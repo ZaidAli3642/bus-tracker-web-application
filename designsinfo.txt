@@ -1,0 +1,13 @@
+driver attributes:
+
+name
+age
+salary
+license
+contact no
+
+
+Personality: 
+hearing ability
+Physical health.
+Visual ability.

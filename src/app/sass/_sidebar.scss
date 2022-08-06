@@ -1,0 +1,77 @@
+.sidebar {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-right: 1px solid rgba($color: $dark, $alpha: 0.1);
+  padding: 20px 0;
+  height: 100%;
+
+  .image-container {
+    border: 1px solid $dark;
+
+    padding: 5px;
+    border-radius: 10px;
+    margin: 10px 0;
+
+    .profile-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+    }
+  }
+
+  .admin-name {
+    font-weight: 500;
+    color: $dark;
+  }
+  .admin-designation {
+    color: $dark;
+    font-weight: 400;
+  }
+
+  .side-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    .side-item {
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+
+      .item-text {
+        color: $dark;
+        font-size: 17px;
+        font-weight: 500;
+        margin-bottom: 1px;
+        margin-left: 2rem;
+        cursor: pointer;
+        @include transition-ease();
+
+        &:hover {
+          color: black;
+        }
+      }
+
+      &::before {
+        content: "";
+        display: inline-block;
+        height: 25px;
+        background-color: $brown;
+        width: 2px;
+        margin-right: 20px;
+        border-radius: 10px;
+        opacity: 0;
+        @include transition-ease();
+      }
+
+      &:hover::before {
+        opacity: 1;
+      }
+    }
+    &:last-of-type {
+      margin-top: auto;
+    }
+  }
+}
