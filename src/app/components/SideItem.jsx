@@ -1,11 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const SideItem = ({ color = "#17191C", size = 20, text, Icon, id }) => {
+const SideItem = ({ color = "#ffffff", to, size = 20, text, Icon, id }) => {
   return (
-    <div className="side-item" id={id}>
+    <li className="side-item" id={id}>
       <Icon color={color} size={size} />
-      <p className="item-text">{text}</p>
-    </div>
+      <Link to={`/${to}`} className="item-text">
+        {text}
+      </Link>
+    </li>
   );
 };
 
