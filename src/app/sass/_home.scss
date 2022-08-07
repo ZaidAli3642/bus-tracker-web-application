@@ -1,0 +1,51 @@
+.update-container {
+  display: flex;
+  margin: 20px 0;
+
+  .update {
+    width: 350px;
+    height: 200px;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    @include transition-ease();
+
+    &-admin {
+      background-color: rgb(255, 239, 226);
+      &:hover {
+        background-color: rgb(241, 206, 177);
+      }
+    }
+
+    &-student {
+      background-color: rgb(230, 245, 249);
+      margin: 0 4rem;
+      &:hover {
+        background-color: rgb(171, 232, 248);
+      }
+    }
+
+    &-driver {
+      background-color: rgb(200, 248, 208);
+      &:hover {
+        background-color: rgb(149, 255, 166);
+      }
+    }
+
+    &-bus {
+      margin: 0 4rem;
+      background-color: rgb(235, 255, 188);
+      &:hover {
+        background-color: rgb(219, 255, 133);
+      }
+    }
+
+    p {
+      color: $dark;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+  }
+}

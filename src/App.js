@@ -1,6 +1,7 @@
 import "./main.css";
-import AdminPanel from "./app/AdminPanel";
-import Sidebar from "./app/Sidebae";
+import AdminPanel from "./app/containers/AdminPanel";
+import Sidebar from "./app/containers/Sidebae";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
   return (

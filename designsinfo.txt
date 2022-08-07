@@ -1,13 +1,6 @@
-driver attributes:
+tommorow work:
 
-name
-age
-salary
-license
-contact no
-
-
-Personality: 
-hearing ability
-Physical health.
-Visual ability.
+chats route,
+bus info and update,
+driver update
+testing google maps 
