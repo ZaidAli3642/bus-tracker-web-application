@@ -1,0 +1,29 @@
+.login-register-container {
+  .logo {
+    width: 100px;
+    height: 120px;
+    margin: 20px 0;
+  }
+
+  .sign-in-text {
+    font-weight: 700;
+  }
+
+  .input {
+    margin: 10px 0;
+  }
+
+  .button {
+    width: 22rem;
+    margin: 10px 0;
+  }
+
+  .forgot-password {
+    margin-top: 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: #979797;
+    }
+  }
+}

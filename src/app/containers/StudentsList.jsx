@@ -12,17 +12,15 @@ const studentsList = [
 const StudentsList = () => {
   return (
     <>
-      <div className="admin">
-        <h1>Students List</h1>
-        <div className="items">
-          {studentsList.map((student) => (
-            <ListItem
-              id={student.id}
-              to={student.to}
-              title={student.studentName}
-            />
-          ))}
-        </div>
+      <h1>Students List</h1>
+      <div className="items">
+        {studentsList.map((student) => (
+          <ListItem
+            id={student.id}
+            to={student.to}
+            title={student.studentName}
+          />
+        ))}
       </div>
     </>
   );
