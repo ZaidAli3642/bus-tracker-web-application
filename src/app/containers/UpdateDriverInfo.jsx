@@ -7,8 +7,8 @@ import SubmitButton from "../components/SubmitButton";
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
   lastname: Yup.string().required().label("Last Name"),
-  designation: Yup.string().required().label("Designation"),
-  institute: Yup.string().required().label("Institute"),
+  age: Yup.number().min(20).max(40).required().label("Age"),
+  salary: Yup.number().min(20000).max(40000).required().label("Salary"),
   country: Yup.string().required().label("Country"),
   city: Yup.string().required().label("City"),
   address: Yup.string().required().label("Address"),
@@ -20,18 +20,18 @@ const validationSchema = Yup.object().shape({
   contact: Yup.string().required().label("Contact"),
 });
 
-const UpdateAdminInfo = () => {
+const UpdateDriverInfo = () => {
   return (
     <>
       <div className="admin">
-        <h1>UPDATE YOUR INFORMATION</h1>
+        <h1>UPDATE DRIVER INFORMATION</h1>
         <div className="items">
           <Form
             initialValues={{
               firstname: "",
               lastname: "",
-              designation: "",
-              institute: "",
+              age: "",
+              salary: "",
               country: "",
               city: "",
               address: "",
@@ -44,7 +44,7 @@ const UpdateAdminInfo = () => {
             <h4>Personal Information</h4>
             <div className="line"></div>
 
-            <div className="image-container image-flex-start">
+            <div className="image-container image-flex-start ">
               <img
                 src={require("../assets/zaid-saleem-image.jpg")}
                 className="profile-image"
@@ -55,29 +55,37 @@ const UpdateAdminInfo = () => {
             <div className="items-details">
               <Input
                 label="First Name"
-                value="First Name"
-                name="firstname"
                 type="text"
+                name="firstname"
+                placeholder="Enter First Name"
               />
               <Input
                 label="Last Name"
-                value="Last Name"
-                name="lastname"
                 type="text"
+                name="lastname"
+                placeholder="Enter Last Name"
               />
             </div>
             <div className="items-details">
               <Input
-                label="Designation"
-                value="Software Engineer"
-                name="designation"
+                label="Age"
                 type="text"
+                name="age"
+                placeholder="Enter Age"
               />
               <Input
-                label={"College/University"}
-                value="GCUF"
-                name="institute"
+                label="Salary"
                 type="text"
+                name="salary"
+                placeholder="Enter Salary"
+              />
+            </div>
+            <div className="items-details">
+              <Input
+                label="Contact No"
+                type="text"
+                name="contact"
+                placeholder="Enter Contact"
               />
             </div>
             <div className="line"></div>
@@ -85,41 +93,33 @@ const UpdateAdminInfo = () => {
             <div className="items-details">
               <Input
                 label="Country"
-                value="Country Name"
-                name="country"
                 type="text"
+                name="country"
+                placeholder="Enter Country"
               />
               <Input
                 label="City Name"
-                value="City Name"
-                name="city"
                 type="text"
+                name="city"
+                placeholder="Enter City"
               />
             </div>
             <div className="items-details">
               <Input
                 label="Address"
-                value="Address"
-                name="address"
                 type="text"
+                name="address"
+                placeholder="Enter Address"
               />
               <Input
                 label="Postal Code"
-                value="Postal Code"
+                type="text"
                 name="postalcode"
-                type="text"
-              />
-            </div>
-            <div className="items-details">
-              <Input
-                label="Contact"
-                value="Contact"
-                name="contact"
-                type="text"
+                placeholder="Enter postal code"
               />
             </div>
 
-            <SubmitButton title="Update Admin" />
+            <SubmitButton title="Update Driver" />
           </Form>
         </div>
       </div>
@@ -127,4 +127,4 @@ const UpdateAdminInfo = () => {
   );
 };
 
-export default UpdateAdminInfo;
+export default UpdateDriverInfo;

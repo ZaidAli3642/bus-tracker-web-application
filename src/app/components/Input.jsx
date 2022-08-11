@@ -1,10 +1,21 @@
-const Input = ({ label, value }) => {
+import ErrorMessage from "./ErrorMessage";
+import { useFormikContext } from "formik";
+
+const Input = ({ label, placeholder, classes, type, name }) => {
+  const { errors, handleChange, setFieldTouched, touched } = useFormikContext();
+
   return (
-    <div className="input-container">
+    <div className={`input-container ${classes}`}>
       <label htmlFor="" className="label">
         {label}
       </label>
-      <input type="text" value={value} />
+      <input
+        type={type}
+        onBlur={() => setFieldTouched(name)}
+        onChange={handleChange(name)}
+        placeholder={placeholder}
+      />
+      <ErrorMessage error={errors[name]} visible={touched[name]} />
     </div>
   );
 };

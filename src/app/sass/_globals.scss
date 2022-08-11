@@ -3,11 +3,11 @@
 *::after {
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 body {
-  font-family: "Roboto Condensed", sans-serif;
+  font-family: "Nunito", sans-serif !important;
 }
 
 .item-list {
@@ -111,8 +111,44 @@ input {
   border: 1px solid rgb(229, 233, 236);
   padding: 5px;
   border-radius: 5px;
+  letter-spacing: 1px;
+  color: #3b3b3b;
 
   &:focus {
     outline: none;
   }
+}
+
+.btn {
+  margin-left: 40px;
+}
+
+.btn-primary {
+  background-color: #795fcd !important;
+  border: #795fcd !important;
+}
+.btn-primary:hover {
+  background-color: #6444ce !important;
+}
+.btn-primary:active {
+  background-color: #6444ce !important;
+}
+
+.btn-primary:visited {
+  background-color: #6444ce !important;
+}
+
+.error-message {
+  color: $danger;
+}
+
+.login-register-container {
+  max-width: 30rem;
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
 }

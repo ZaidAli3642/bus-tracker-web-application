@@ -1,15 +1,24 @@
 import "./main.css";
-import AdminPanel from "./app/containers/AdminPanel";
-import Sidebar from "./app/containers/Sidebae";
-import { Route, Routes } from "react-router-dom";
+
+import Login from "./app/containers/Login";
+import Register from "./app/containers/Register";
+import Home from "./app/containers/Home";
+
+import { Routes, Route, Navigate } from "react-router-dom";
+import NotFound from "./app/containers/NotFound";
 
 function App() {
   return (
     <div className="container">
-      <main className="admin-panel row">
-        <Sidebar />
-        <AdminPanel />
-      </main>
+      <>
+        <Routes>
+          <Route path="/admin/register" element={<Register />} />
+          <Route path="/admin/login" element={<Login />} />
+          <Route path="/*" element={<Home />} />
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/not-found" replace />} />
+        </Routes>
+      </>
     </div>
   );
 }

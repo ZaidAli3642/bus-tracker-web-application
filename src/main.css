@@ -1,15 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap");
 *,
 *::before,
 *::after {
   padding: 0;
   margin: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  -webkit-box-sizing: border-box !important;
+          box-sizing: border-box !important;
 }
 
 body {
-  font-family: "Roboto Condensed", sans-serif;
+  font-family: "Nunito", sans-serif !important;
 }
 
 .item-list {
@@ -129,10 +129,58 @@ input {
   border: 1px solid #e5e9ec;
   padding: 5px;
   border-radius: 5px;
+  letter-spacing: 1px;
+  color: #3b3b3b;
 }
 
 input:focus {
   outline: none;
+}
+
+.btn {
+  margin-left: 40px;
+}
+
+.btn-primary {
+  background-color: #795fcd !important;
+  border: #795fcd !important;
+}
+
+.btn-primary:hover {
+  background-color: #6444ce !important;
+}
+
+.btn-primary:active {
+  background-color: #6444ce !important;
+}
+
+.btn-primary:visited {
+  background-color: #6444ce !important;
+}
+
+.error-message {
+  color: #ff1a4a;
+}
+
+.login-register-container {
+  max-width: 30rem;
+  margin: 20px auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
 }
 
 .update-container {
@@ -332,6 +380,13 @@ input:focus {
   border-radius: 50px;
 }
 
+.items .image-flex-start {
+  margin-left: 20px;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
 .items .items-details {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -344,5 +399,38 @@ input:focus {
 
 .items .items-details .right-item {
   width: 400px;
+}
+
+.items .button {
+  width: 100%;
+  margin: 10px auto;
+}
+
+.login-register-container .logo {
+  width: 100px;
+  height: 120px;
+  margin: 20px 0;
+}
+
+.login-register-container .sign-in-text {
+  font-weight: 700;
+}
+
+.login-register-container .input {
+  margin: 10px 0;
+}
+
+.login-register-container .button {
+  width: 22rem;
+  margin: 10px 0;
+}
+
+.login-register-container .forgot-password {
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.login-register-container .forgot-password:hover {
+  color: #979797;
 }
 /*# sourceMappingURL=main.css.map */
