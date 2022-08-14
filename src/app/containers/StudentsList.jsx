@@ -1,12 +1,12 @@
 import ListItem from "../components/ListItem";
 
 const studentsList = [
-  { id: 1, studentName: "Student 1", to: `/student` },
-  { id: 2, studentName: "Student 2", to: `/student` },
-  { id: 3, studentName: "Student 3", to: `/student` },
-  { id: 4, studentName: "Student 4", to: `/student` },
-  { id: 5, studentName: "Student 5", to: `/student` },
-  { id: 6, studentName: "Student 6", to: `/student` },
+  { id: 1, studentName: "Student 1", to: `/admin/student` },
+  { id: 2, studentName: "Student 2", to: `/admin/student` },
+  { id: 3, studentName: "Student 3", to: `/admin/student` },
+  { id: 4, studentName: "Student 4", to: `/admin/student` },
+  { id: 5, studentName: "Student 5", to: `/admin/student` },
+  { id: 6, studentName: "Student 6", to: `/admin/student` },
 ];
 
 const StudentsList = () => {

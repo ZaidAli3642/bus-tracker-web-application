@@ -1,8 +1,15 @@
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import * as Yup from "yup";
 
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, database } from "../firebase/firebaseConfig";
+import { addDoc, collection } from "firebase/firestore";
+
 import SubmitButton from "./../components/SubmitButton";
 import Form from "./../components/Form";
+import useAuth from "./../context/auth/useAuth";
 
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
@@ -23,8 +30,40 @@ const validationSchema = Yup.object().shape({
 });
 
 const Register = () => {
-  const handleSubmit = (values) => {
-    console.log(values);
+  const [isLoading, setIsLoading] = useState(false);
+  const user = useAuth();
+  const navigate = useNavigate();
+
+  const docRef = collection(database, "admin");
+
+  const handleSubmit = async (values) => {
+    setIsLoading(true);
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+
+      await addDoc(docRef, {
+        admin_id: userCredentials.user.uid,
+        firstname: values.firstname,
+        lastname: values.lastname,
+        email: values.email,
+        designation: values.designation,
+        institute: values.institute,
+        country: values.country,
+        city: values.city,
+        address: values.address,
+        postalcode: values.postalcode,
+        contact: values.contact,
+      });
+      navigate("/admin/home");
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -85,11 +124,16 @@ const Register = () => {
         />
         <Input label="CONTACT" type="text" classes="input" name="contact" />
 
-        <SubmitButton title="Sign up" />
+        <SubmitButton title="Sign up" isLoading={isLoading} />
 
         <h5 className="new-account-text">Already have an Admin Account?</h5>
 
-        <button className="btn btn-md btn-primary button">Sign in</button>
+        <button
+          className="btn btn-md btn-primary button"
+          onClick={() => navigate("/admin/login")}
+        >
+          Sign in
+        </button>
       </Form>
     </div>
   );

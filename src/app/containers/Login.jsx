@@ -1,9 +1,16 @@
+import { useContext, useState } from "react";
 import Input from "../components/Input";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+
+import { auth, database } from "../firebase/firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { getDocs, doc, collection, query, where } from "firebase/firestore";
 
 import SubmitButton from "./../components/SubmitButton";
 import Form from "./../components/Form";
+import useAuth from "../context/auth/useAuth";
+import AuthContext from "../context/authContext";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
@@ -11,11 +18,33 @@ const validationSchema = Yup.object().shape({
 });
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const authUser = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (values) => {
-    console.log(values);
-    navigate("/");
+  const { setUser } = useContext(AuthContext);
+
+  const handleLogin = async (values) => {
+    setIsLoading(true);
+    try {
+      const userCred = await signInWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+      const adminRef = collection(database, "admin");
+      const q = query(adminRef, where("admin_id", "==", userCred.user.uid));
+
+      const docSnap = await getDocs(q);
+
+      docSnap.forEach((doc) => setUser(doc.data()));
+
+      navigate("/admin/home");
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -25,7 +54,7 @@ const Login = () => {
 
       <Form
         initialValues={{ email: "", password: "" }}
-        onSubmit={handleSubmit}
+        onSubmit={handleLogin}
         validationSchema={validationSchema}
       >
         <Input
@@ -44,12 +73,15 @@ const Login = () => {
           name="password"
         />
 
-        <SubmitButton title="Sign in" />
+        <SubmitButton title="Sign in" isLoading={isLoading} />
 
         <p className="forgot-password label">forgot your password?</p>
         <h5 className="new-account-text">Don't have an Admin Account?</h5>
 
-        <button className="btn btn-md btn-primary button">
+        <button
+          className="btn btn-md btn-primary button"
+          onClick={() => navigate("/admin/register")}
+        >
           Create New Account
         </button>
       </Form>

@@ -1,12 +1,12 @@
 import ListItem from "../components/ListItem";
 
 const busList = [
-  { id: 1, busName: "Bus 1", to: `/bus` },
-  { id: 2, busName: "Bus 2", to: `/bus` },
-  { id: 3, busName: "Bus 3", to: `/bus` },
-  { id: 4, busName: "Bus 4", to: `/bus` },
-  { id: 5, busName: "Bus 5", to: `/bus` },
-  { id: 6, busName: "Bus 6", to: `/bus` },
+  { id: 1, busName: "Bus 1", to: `/admin/bus` },
+  { id: 2, busName: "Bus 2", to: `/admin/bus` },
+  { id: 3, busName: "Bus 3", to: `/admin/bus` },
+  { id: 4, busName: "Bus 4", to: `/admin/bus` },
+  { id: 5, busName: "Bus 5", to: `/admin/bus` },
+  { id: 6, busName: "Bus 6", to: `/admin/bus` },
 ];
 
 const BusLists = () => {

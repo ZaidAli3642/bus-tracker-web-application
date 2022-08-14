@@ -1,7 +1,23 @@
 import { useFormikContext } from "formik";
+import { BarLoader } from "react-spinners";
 
-const SubmitButton = ({ title }) => {
+const SubmitButton = ({ title, isLoading }) => {
   const { handleSubmit } = useFormikContext();
+
+  if (isLoading)
+    return (
+      <div
+        className="btn btn-md btn-primary button"
+        style={{
+          height: "40px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <BarLoader loading={isLoading} color="#fff" />
+      </div>
+    );
 
   return (
     <button className="btn btn-md btn-primary button" onClick={handleSubmit}>
