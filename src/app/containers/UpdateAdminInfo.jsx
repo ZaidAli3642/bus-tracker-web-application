@@ -1,8 +1,13 @@
+import { useEffect, useContext } from "react";
 import * as Yup from "yup";
+import { useMatch, Navigate } from "react-router-dom";
+import { database } from "../firebase/firebaseConfig";
+import { collection, where, query, getDocs } from "firebase/firestore";
 
 import Input from "../components/Input";
 import Form from "../components/Form";
 import SubmitButton from "../components/SubmitButton";
+import useAuth from "./../context/auth/useAuth";
 
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
@@ -21,6 +26,18 @@ const validationSchema = Yup.object().shape({
 });
 
 const UpdateAdminInfo = () => {
+  const { user } = useAuth();
+
+  const match = useMatch({ path: "/admin/admin_update/:id" });
+
+  if (user === null) {
+    return null;
+  }
+
+  if (match.params.id !== user.admin_id) {
+    return <Navigate to="/not-found" />;
+  }
+
   return (
     <>
       <div className="admin">
@@ -48,34 +65,19 @@ const UpdateAdminInfo = () => {
               <img
                 src={require("../assets/zaid-saleem-image.jpg")}
                 className="profile-image"
+                alt="profile"
               />
               <button className="btn btn-primary btn-md">Change Image</button>
             </div>
             <div className="line"></div>
             <div className="items-details">
-              <Input
-                label="First Name"
-                value="First Name"
-                name="firstname"
-                type="text"
-              />
-              <Input
-                label="Last Name"
-                value="Last Name"
-                name="lastname"
-                type="text"
-              />
+              <Input label="First Name" name="firstname" type="text" />
+              <Input label="Last Name" name="lastname" type="text" />
             </div>
             <div className="items-details">
-              <Input
-                label="Designation"
-                value="Software Engineer"
-                name="designation"
-                type="text"
-              />
+              <Input label="Designation" name="designation" type="text" />
               <Input
                 label={"College/University"}
-                value="GCUF"
                 name="institute"
                 type="text"
               />
@@ -83,40 +85,15 @@ const UpdateAdminInfo = () => {
             <div className="line"></div>
             <h4>Physical Address</h4>
             <div className="items-details">
-              <Input
-                label="Country"
-                value="Country Name"
-                name="country"
-                type="text"
-              />
-              <Input
-                label="City Name"
-                value="City Name"
-                name="city"
-                type="text"
-              />
+              <Input label="Country" name="country" type="text" />
+              <Input label="City Name" name="city" type="text" />
             </div>
             <div className="items-details">
-              <Input
-                label="Address"
-                value="Address"
-                name="address"
-                type="text"
-              />
-              <Input
-                label="Postal Code"
-                value="Postal Code"
-                name="postalcode"
-                type="text"
-              />
+              <Input label="Address" name="address" type="text" />
+              <Input label="Postal Code" name="postalcode" type="text" />
             </div>
             <div className="items-details">
-              <Input
-                label="Contact"
-                value="Contact"
-                name="contact"
-                type="text"
-              />
+              <Input label="Contact" name="contact" type="text" />
             </div>
 
             <SubmitButton title="Update Admin" />

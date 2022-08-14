@@ -28,10 +28,12 @@ const Location = () => {
   // ];
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
+    googleMapsApiKey: "",
   });
 
   const center = { lat: 40.756795, lng: -73.954298 };
+
+  console.log(isLoaded);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const directions = async () => {

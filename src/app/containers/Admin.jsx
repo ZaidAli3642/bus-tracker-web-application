@@ -1,24 +1,27 @@
 import { useNavigate } from "react-router-dom";
 
+import useAuth from "./../context/auth/useAuth";
+
 const Admin = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <>
-      <h1>HELLO ZAID</h1>
+      <h1>Hello {user.firstname}</h1>
       <label htmlFor="" className="label">
         Welcome Back!
       </label>
       <div className="admin">
         <div className="update-container">
           <div
-            onClick={() => navigate("/admin/1")}
+            onClick={() => navigate("/admin/admin_update/" + user.admin_id)}
             className="update update-admin"
           >
             <p>Update Your Information</p>
           </div>
           <div
-            onClick={() => navigate("/student_update/1")}
+            onClick={() => navigate("/admin/student_update/1")}
             className="update update-student"
           >
             <p>Update Student Information</p>
@@ -26,7 +29,7 @@ const Admin = () => {
         </div>
         <div className="update-container">
           <div
-            onClick={() => navigate("/driver_update/1")}
+            onClick={() => navigate("/admin/driver_update/1")}
             className="update update-driver"
           >
             <p>Update Driver Information</p>

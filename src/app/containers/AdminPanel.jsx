@@ -19,7 +19,7 @@ const AdminPanel = () => {
         <>
           <Routes>
             <Route path="/home" element={<Admin />} />
-            <Route path="/admin/:id" element={<UpdateAdminInfo />} />
+            <Route path="/admin_update/:id" element={<UpdateAdminInfo />} />
             <Route path="/student_update/:id" element={<UpdateStudentInfo />} />
             <Route path="/student/:id" element={<StudentDetails />} />
             <Route path="/student" element={<StudentsList />} />
@@ -30,7 +30,6 @@ const AdminPanel = () => {
             <Route path="/bus" element={<BusLists />} />
             <Route path="/location" element={<Location />} />
             <Route path="/not-found" element={<NotFound />} />
-            <Route path="/" element={<Admin />} />
             <Route path="*" element={<Navigate to="/not-found" replace />} />
           </Routes>
         </>
