@@ -1,4 +1,5 @@
 import ListItem from "../components/ListItem";
+import { useNavigate } from "react-router-dom";
 
 const studentsList = [
   { id: 1, studentName: "Student 1", to: `/admin/student` },
@@ -10,6 +11,7 @@ const studentsList = [
 ];
 
 const StudentsList = () => {
+  const navigation = useNavigate();
   return (
     <>
       <h1>Students List</h1>
@@ -19,6 +21,7 @@ const StudentsList = () => {
             id={student.id}
             to={student.to}
             title={student.studentName}
+            onClick={() => navigation("/admin/student_update/" + student.id)}
           />
         ))}
       </div>

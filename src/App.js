@@ -8,6 +8,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoutes from "./app/routes/PrivateRoutes";
 import NotFound from "./app/containers/NotFound";
 import AuthContext from "./app/context/authContext";
+import Loader from "./app/components/Loader";
 
 function App() {
   const [user, setUser] = useState(null);

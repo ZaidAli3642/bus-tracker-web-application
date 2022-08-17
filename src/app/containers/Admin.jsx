@@ -15,27 +15,30 @@ const Admin = () => {
       <div className="admin">
         <div className="update-container">
           <div
-            onClick={() => navigate("/admin/admin_update/" + user.admin_id)}
+            onClick={() => navigate("/admin/admin_update/" + user.id)}
             className="update update-admin"
           >
             <p>Update Your Information</p>
           </div>
           <div
-            onClick={() => navigate("/admin/student_update/1")}
+            onClick={() => navigate("/admin/student_update/new")}
             className="update update-student"
           >
-            <p>Update Student Information</p>
+            <p>Add Student Information</p>
           </div>
         </div>
         <div className="update-container">
           <div
-            onClick={() => navigate("/admin/driver_update/1")}
+            onClick={() => navigate("/admin/driver_update/new")}
             className="update update-driver"
           >
-            <p>Update Driver Information</p>
+            <p>Add Driver Information</p>
           </div>
-          <div className="update update-bus">
-            <p>Update Bus Information</p>
+          <div
+            className="update update-bus"
+            onClick={() => navigate("/admin/bus_update/new")}
+          >
+            <p>Add Bus Information</p>
           </div>
         </div>
       </div>

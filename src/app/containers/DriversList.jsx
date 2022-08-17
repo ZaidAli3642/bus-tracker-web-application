@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import ListItem from "../components/ListItem";
 
 const driversList = [
@@ -10,12 +11,19 @@ const driversList = [
 ];
 
 const DriversList = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <h1>DRIVERS LIST</h1>
       <div className="items">
         {driversList.map((driver) => (
-          <ListItem id={driver.id} to={driver.to} title={driver.driverName} />
+          <ListItem
+            id={driver.id}
+            to={driver.to}
+            title={driver.driverName}
+            onClick={() => navigate("/admin/driver_update/" + driver.id)}
+          />
         ))}
       </div>
     </>

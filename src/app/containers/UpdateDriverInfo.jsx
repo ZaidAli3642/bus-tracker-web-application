@@ -24,7 +24,7 @@ const UpdateDriverInfo = () => {
   return (
     <>
       <div className="admin">
-        <h1>UPDATE DRIVER INFORMATION</h1>
+        <h1>Update Driver Information</h1>
         <div className="items">
           <Form
             initialValues={{
@@ -119,7 +119,7 @@ const UpdateDriverInfo = () => {
               />
             </div>
 
-            <SubmitButton title="Update Driver" />
+            <SubmitButton title="SAVE DRIVER" />
           </Form>
         </div>
       </div>

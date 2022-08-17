@@ -25,7 +25,7 @@ const UpdateStudentInfo = () => {
   return (
     <>
       <div className="admin">
-        <h1>UPDATE STUDENT INFORMATION</h1>
+        <h1>Update Student Information</h1>
         <div className="items">
           <Form
             initialValues={{
@@ -131,7 +131,7 @@ const UpdateStudentInfo = () => {
               />
             </div>
 
-            <SubmitButton title="Update Student" />
+            <SubmitButton title="SAVE STUDENT" />
           </Form>
         </div>
       </div>

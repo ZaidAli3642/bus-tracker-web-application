@@ -1,7 +1,7 @@
 import ErrorMessage from "./ErrorMessage";
-import { useFormikContext, Field } from "formik";
+import { useFormikContext } from "formik";
 
-const Input = ({ label, placeholder, classes, value, type, name }) => {
+const Input = ({ label, placeholder, classes, type, name }) => {
   const { errors, handleChange, setFieldTouched, touched, values } =
     useFormikContext();
 

@@ -23,10 +23,13 @@ const sidebar = [
 const Sidebar = () => {
   const navigate = useNavigate();
 
+  const { setUser } = useContext(AuthContext);
+
   const { user } = useAuth();
   const logout = async () => {
     try {
       await signOut(auth);
+      setUser(null);
       navigate("/admin/login", { replace: true });
     } catch (error) {
       console.log(error);
@@ -36,11 +39,7 @@ const Sidebar = () => {
   return (
     <div className="col-2 sidebar">
       <div className="image-container">
-        <img
-          className="profile-image"
-          src={require("../assets/zaid-saleem-image.jpg")}
-          alt="Admin Image"
-        />
+        <img className="profile-image" src={user.image} alt="Admin" />
       </div>
 
       <h4 className="admin-name">{`${user.firstname} ${user.lastname}`}</h4>
