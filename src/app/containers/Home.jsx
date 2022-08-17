@@ -1,12 +1,13 @@
 import Sidebar from "./Sidebae";
 import AdminPanel from "./AdminPanel";
 import useAuth from "./../context/auth/useAuth";
+import Loader from "./../components/Loader";
 
 const Home = () => {
-  const { user } = useAuth();
+  const { authUser, user } = useAuth();
 
-  if (user === null) {
-    return null;
+  if (authUser === undefined) {
+    return <Loader />;
   }
 
   return (

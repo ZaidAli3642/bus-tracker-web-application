@@ -11,6 +11,7 @@ import UpdateDriverInfo from "./UpdateDriverInfo";
 import NotFound from "./NotFound";
 import Admin from "./Admin";
 import Location from "./Location";
+import BusInformationForm from "./BusInformationForm";
 
 const AdminPanel = () => {
   return (
@@ -26,6 +27,7 @@ const AdminPanel = () => {
             <Route path="/driver_update/:id" element={<UpdateDriverInfo />} />
             <Route path="/driver/:id" element={<DriverDetails />} />
             <Route path="/driver" element={<DriversList />} />
+            <Route path="/bus_update/:id" element={<BusInformationForm />} />
             <Route path="/bus/:id" element={<BusDetails />} />
             <Route path="/bus" element={<BusLists />} />
             <Route path="/location" element={<Location />} />

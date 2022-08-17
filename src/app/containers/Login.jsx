@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import Input from "../components/Input";
 import * as Yup from "yup";
 import { useNavigate, Navigate } from "react-router-dom";
+import { BarLoader } from "react-spinners";
 
 import { auth, database } from "../firebase/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -11,6 +12,7 @@ import SubmitButton from "./../components/SubmitButton";
 import Form from "./../components/Form";
 import useAuth from "../context/auth/useAuth";
 import AuthContext from "../context/authContext";
+import Loader from "./../components/Loader";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
@@ -19,7 +21,7 @@ const validationSchema = Yup.object().shape({
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const authUser = useAuth();
+  const { user, authUser } = useAuth();
   const navigate = useNavigate();
 
   const { setUser } = useContext(AuthContext);
@@ -37,7 +39,7 @@ const Login = () => {
 
       const docSnap = await getDocs(q);
 
-      docSnap.forEach((doc) => setUser(doc.data()));
+      docSnap.forEach((doc) => setUser({ id: doc.id, ...doc.data() }));
 
       navigate("/admin/home");
       setIsLoading(false);
@@ -47,6 +49,10 @@ const Login = () => {
     }
   };
 
+  if (authUser === undefined || user !== null) return null;
+  if (authUser && user === null) {
+    return <Navigate to="/not-found" />;
+  }
   return (
     <div className="login-register-container">
       <img src={require("../assets/BTS.png")} alt="logo" className="logo" />

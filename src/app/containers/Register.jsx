@@ -31,7 +31,6 @@ const validationSchema = Yup.object().shape({
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const user = useAuth();
   const navigate = useNavigate();
 
   const docRef = collection(database, "admin");

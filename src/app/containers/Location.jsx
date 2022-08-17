@@ -1,9 +1,9 @@
+/* eslint-disable no-undef */
 import { useState, useEffect } from "react";
 import {
   useJsApiLoader,
   GoogleMap,
   MarkerF,
-  DirectionsService,
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import routes from "./routes.json";
@@ -46,28 +46,25 @@ const Location = () => {
 
     const origin =
       routesCopy.length === 1
-        ? // eslint-disable-next-line no-undef
-          new google.maps.LatLng(
+        ? new google.maps.LatLng(
             routesCopy[0].location.lat,
             routesCopy[0].location.lng
           )
         : routesCopy.shift().location;
     const destination =
       routesCopy.length === 1
-        ? // eslint-disable-next-line no-undef
-          new google.maps.LatLng(
+        ? new google.maps.LatLng(
             routesCopy[0].location.lat,
             routesCopy[0].location.lng
           )
         : routesCopy.pop().location;
 
-    // eslint-disable-next-line no-undef
     const directionsService = new google.maps.DirectionsService();
 
     const result = await directionsService.route({
       origin: origin,
       destination: destination,
-      // eslint-disable-next-line no-undef
+
       travelMode: google.maps.TravelMode.DRIVING,
       waypoints: routesCopy,
     });
