@@ -1,14 +1,31 @@
+import { useLocation, useMatch } from "react-router-dom";
 import Detail from "../components/Detail";
 
 const StudentDetails = () => {
+  const location = useLocation();
+
+  const {
+    firstname,
+    lastname,
+    parent,
+    institute,
+    parentcontact,
+    country,
+    city,
+    address,
+    postalcode,
+    contact,
+    busNo,
+    image,
+  } = location.state || {};
   return (
     <>
-      <h1>DRIVER DETAILS</h1>
+      <h1>Student Details</h1>
       <div className="items">
         <div className="image-container">
           <img
-            src={require("../assets/zaid-saleem-image.jpg")}
-            alt=""
+            src={image ? image : require("../assets/student-avatar.jpg")}
+            alt="student"
             className="profile-image"
           />
         </div>
@@ -17,28 +34,25 @@ const StudentDetails = () => {
         <div className="line"></div>
         <div className="items-details">
           <div>
-            <Detail label="Full Name" detail="Detail 1" />
+            <Detail label="Full Name" detail={`${firstname} ${lastname}`} />
           </div>
           <div className="right-item">
-            <Detail label="Father/Guardian" detail="Detail 2" />
+            <Detail label="Father/Guardian" detail={parent} />
           </div>
         </div>
 
         <div className="items-details">
           <div>
-            <Detail label="contact no" detail="Detail 5" />
+            <Detail label="contact no" detail={contact} />
           </div>
           <div className="right-item">
-            <Detail label="Father/Guardian no" detail="Detail 6" />
+            <Detail label="Father/Guardian no" detail={parentcontact} />
           </div>
         </div>
 
         <div className="items-details">
           <div>
-            <Detail label="College/University" detail="Detail 3" />
-          </div>
-          <div className="right-item">
-            <Detail label="Class/Semester" detail="Detail 4" />
+            <Detail label="College/University" detail={institute} />
           </div>
         </div>
 
@@ -46,24 +60,24 @@ const StudentDetails = () => {
         <div className="line"></div>
         <div className="items-details">
           <div>
-            <Detail label="Country" detail="Country Name" />
+            <Detail label="Country" detail={country} />
           </div>
           <div className="right-item">
-            <Detail label="City" detail="City Name" />
+            <Detail label="City" detail={city} />
           </div>
         </div>
 
         <div className="items-details">
           <div>
-            <Detail label="Postal Code" detail="Postal Code" />
+            <Detail label="Postal Code" detail={postalcode} />
           </div>
           <div className="right-item">
-            <Detail label="Address" detail="Full Address" />
+            <Detail label="Address" detail={address} />
           </div>
         </div>
         <div className="items-details">
           <div>
-            <Detail label="Contact Info" detail="Detail 1" />
+            <Detail label="Bus No" detail={busNo} />
           </div>
         </div>
       </div>

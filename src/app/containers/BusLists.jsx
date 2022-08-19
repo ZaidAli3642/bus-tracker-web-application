@@ -1,17 +1,26 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { database } from "../firebase/firebaseConfig";
-import { collection, onSnapshot, getDocs } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  where,
+  query,
+  getDocs,
+} from "firebase/firestore";
 import ListItem from "../components/ListItem";
+import useAuth from "../context/auth/useAuth";
 
 const BusLists = () => {
   const [buses, setBuses] = useState([]);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const getBusInformation = async () => {
     const busCollection = collection(database, "bus");
+    const q = query(busCollection, where("admin_id", "==", user.admin_id));
 
-    const busSnapShot = await getDocs(busCollection);
+    const busSnapShot = await getDocs(q);
     const busList = busSnapShot.docs.map((item) => ({
       id: item.id,
       ...item.data(),

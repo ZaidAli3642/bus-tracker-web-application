@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Login from "./app/containers/Login";
 import Register from "./app/containers/Register";
 import Home from "./app/containers/Home";
@@ -8,7 +8,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoutes from "./app/routes/PrivateRoutes";
 import NotFound from "./app/containers/NotFound";
 import AuthContext from "./app/context/authContext";
-import Loader from "./app/components/Loader";
 
 function App() {
   const [user, setUser] = useState(null);

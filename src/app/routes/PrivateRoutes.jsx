@@ -4,8 +4,6 @@ import useAuth from "./../context/auth/useAuth";
 const PrivateRoutes = () => {
   const { authUser, user } = useAuth();
 
-  console.log("Auth: ", authUser);
-  console.log("User: ", user);
   if (authUser === undefined || user === null) {
     return null; // or loading spinner, etc...
   }

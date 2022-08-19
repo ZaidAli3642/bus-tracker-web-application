@@ -10,6 +10,7 @@ import SelectImageInput from "../components/SelectImageInput";
 import MultipleInputs from "../components/MultipleInputs";
 import Select from "../components/select";
 import { addData, updateData } from "../firebase/firebaseCalls/addDoc";
+import useAuth from "../context/auth/useAuth";
 
 const mantainanceStates = [
   { id: 1, label: "Excellent", values: "excellent" },
@@ -29,8 +30,9 @@ const BusInformationForm = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const location = useLocation();
   const match = useMatch("/admin/bus_update/:id");
+  const { user } = useAuth();
 
-  const handleAddBusInformation = async (values) => {
+  const handleAddBusInformation = async (values, { resetForm }) => {
     setIsProcessing(true);
     try {
       const data = {
@@ -40,6 +42,7 @@ const BusInformationForm = () => {
         busRoutes: values.routesList,
         maintainance: values.maintainance,
         isBusAlloted: location?.state?.isBusAlloted ? true : false,
+        admin_id: user.admin_id,
       };
 
       let result;
@@ -56,6 +59,7 @@ const BusInformationForm = () => {
 
       setIsProcessing(false);
       toast.success("Data Saved Successfully.");
+      resetForm();
     } catch (error) {
       console.log(error);
       toast.error("Error occured while saving data.");
@@ -66,7 +70,9 @@ const BusInformationForm = () => {
   return (
     <>
       <div className="admin">
-        <h1>Update Driver Information</h1>
+        <h1>
+          {location?.state?.isUpdated ? "Update" : "Add"} Driver Information
+        </h1>
         <div className="items">
           <Form
             initialValues={{
@@ -96,13 +102,13 @@ const BusInformationForm = () => {
                   src={
                     location?.state?.image
                       ? location?.state?.image
-                      : require("../assets/zaid-saleem-image.jpg")
+                      : require("../assets/no-image.jpg")
                   }
                   className="square-image"
                   alt="license"
                 />
               </div>
-              <SelectImageInput name="licenseImage" />
+              <SelectImageInput name="image" />
             </div>
             <div className="line"></div>
             <h3>Routes</h3>

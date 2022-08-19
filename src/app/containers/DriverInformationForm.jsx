@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, where, query } from "firebase/firestore";
-import { addData } from "../firebase/firebaseCalls/addDoc";
+import { useLocation, useMatch } from "react-router-dom";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { addData, updateData } from "../firebase/firebaseCalls/addDoc";
 import { database } from "./../firebase/firebaseConfig";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -10,6 +11,7 @@ import Form from "../components/Form";
 import SubmitButton from "../components/SubmitButton";
 import Select from "../components/select";
 import SelectImageInput from "../components/SelectImageInput";
+import useAuth from "./../context/auth/useAuth";
 
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
@@ -27,17 +29,38 @@ const validationSchema = Yup.object().shape({
   contact: Yup.string().required().label("Contact"),
   busNo: Yup.number().required().label("Bus No"),
   image: Yup.string().nullable().required().label("Image"),
+  driverDutyTime: Yup.string().required().label("Duty Start"),
+  driverDutyEnd: Yup.string().required().label("Duty End"),
 });
 
 const DriverInformationForm = () => {
   const [busNoList, setBusNoList] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [drivers, setDrivers] = useState();
+  const { user } = useAuth();
+  const location = useLocation();
+  const match = useMatch("/admin/driver_update/:id");
+
+  const {
+    firstname,
+    lastname,
+    age,
+    salary,
+    contact,
+    country,
+    city,
+    address,
+    postalcode,
+    busNo,
+    driverDutyTime,
+    driverDutyEnd,
+    image,
+    isUpdated,
+  } = location.state || {};
 
   const getBusDetails = async () => {
     const busCollection = collection(database, "bus");
 
-    const q = query(busCollection, where("isBusAlloted", "==", false));
+    const q = query(busCollection, where("admin_id", "==", user.admin_id));
 
     const busSnapshot = await getDocs(q);
 
@@ -63,16 +86,29 @@ const DriverInformationForm = () => {
         postalcode: values.postalcode,
         contact: values.contact,
         busNo: values.busNo,
-        imageName: values.image[0].name,
+        imageName: values.image[0].name || image,
+        driverDutyTime: values.driverDutyTime,
+        driverDutyEnd: values.driverDutyEnd,
+        admin_id: user.admin_id,
       };
-      const result = await addData(data, "drivers", values.image);
+
+      let result;
+      if (isUpdated) {
+        result = await updateData(
+          data,
+          "drivers",
+          values.image,
+          match.params.id
+        );
+      } else {
+        result = await addData(data, "drivers", values.image);
+      }
 
       if (result === undefined) {
         setIsProcessing(false);
         return toast.error("Image should be in png, jpg or jpeg format");
       }
 
-      setDrivers(result);
       setIsProcessing(false);
       toast.success("Data Saved Successfully.");
     } catch (error) {
@@ -84,26 +120,28 @@ const DriverInformationForm = () => {
 
   useEffect(() => {
     getBusDetails();
-  }, [drivers]);
+  }, []);
 
   return (
     <>
       <div className="admin">
-        <h1>Update Driver Information</h1>
+        <h1>{isUpdated ? "Update" : "Add"} Driver Information</h1>
         <div className="items">
           <Form
             initialValues={{
-              firstname: "",
-              lastname: "",
-              age: "",
-              salary: "",
-              country: "",
-              city: "",
-              address: "",
-              postalcode: "",
-              contact: "",
-              busNo: "",
-              image: null,
+              firstname: firstname || "",
+              lastname: lastname || "",
+              age: age || "",
+              salary: salary || "",
+              country: country || "",
+              city: city || "",
+              address: address || "",
+              postalcode: postalcode || "",
+              contact: contact || "",
+              busNo: busNo || "",
+              image: image || null,
+              driverDutyTime: driverDutyTime || "",
+              driverDutyEnd: driverDutyEnd || "",
             }}
             onSubmit={handleDriverInformation}
             validationSchema={validationSchema}
@@ -113,7 +151,7 @@ const DriverInformationForm = () => {
 
             <div className="image-container image-flex-start ">
               <img
-                src={require("../assets/driver-avatar.png")}
+                src={image ? image : require("../assets/driver-avatar.png")}
                 className="profile-image"
                 alt="driver"
               />
@@ -190,6 +228,10 @@ const DriverInformationForm = () => {
             <div className="line"></div>
             <div className="items-details">
               <Select options={busNoList} label="Bus No" name="busNo" />
+              <Input type="time" label="Duty Time" name="driverDutyTime" />
+            </div>
+            <div className="items-details">
+              <Input type="time" label="Duty End" name="driverDutyEnd" />
             </div>
 
             <SubmitButton title="SAVE DRIVER" isLoading={isProcessing} />

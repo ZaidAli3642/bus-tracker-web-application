@@ -1,28 +1,79 @@
 import { useNavigate } from "react-router-dom";
 import ListItem from "../components/ListItem";
-
-const driversList = [
-  { id: 1, driverName: "Driver 1", to: `/admin/driver` },
-  { id: 2, driverName: "Driver 2", to: `/admin/driver` },
-  { id: 3, driverName: "Driver 3", to: `/admin/driver` },
-  { id: 4, driverName: "Driver 4", to: `/admin/driver` },
-  { id: 5, driverName: "Driver 5", to: `/admin/driver` },
-  { id: 6, driverName: "Driver 6", to: `/admin/driver` },
-];
+import { useEffect, useState } from "react";
+import { database } from "../firebase/firebaseConfig";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const DriversList = () => {
   const navigate = useNavigate();
+  const [drivers, setDrivers] = useState([]);
+
+  const getDriversInformation = () => {
+    const driverCollection = collection(database, "drivers");
+    const unsubscribe = onSnapshot(driverCollection, (driverSnapshot) => {
+      const driversList = driverSnapshot.docs.map((driver) => ({
+        id: driver.id,
+        ...driver.data(),
+      }));
+      setDrivers(driversList);
+    });
+
+    return unsubscribe;
+  };
+
+  useEffect(() => {
+    const unsubscribe = getDriversInformation();
+    return () => unsubscribe();
+  }, []);
 
   return (
     <>
       <h1>DRIVERS LIST</h1>
       <div className="items">
-        {driversList.map((driver) => (
+        {drivers.map((driver) => (
           <ListItem
             id={driver.id}
-            to={driver.to}
-            title={driver.driverName}
-            onClick={() => navigate("/admin/driver_update/" + driver.id)}
+            to={`/admin/driver`}
+            state={{
+              id: driver.id,
+              firstname: driver.firstname,
+              lastname: driver.lastname,
+              contact: driver.contact,
+              age: driver.age,
+              salary: driver.salary,
+              image: driver.image,
+              imageName: driver.imageName,
+              country: driver.country,
+              city: driver.city,
+              address: driver.address,
+              postalcode: driver.postalcode,
+              busNo: driver.busNo,
+              driverDutyTime: driver.driverDutyTime,
+              driverDutyEnd: driver.driverDutyEnd,
+            }}
+            title={driver.firstname}
+            onClick={() =>
+              navigate("/admin/driver_update/" + driver.id, {
+                state: {
+                  id: driver.id,
+                  firstname: driver.firstname,
+                  lastname: driver.lastname,
+                  contact: driver.contact,
+                  age: driver.age,
+                  image: driver.image,
+                  imageName: driver.imageName,
+                  salary: driver.salary,
+                  country: driver.country,
+                  city: driver.city,
+                  address: driver.address,
+                  postalcode: driver.postalcode,
+                  busNo: driver.busNo,
+                  driverDutyTime: driver.driverDutyTime,
+                  driverDutyEnd: driver.driverDutyEnd,
+                  isUpdated: true,
+                },
+              })
+            }
           />
         ))}
       </div>
