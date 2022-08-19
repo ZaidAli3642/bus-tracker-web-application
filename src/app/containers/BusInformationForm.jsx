@@ -1,5 +1,7 @@
 import { useState } from "react";
 import * as Yup from "yup";
+import { useLocation, useMatch } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import Form from "../components/Form";
 import Input from "../components/Input";
@@ -7,13 +9,12 @@ import SubmitButton from "../components/SubmitButton";
 import SelectImageInput from "../components/SelectImageInput";
 import MultipleInputs from "../components/MultipleInputs";
 import Select from "../components/select";
-import { addData } from "../firebase/firebaseCalls/addDoc";
-import { toast } from "react-toastify";
+import { addData, updateData } from "../firebase/firebaseCalls/addDoc";
 
 const mantainanceStates = [
-  { id: 1, state: "Excellent", values: "excellent" },
-  { id: 2, state: "Good", values: "good" },
-  { id: 3, state: "Poor", values: "poor" },
+  { id: 1, label: "Excellent", values: "excellent" },
+  { id: 2, label: "Good", values: "good" },
+  { id: 3, label: "Poor", values: "poor" },
 ];
 
 const validationSchema = Yup.object().shape({
@@ -26,6 +27,8 @@ const validationSchema = Yup.object().shape({
 
 const BusInformationForm = () => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const location = useLocation();
+  const match = useMatch("/admin/bus_update/:id");
 
   const handleAddBusInformation = async (values) => {
     setIsProcessing(true);
@@ -33,20 +36,26 @@ const BusInformationForm = () => {
       const data = {
         busNo: values.busNo,
         licenseNo: values.licenseNo,
-        imageName: values.image[0].name,
+        imageName: values.image[0].name || location?.state?.imageName,
         busRoutes: values.routesList,
         maintainance: values.maintainance,
+        isBusAlloted: location?.state?.isBusAlloted ? true : false,
       };
 
-      const result = await addData(data, "bus/", values.image);
+      let result;
+      if (location?.state?.isUpdated === true) {
+        result = await updateData(data, "bus", values.image, match.params.id);
+      } else {
+        result = await addData(data, "bus/", values.image);
+      }
 
       if (result === undefined) {
         setIsProcessing(false);
         return toast.error("Image should be in png, jpg or jpeg format");
       }
 
-      toast.success("Data Saved Successfully.");
       setIsProcessing(false);
+      toast.success("Data Saved Successfully.");
     } catch (error) {
       console.log(error);
       toast.error("Error occured while saving data.");
@@ -61,11 +70,13 @@ const BusInformationForm = () => {
         <div className="items">
           <Form
             initialValues={{
-              busNo: "",
-              licenseNo: "",
-              image: null,
-              routesList: [{ latitude: "", longitude: "" }],
-              maintainance: "",
+              busNo: location?.state?.busNo || "",
+              licenseNo: location?.state?.licenseNo || "",
+              image: location?.state?.image || null,
+              routesList: location?.state?.routes || [
+                { latitude: "", longitude: "" },
+              ],
+              maintainance: location?.state?.maintainance || "",
             }}
             onSubmit={handleAddBusInformation}
             validationSchema={validationSchema}
@@ -82,7 +93,11 @@ const BusInformationForm = () => {
               <div className="input-container">
                 <label className="label">License Picture</label>
                 <img
-                  src={require("../assets/zaid-saleem-image.jpg")}
+                  src={
+                    location?.state?.image
+                      ? location?.state?.image
+                      : require("../assets/zaid-saleem-image.jpg")
+                  }
                   className="square-image"
                   alt="license"
                 />
