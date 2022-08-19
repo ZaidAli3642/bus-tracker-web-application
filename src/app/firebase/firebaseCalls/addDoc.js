@@ -34,7 +34,7 @@ const storeImage = async (collectionName, image) => {
 };
 
 export const addData = async (data, collectionName, image) => {
-  const result = await storeImage(collectionName, image);
+  const result = await storeImage(collectionName + "/", image);
 
   if (result === false) return;
 
@@ -49,7 +49,7 @@ export const addData = async (data, collectionName, image) => {
 };
 
 export const updateData = async (data, collectionName, image, docId) => {
-  const result = await storeImage("bus/", image);
+  const result = await storeImage(collectionName + "/", image);
 
   if (result === false || result === undefined) return;
 
