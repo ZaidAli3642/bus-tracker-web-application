@@ -7,11 +7,11 @@ import UpdateAdminInfo from "./UpdateAdminInfo";
 import StudentsList from "./StudentsList";
 import StudentDetails from "./StudentDetails";
 import UpdateStudentInfo from "./UpdateStudentInfo";
-import UpdateDriverInfo from "./UpdateDriverInfo";
 import NotFound from "./NotFound";
 import Admin from "./Admin";
 import Location from "./Location";
 import BusInformationForm from "./BusInformationForm";
+import DriverInformationForm from "./DriverInformationForm";
 
 const AdminPanel = () => {
   return (
@@ -24,7 +24,10 @@ const AdminPanel = () => {
             <Route path="/student_update/:id" element={<UpdateStudentInfo />} />
             <Route path="/student/:id" element={<StudentDetails />} />
             <Route path="/student" element={<StudentsList />} />
-            <Route path="/driver_update/:id" element={<UpdateDriverInfo />} />
+            <Route
+              path="/driver_update/:id"
+              element={<DriverInformationForm />}
+            />
             <Route path="/driver/:id" element={<DriverDetails />} />
             <Route path="/driver" element={<DriversList />} />
             <Route path="/bus_update/:id" element={<BusInformationForm />} />

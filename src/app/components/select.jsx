@@ -3,7 +3,8 @@ import React from "react";
 import ErrorMessage from "./ErrorMessage";
 
 const Select = ({ name, label, options }) => {
-  const { errors, handleChange, touched, setFieldTouched } = useFormikContext();
+  const { errors, handleChange, touched, setFieldTouched, values } =
+    useFormikContext();
 
   return (
     <div className="input-container">
@@ -11,19 +12,17 @@ const Select = ({ name, label, options }) => {
       <select
         name={name}
         onChange={handleChange(name)}
+        value={values[name]}
         onBlur={() => setFieldTouched(name)}
       >
         <option value="Select State" />
         {options.map((option) => (
           <option key={option.id} value={option.value}>
-            {option.state}
+            {option.label}
           </option>
         ))}
       </select>
-      <ErrorMessage
-        error={errors["maintainance"]}
-        visible={touched["maintainance"]}
-      />
+      <ErrorMessage error={errors[name]} visible={touched[name]} />
     </div>
   );
 };

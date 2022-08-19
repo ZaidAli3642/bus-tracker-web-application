@@ -35,6 +35,7 @@ const MultipleInputs = () => {
               type="text"
               placeholder="Latitude"
               name={`latitude`}
+              value={routes.latitude}
               // onBlur={() => setFieldTouched("routesList")}
               style={{ width: 200, marginRight: 5, padding: 7 }}
               onChange={(e) => handleChange(e, index)}
@@ -42,6 +43,7 @@ const MultipleInputs = () => {
             <input
               type="text"
               placeholder="Longitude"
+              value={routes.longitude}
               name={`longitude`}
               style={{ width: 200, padding: 7 }}
               // onBlur={() => setFieldTouched("routesList")}
