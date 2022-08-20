@@ -60,7 +60,7 @@ const DriverInformationForm = () => {
   const getBusDetails = async () => {
     const busCollection = collection(database, "bus");
 
-    const q = query(busCollection, where("admin_id", "==", user.admin_id));
+    const q = query(busCollection, where("institute", "==", user.institute));
 
     const busSnapshot = await getDocs(q);
 
@@ -89,7 +89,7 @@ const DriverInformationForm = () => {
         imageName: values.image[0].name || image,
         driverDutyTime: values.driverDutyTime,
         driverDutyEnd: values.driverDutyEnd,
-        admin_id: user.admin_id,
+        institute: user.institute,
       };
 
       let result;

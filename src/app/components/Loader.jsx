@@ -1,28 +1,20 @@
-import { useRef, useEffect } from "react";
-import lottie from "lottie-web";
-import data from "../assets/loader/loader.json";
+import Lottie from "lottie-react";
+import data from "../assets/loader/loader2.json";
 
 const Loader = () => {
-  const container = useRef();
-
-  useEffect(() => {
-    lottie
-      .loadAnimation({
-        container: container.current, // the dom element that will contain the animation
-        renderer: "svg",
-        loop: true,
-        autoplay: true,
-        animationData: data,
-      })
-      .play();
-  }, []);
-
   return (
     <div
-      className="container"
-      style={{ width: "100vh", height: "100vh" }}
-      ref={container}
-    ></div>
+      style={{
+        width: "250px",
+        height: "100vh",
+        margin: "0px auto",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Lottie animationData={data} loop />
+    </div>
   );
 };
 

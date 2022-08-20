@@ -110,7 +110,15 @@ const UpdateAdminInfo = () => {
             <div className="line"></div>
 
             <div className="image-container image-flex-start">
-              <img src={user.image} className="profile-image" alt="profile" />
+              <img
+                src={
+                  user.image
+                    ? user.image
+                    : require("../assets/profile-avatar.jpg")
+                }
+                className="profile-image"
+                alt="profile"
+              />
 
               <SelectImageInput name="image" />
             </div>

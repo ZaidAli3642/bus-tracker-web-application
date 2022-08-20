@@ -4,7 +4,7 @@ import useAuth from "./../context/auth/useAuth";
 import Loader from "./../components/Loader";
 
 const Home = () => {
-  const { authUser, user } = useAuth();
+  const { authUser } = useAuth();
 
   if (authUser === undefined) {
     return <Loader />;

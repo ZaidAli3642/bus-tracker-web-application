@@ -4,20 +4,26 @@ import Register from "./app/containers/Register";
 import Home from "./app/containers/Home";
 import "./main.css";
 
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import PrivateRoutes from "./app/routes/PrivateRoutes";
 import NotFound from "./app/containers/NotFound";
 import AuthContext from "./app/context/authContext";
+import Messages from "./app/containers/Messages";
 
 function App() {
   const [user, setUser] = useState(null);
-
+  const location = useLocation();
   return (
-    <div className="container">
+    <div
+      className={
+        location.pathname === "/messages" ? "container-fluid" : "container"
+      }
+    >
       <AuthContext.Provider value={{ user, setUser }}>
         <Routes>
           <Route element={<PrivateRoutes />}>
             <Route path="/admin/*" element={<Home />} />
+            <Route path="/messages" element={<Messages />} />
             <Route path="/not-found" element={<NotFound />} />
             <Route path="/not-found" element={<Navigate to={"/not-found"} />} />
           </Route>

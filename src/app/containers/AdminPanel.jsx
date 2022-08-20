@@ -12,6 +12,7 @@ import Location from "./Location";
 import BusInformationForm from "./BusInformationForm";
 import DriverInformationForm from "./DriverInformationForm";
 import StudentInformationForm from "./StudentInformationForm";
+import Messages from "./Messages";
 
 const AdminPanel = () => {
   return (

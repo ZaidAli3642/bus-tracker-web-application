@@ -23,5 +23,5 @@ export default function useAuth() {
     return unsubscribe;
   }, [setUser]);
 
-  return { user, authUser };
+  return { user: user || {}, authUser };
 }

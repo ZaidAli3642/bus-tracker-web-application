@@ -1,24 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { database } from "../firebase/firebaseConfig";
-import {
-  collection,
-  onSnapshot,
-  where,
-  query,
-  getDocs,
-} from "firebase/firestore";
+import { collection, where, query, getDocs } from "firebase/firestore";
 import ListItem from "../components/ListItem";
 import useAuth from "../context/auth/useAuth";
+import Loader from "../components/Loader";
 
 const BusLists = () => {
   const [buses, setBuses] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const getBusInformation = async () => {
+    setIsLoading(true);
     const busCollection = collection(database, "bus");
-    const q = query(busCollection, where("admin_id", "==", user.admin_id));
+    const q = query(busCollection, where("institute", "==", user.institute));
 
     const busSnapShot = await getDocs(q);
     const busList = busSnapShot.docs.map((item) => ({
@@ -26,15 +23,21 @@ const BusLists = () => {
       ...item.data(),
     }));
     setBuses(busList);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     getBusInformation();
   }, []);
 
+  if (isLoading) return <Loader />;
+
+  if (buses.length === 0) return <h3>No Buses Added</h3>;
+
   return (
     <>
       <h1>BUSES LIST</h1>
+
       <div className="items">
         {buses.map((bus) => (
           <ListItem

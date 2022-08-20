@@ -1,7 +1,7 @@
 import ErrorMessage from "./ErrorMessage";
 import { useFormikContext } from "formik";
 
-const Input = ({ label, placeholder, classes, type, name }) => {
+const Input = ({ label, placeholder, classes, type, inputClasses, name }) => {
   const { errors, handleChange, setFieldTouched, touched, values } =
     useFormikContext();
 
@@ -11,6 +11,7 @@ const Input = ({ label, placeholder, classes, type, name }) => {
         {label}
       </label>
       <input
+        className={inputClasses}
         type={type}
         value={values[name]}
         onBlur={() => setFieldTouched(name)}

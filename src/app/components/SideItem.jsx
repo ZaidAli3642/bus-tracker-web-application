@@ -7,13 +7,18 @@ const SideItem = ({
   size = 20,
   text,
   Icon,
-  id,
+  target,
   handleClick,
 }) => {
   return (
     <li className="side-item">
       <Icon color={color} size={size} />
-      <Link onClick={handleClick} to={`/${to}`} className="item-text">
+      <Link
+        onClick={handleClick}
+        to={`/${to}`}
+        className="item-text"
+        target={target}
+      >
         {text}
       </Link>
     </li>
