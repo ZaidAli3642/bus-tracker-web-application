@@ -31,6 +31,7 @@ const BusInformationForm = () => {
   const location = useLocation();
   const match = useMatch("/admin/bus_update/:id");
   const { user } = useAuth();
+  console.log(user);
 
   const handleAddBusInformation = async (values, { resetForm }) => {
     setIsProcessing(true);
@@ -42,7 +43,7 @@ const BusInformationForm = () => {
         busRoutes: values.routesList,
         maintainance: values.maintainance,
         isBusAlloted: location?.state?.isBusAlloted ? true : false,
-        admin_id: user.admin_id,
+        institute: user.institute,
       };
 
       let result;
@@ -54,7 +55,7 @@ const BusInformationForm = () => {
 
       if (result === undefined) {
         setIsProcessing(false);
-        return toast.error("Image should be in png, jpg or jpeg format");
+        return toast.warning("Image should be in png, jpg or jpeg format");
       }
 
       setIsProcessing(false);
@@ -70,9 +71,7 @@ const BusInformationForm = () => {
   return (
     <>
       <div className="admin">
-        <h1>
-          {location?.state?.isUpdated ? "Update" : "Add"} Driver Information
-        </h1>
+        <h1>{location?.state?.isUpdated ? "Update" : "Add"} Bus Information</h1>
         <div className="items">
           <Form
             initialValues={{

@@ -5,6 +5,7 @@ import { database } from "../firebase/firebaseConfig";
 
 import ListItem from "../components/ListItem";
 import useAuth from "./../context/auth/useAuth";
+import Loader from "../components/Loader";
 
 const studentsList = [
   { id: 1, studentName: "Student 1", to: `/admin/student` },
@@ -18,12 +19,17 @@ const studentsList = [
 const StudentsList = () => {
   const navigation = useNavigate();
   const [students, setStudents] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
   const getStudentsInformation = () => {
+    setIsLoading(true);
     const studentCollection = collection(database, "students");
 
-    const q = query(studentCollection, where("admin_id", "==", user.admin_id));
+    const q = query(
+      studentCollection,
+      where("institute", "==", user.institute)
+    );
 
     const unsubscribe = onSnapshot(q, (studentSnapshot) => {
       const studentsList = studentSnapshot.docs.map((student) => ({
@@ -31,6 +37,7 @@ const StudentsList = () => {
         ...student.data(),
       }));
       setStudents(studentsList);
+      setIsLoading(false);
     });
 
     return unsubscribe;
@@ -40,6 +47,10 @@ const StudentsList = () => {
     const unsubscribe = getStudentsInformation();
     return () => unsubscribe();
   }, []);
+
+  if (isLoading) return <Loader />;
+
+  if (students.length === 0) return <h3>No Students Added</h3>;
 
   return (
     <>

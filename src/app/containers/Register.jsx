@@ -32,6 +32,7 @@ const validationSchema = Yup.object().shape({
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { user, authUser } = useAuth();
 
   const docRef = collection(database, "admin");
 
@@ -64,6 +65,14 @@ const Register = () => {
       setIsLoading(false);
     }
   };
+
+  if (authUser === undefined || Object.keys(user).length !== 0) return null;
+  if (authUser && Object.keys(user).length === 0) {
+    return <Navigate to="/not-found" />;
+  }
+  // if (Object.keys(user).length === 0) {
+  //   return <Navigate to={"/not-found"} />;
+  // }
 
   return (
     <div className="login-register-container">

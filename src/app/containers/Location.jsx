@@ -7,6 +7,7 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import routes from "./routes.json";
+import Loader from "../components/Loader";
 
 const Location = () => {
   const [map, setMap] = useState();
@@ -32,8 +33,6 @@ const Location = () => {
   });
 
   const center = { lat: 40.756795, lng: -73.954298 };
-
-  console.log(isLoaded);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const directions = async () => {
@@ -77,7 +76,7 @@ const Location = () => {
   }, []);
 
   if (!isLoaded) {
-    return <h1>Error Loading Google Maps. Try Again Later!</h1>;
+    return <Loader />;
   }
 
   return (

@@ -17,7 +17,6 @@ const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
   lastname: Yup.string().required().label("Last Name"),
   parent: Yup.string().required().label("Father/Guardian"),
-  institute: Yup.string().required().label("Institute"),
   parentcontact: Yup.string().required().label("Parent Contact"),
   country: Yup.string().required().label("Country"),
   city: Yup.string().required().label("City"),
@@ -59,7 +58,7 @@ const StudentInformationForm = () => {
   const getBusDetails = async () => {
     const busCollection = collection(database, "bus");
 
-    const q = query(busCollection, where("admin_id", "==", user.admin_id));
+    const q = query(busCollection, where("institute", "==", user.institute));
 
     const busSnapshot = await getDocs(q);
 
@@ -79,7 +78,7 @@ const StudentInformationForm = () => {
         firstname: values.firstname,
         lastname: values.lastname,
         parent: values.parent,
-        institute: values.institute,
+        institute: user.institute,
         parentcontact: values.parentcontact,
         country: values.country,
         city: values.city,
@@ -88,7 +87,6 @@ const StudentInformationForm = () => {
         contact: values.contact,
         busNo: values.busNo,
         imageName: values.image[0].name || imageName,
-        admin_id: user.admin_id,
       };
 
       let result;
@@ -129,7 +127,6 @@ const StudentInformationForm = () => {
               firstname: firstname || "",
               lastname: lastname || "",
               parent: parent || "",
-              institute: institute || "",
               parentcontact: parentcontact || "",
               country: country || "",
               city: city || "",
@@ -175,13 +172,6 @@ const StudentInformationForm = () => {
                 name="parent"
                 placeholder="Enter Father/Guardian Name"
                 type="text"
-              />
-              <Input
-                label="College/University"
-                value="GCUF"
-                name="institute"
-                type="text"
-                placeholder="Enter University/College/School"
               />
             </div>
             <div className="items-details">

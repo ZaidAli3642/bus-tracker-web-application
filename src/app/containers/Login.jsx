@@ -49,10 +49,14 @@ const Login = () => {
     }
   };
 
-  if (authUser === undefined || user !== null) return null;
-  if (authUser && user === null) {
+  if (authUser === undefined || Object.keys(user).length !== 0) return null;
+  if (authUser && Object.keys(user).length === 0) {
     return <Navigate to="/not-found" />;
   }
+
+  // if (Object.keys(user).length === 0 && authUser !== undefined) {
+  //   return <Navigate to={"/not-found"} />;
+  // }
   return (
     <div className="login-register-container">
       <img src={require("../assets/BTS.png")} alt="logo" className="logo" />

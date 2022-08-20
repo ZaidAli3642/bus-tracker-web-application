@@ -2,22 +2,28 @@ import { useNavigate } from "react-router-dom";
 import ListItem from "../components/ListItem";
 import { useEffect, useState } from "react";
 import { database } from "../firebase/firebaseConfig";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import Loader from "../components/Loader";
+import useAuth from "../context/auth/useAuth";
 
 const DriversList = () => {
   const navigate = useNavigate();
   const [drivers, setDrivers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
   const getDriversInformation = () => {
+    setIsLoading(true);
     const driverCollection = collection(database, "drivers");
-    const unsubscribe = onSnapshot(driverCollection, (driverSnapshot) => {
+    const q = query(driverCollection, where("institute", "==", user.institute));
+    const unsubscribe = onSnapshot(q, (driverSnapshot) => {
       const driversList = driverSnapshot.docs.map((driver) => ({
         id: driver.id,
         ...driver.data(),
       }));
       setDrivers(driversList);
+      setIsLoading(false);
     });
-
     return unsubscribe;
   };
 
@@ -25,6 +31,10 @@ const DriversList = () => {
     const unsubscribe = getDriversInformation();
     return () => unsubscribe();
   }, []);
+
+  if (isLoading) return <Loader />;
+
+  if (drivers.length === 0) return <h3>No Drivers Added</h3>;
 
   return (
     <>
