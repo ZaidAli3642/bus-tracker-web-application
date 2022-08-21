@@ -1,7 +1,7 @@
 import { useFormikContext } from "formik";
 import { BarLoader } from "react-spinners";
 
-const SubmitButton = ({ title, isLoading }) => {
+const SubmitButton = ({ title, isLoading, disabled }) => {
   const { handleSubmit } = useFormikContext();
 
   if (isLoading)
@@ -20,7 +20,11 @@ const SubmitButton = ({ title, isLoading }) => {
     );
 
   return (
-    <button className="btn btn-md btn-primary button" onClick={handleSubmit}>
+    <button
+      disabled={disabled}
+      className="btn btn-md btn-primary button"
+      onClick={handleSubmit}
+    >
       {title}
     </button>
   );

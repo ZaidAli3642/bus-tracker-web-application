@@ -7,20 +7,19 @@
   height: 100vh !important;
   background-color: rgb(245, 247, 251);
   .chat-system {
-    height: 100%;
+    height: 80%;
     .chat-container {
       display: flex;
       justify-content: space-between;
-      height: 80%;
+      height: 100%;
       padding-bottom: 10px;
 
       .message-container {
-        position: relative;
         background: white;
         border-radius: 10px;
         height: 100%;
-        overflow-y: scroll;
-        overflow-x: hidden;
+        padding: 0;
+        overflow: hidden;
 
         .message-header {
           display: flex;
@@ -30,22 +29,55 @@
 
           .user-details {
             margin-left: 20px;
+
+            .name {
+              font-weight: 700;
+            }
           }
         }
 
-        .message {
-          margin: 20px 0 !important;
-          background-color: rgb(245, 247, 251);
-          max-width: 400px;
-          padding: 10px;
-          border-radius: 0 10px 10px 10px;
+        .messages {
+          width: 100%;
+          height: 70%;
+          overflow-y: scroll;
+          overflow-x: hidden;
+
+          &::-webkit-scrollbar {
+            display: none;
+          }
+
+          .message {
+            display: flex;
+            width: 100%;
+            margin: 20px 0 !important;
+            padding: 0 10px;
+          }
+          .message-text {
+            background-color: rgb(245, 247, 251);
+            max-width: 400px;
+            padding: 10px;
+            border-radius: 0 10px 10px 10px;
+            margin: 20px auto;
+          }
+          .message-text-own {
+            border-radius: 10px 0px 10px 10px;
+            background-color: $purple;
+            color: white;
+          }
+          .message-own {
+            justify-content: flex-end;
+          }
         }
 
         .send-message-container {
+          width: 100%;
+          height: 60px;
+          background-color: white;
           display: flex;
           align-items: center;
+          padding: 0 10px;
           position: sticky;
-          bottom: 5px;
+          bottom: 0px;
 
           .messages-input {
             width: 48rem;
@@ -54,15 +86,45 @@
             padding-left: 25px;
           }
         }
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
       }
 
       .people-container {
         background-color: white;
         border-radius: 10px;
+        height: 100%;
+        padding: 0;
+        overflow-y: scroll;
+        overflow-x: hidden;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+
+        .people-details {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          padding: 10px;
+          margin: 10px 0;
+          cursor: pointer;
+          @include transition-ease;
+
+          &:hover {
+            background-color: rgb(245, 247, 251);
+          }
+
+          .user-details {
+            margin-left: 20px;
+            width: 100%;
+
+            .name {
+              font-weight: 700;
+            }
+            .line {
+              margin: 0;
+            }
+          }
+        }
       }
     }
   }

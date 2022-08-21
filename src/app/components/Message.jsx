@@ -1,9 +1,10 @@
-const Message = () => {
+const Message = ({ own, message, id }) => {
   return (
-    <p className="message">
-      Hello This is the message. and a very long message. now I am going to make
-      it long
-    </p>
+    <div id={id} className={own ? "message message-own" : "message"}>
+      <p className={own ? "message-text message-text-own" : "message-text"}>
+        {message}
+      </p>
+    </div>
   );
 };
 

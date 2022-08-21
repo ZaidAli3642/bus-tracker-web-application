@@ -208,6 +208,18 @@ select:focus {
   padding: 20px 0;
 }
 
+.flex-align-center {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
 .update-container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -469,7 +481,7 @@ select:focus {
 }
 
 .container-fluid .chat-system {
-  height: 100%;
+  height: 80%;
 }
 
 .container-fluid .chat-system .chat-container {
@@ -479,17 +491,16 @@ select:focus {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  height: 80%;
+  height: 100%;
   padding-bottom: 10px;
 }
 
 .container-fluid .chat-system .chat-container .message-container {
-  position: relative;
   background: white;
   border-radius: 10px;
   height: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  padding: 0;
+  overflow: hidden;
 }
 
 .container-fluid .chat-system .chat-container .message-container .message-header {
@@ -507,24 +518,64 @@ select:focus {
   margin-left: 20px;
 }
 
-.container-fluid .chat-system .chat-container .message-container .message {
+.container-fluid .chat-system .chat-container .message-container .message-header .user-details .name {
+  font-weight: 700;
+}
+
+.container-fluid .chat-system .chat-container .message-container .messages {
+  width: 100%;
+  height: 70%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.container-fluid .chat-system .chat-container .message-container .messages::-webkit-scrollbar {
+  display: none;
+}
+
+.container-fluid .chat-system .chat-container .message-container .messages .message {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
   margin: 20px 0 !important;
+  padding: 0 10px;
+}
+
+.container-fluid .chat-system .chat-container .message-container .messages .message-text {
   background-color: #f5f7fb;
   max-width: 400px;
   padding: 10px;
   border-radius: 0 10px 10px 10px;
+  margin: 20px auto;
+}
+
+.container-fluid .chat-system .chat-container .message-container .messages .message-text-own {
+  border-radius: 10px 0px 10px 10px;
+  background-color: #795fcd;
+  color: white;
+}
+
+.container-fluid .chat-system .chat-container .message-container .messages .message-own {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
 }
 
 .container-fluid .chat-system .chat-container .message-container .send-message-container {
+  width: 100%;
+  height: 60px;
+  background-color: white;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  padding: 0 10px;
   position: -webkit-sticky;
   position: sticky;
-  bottom: 5px;
+  bottom: 0px;
 }
 
 .container-fluid .chat-system .chat-container .message-container .send-message-container .messages-input {
@@ -534,12 +585,48 @@ select:focus {
   padding-left: 25px;
 }
 
-.container-fluid .chat-system .chat-container .message-container::-webkit-scrollbar {
-  display: none;
-}
-
 .container-fluid .chat-system .chat-container .people-container {
   background-color: white;
   border-radius: 10px;
+  height: 100%;
+  padding: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.container-fluid .chat-system .chat-container .people-container::-webkit-scrollbar {
+  display: none;
+}
+
+.container-fluid .chat-system .chat-container .people-container .people-details {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.container-fluid .chat-system .chat-container .people-container .people-details:hover {
+  background-color: #f5f7fb;
+}
+
+.container-fluid .chat-system .chat-container .people-container .people-details .user-details {
+  margin-left: 20px;
+  width: 100%;
+}
+
+.container-fluid .chat-system .chat-container .people-container .people-details .user-details .name {
+  font-weight: 700;
+}
+
+.container-fluid .chat-system .chat-container .people-container .people-details .user-details .line {
+  margin: 0;
 }
 /*# sourceMappingURL=main.css.map */
