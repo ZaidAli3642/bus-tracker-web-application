@@ -3,7 +3,7 @@ const PersonDetails = ({ image, name, designation, handleClick }) => {
     <>
       <div className="people-details" onClick={handleClick}>
         <img
-          src={image}
+          src={image ? image : require("../assets/profile-avatar.jpg")}
           className="profile-image profile-rounded-image"
           alt=""
         />
