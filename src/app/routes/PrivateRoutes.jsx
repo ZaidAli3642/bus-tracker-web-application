@@ -8,6 +8,7 @@ const PrivateRoutes = () => {
   if (authUser === false && Object.keys(user).length === 0)
     return <Navigate to="/admin/not-found" />;
 
+  console.log(user);
   if (authUser === undefined || Object.keys(user).length === 0) {
     return <Loader />; // or loading spinner, etc...
   }

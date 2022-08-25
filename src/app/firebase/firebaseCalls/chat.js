@@ -20,7 +20,6 @@ export const getAdmins = async (user) => {
       ...admins.data(),
     }))
     .filter((admins) => admins.id !== user.id);
-
   return admins;
 };
 

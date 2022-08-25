@@ -22,6 +22,6 @@ export default function useAuth() {
 
     return unsubscribe;
   }, [setUser]);
-
+  console.log(user);
   return { user: user || {}, authUser };
 }

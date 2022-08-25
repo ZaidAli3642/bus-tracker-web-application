@@ -1,0 +1,86 @@
+.footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: $dark-black;
+  width: 100%;
+
+  .first-footer-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 50px;
+
+    @include respond(tab-port-sm) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .information {
+      align-self: center;
+
+      @include respond(tab-port-sm) {
+        align-self: flex-start;
+        margin-bottom: 50px;
+      }
+
+      h2 {
+        color: $white;
+        font-size: 40px;
+        font-weight: 700;
+        padding: 10px 0;
+      }
+      p {
+        color: $white;
+        font-size: 20px;
+        padding: 5px 0;
+      }
+      .address {
+        padding: 20px 0;
+        color: $grey;
+        font-weight: 600;
+      }
+    }
+
+    .authentication {
+      h4 {
+        color: $grey;
+      }
+    }
+  }
+
+  .second-footer-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #202020;
+    width: 100%;
+    height: 100px;
+
+    @include respond(tab-port) {
+      flex-direction: column;
+    }
+
+    .copyright-text {
+      font-size: 20px;
+      color: $white;
+    }
+
+    .footer-icons {
+      color: $green;
+
+      .icon {
+        font-size: 35px;
+        margin: 0 10px;
+        cursor: pointer;
+        @include transition-ease;
+
+        &:hover {
+          color: $white;
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+}
