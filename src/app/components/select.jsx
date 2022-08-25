@@ -1,5 +1,4 @@
 import { useFormikContext } from "formik";
-import React from "react";
 import ErrorMessage from "./ErrorMessage";
 
 const Select = ({ name, label, options }) => {
@@ -13,8 +12,7 @@ const Select = ({ name, label, options }) => {
         name={name}
         onChange={handleChange(name)}
         value={values[name]}
-        onBlur={() => setFieldTouched(name)}
-      >
+        onBlur={() => setFieldTouched(name)}>
         <option value="Select State" />
         {options.map((option) => (
           <option key={option.id} value={option.value}>

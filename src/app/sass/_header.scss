@@ -1,0 +1,25 @@
+header {
+  .contact-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px 25px;
+    background-color: #192f59;
+
+    .contact-details {
+      display: flex;
+      width: 200px;
+      color: white;
+      font-size: 16px;
+
+      .contact {
+        display: flex;
+        align-items: center;
+      }
+      .icon {
+        margin: 0 10px;
+        font-size: 20px;
+      }
+    }
+  }
+}
