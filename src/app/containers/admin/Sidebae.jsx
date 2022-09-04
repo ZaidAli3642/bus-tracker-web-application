@@ -15,7 +15,13 @@ import useAuth from "../../context/auth/useAuth";
 
 const sidebar = [
   { id: 1, text: "Home", Icon: AiFillHome, to: "admin/home" },
-  { id: 2, text: "Location", Icon: GoLocation, to: "admin/location" },
+  {
+    id: 2,
+    text: "Location",
+    Icon: GoLocation,
+    to: "admin/location",
+    target: "_blank",
+  },
   { id: 3, text: "Students", Icon: BiBusSchool, to: "admin/student" },
   { id: 4, text: "Drivers", Icon: GoPerson, to: "admin/driver" },
   { id: 5, text: "Buses", Icon: BiBusSchool, to: "admin/bus" },
@@ -23,7 +29,7 @@ const sidebar = [
     id: 6,
     text: "Messages",
     Icon: FiMessageSquare,
-    to: "messages",
+    to: "admin/messages",
     target: "_blank",
   },
 ];

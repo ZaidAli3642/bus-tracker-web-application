@@ -28,6 +28,7 @@ const validationSchema = Yup.object().shape({
     .label("Postal Code"),
   contact: Yup.string().required().label("Contact"),
   busNo: Yup.string().required().label("Bus No"),
+  class: Yup.string().required().label("Class"),
   image: Yup.string().nullable().required().label("Student Image"),
 });
 
@@ -40,6 +41,7 @@ const StudentInformationForm = () => {
 
   const {
     firstname,
+    rollNo,
     lastname,
     parent,
     parentcontact,
@@ -51,9 +53,11 @@ const StudentInformationForm = () => {
     busNo,
     imageName,
     image,
+    class: majorOrClass,
     isUpdated,
   } = location.state || {};
 
+  console.log("Hello", majorOrClass);
   const getBusDetails = async () => {
     const busCollection = collection(database, "bus");
 
@@ -85,7 +89,9 @@ const StudentInformationForm = () => {
         postalcode: values.postalcode,
         contact: values.contact,
         busNo: values.busNo,
+        rollNo: values.rollNo,
         imageName: values.image[0].name || imageName,
+        class: values.class,
       };
 
       let result;
@@ -119,7 +125,7 @@ const StudentInformationForm = () => {
   return (
     <>
       <div className="admin">
-        <h1>Update Student Information</h1>
+        <h1>{isUpdated ? "Update" : "Add"} Student Information</h1>
         <div className="items">
           <Form
             initialValues={{
@@ -134,6 +140,8 @@ const StudentInformationForm = () => {
               contact: contact || "",
               busNo: busNo || "",
               image: image || null,
+              class: majorOrClass || "",
+              rollNo: rollNo || "",
             }}
             onSubmit={handleStudentInformation}
             validationSchema={validationSchema}>
@@ -171,6 +179,7 @@ const StudentInformationForm = () => {
                 placeholder="Enter Father/Guardian Name"
                 type="text"
               />
+              <Input label="Roll No" name="rollNo" type="number" />
             </div>
             <div className="items-details">
               <Input
@@ -220,6 +229,8 @@ const StudentInformationForm = () => {
             </div>
             <div className="items-details">
               <Select label="Bus No" name="busNo" options={busNoList} />
+
+              <Input label="Major or Class" name="class" type="text" />
             </div>
 
             <SubmitButton title="SAVE STUDENT" isLoading={isProcessing} />

@@ -9,6 +9,7 @@ import "react-datalist-input/dist/styles.css";
 import "aos/dist/aos.css";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
+import "react-pro-sidebar/dist/css/styles.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -21,9 +21,9 @@ const mantainanceStates = [
 const validationSchema = Yup.object().shape({
   busNo: Yup.number().required().label("Bus No"),
   licenseNo: Yup.number().required().label("License No"),
-
   image: Yup.string().required().nullable().label("License Image"),
   maintainance: Yup.string().required().label("Maintainance"),
+  seatCapacity: Yup.number().required().label("Seat Capacity"),
 });
 
 const BusInformationForm = () => {
@@ -44,6 +44,7 @@ const BusInformationForm = () => {
         maintainance: values.maintainance,
         isBusAlloted: location?.state?.isBusAlloted ? true : false,
         institute: user.institute,
+        seatCapacity: values.seatCapacity,
       };
 
       let result;
@@ -82,6 +83,7 @@ const BusInformationForm = () => {
                 { latitude: "", longitude: "" },
               ],
               maintainance: location?.state?.maintainance || "",
+              seatCapacity: location?.state?.seatCapacity || "",
             }}
             onSubmit={handleAddBusInformation}
             validationSchema={validationSchema}>
@@ -114,12 +116,16 @@ const BusInformationForm = () => {
               <MultipleInputs />
             </div>
             <div className="line"></div>
-            <Select
-              options={mantainanceStates}
-              label="Bus Maintainance"
-              name="maintainance"
-            />
-            <SubmitButton title="SAVE DRIVER" isLoading={isProcessing} />
+            <div></div>
+            <div className="items-details">
+              <Select
+                options={mantainanceStates}
+                label="Bus Maintainance"
+                name="maintainance"
+              />
+              <Input type="number" label="Seat Capacity" name="seatCapacity" />
+            </div>
+            <SubmitButton title="SAVE BUS" isLoading={isProcessing} />
           </Form>
         </div>
       </div>

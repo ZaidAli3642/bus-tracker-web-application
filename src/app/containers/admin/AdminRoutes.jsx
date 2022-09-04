@@ -8,6 +8,7 @@ import Home from "./Home";
 import NotFound from "./../NotFound";
 import AuthContext from "./../../context/authContext";
 import Messages from "./Messages";
+import Location from "./Location";
 
 const AdminRoutes = () => {
   const [user, setUser] = useState(null);
@@ -15,22 +16,24 @@ const AdminRoutes = () => {
   return (
     <div
       className={
-        location.pathname === "/messages" ? "container-fluid" : "container"
+        location.pathname === "/admin/messages" ||
+        location.pathname === "/admin/location"
+          ? "container-fluid"
+          : "container"
       }>
       <AuthContext.Provider value={{ user, setUser }}>
         <Routes>
           <Route element={<PrivateRoutes />}>
             <Route path="/admin/*" element={<Home />} />
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/not-found" element={<NotFound />} />
-            <Route path="/not-found" element={<Navigate to={"/not-found"} />} />
+            <Route path="/admin/messages" element={<Messages />} />
+            <Route path="/admin/location" element={<Location />} />
           </Route>
           <Route path="/admin/register" element={<Register />} />
           <Route path="/admin/login" element={<Login />} />
-          <Route path="/admin/not-found" element={<NotFound />} />
+          <Route path="/not-found" element={<NotFound />} />
           <Route
-            path="/admin/not-found"
-            element={<Navigate to={"/admin/not-found"} />}
+            path="/not-found"
+            element={<Navigate to={"/not-found"} replace />}
           />
         </Routes>
       </AuthContext.Provider>

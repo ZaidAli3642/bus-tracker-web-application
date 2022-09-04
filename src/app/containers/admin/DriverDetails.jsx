@@ -1,9 +1,11 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Detail from "../../components/Detail";
 
 const DriverDetails = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const {
+    id,
     firstname,
     lastname,
     age,
@@ -17,8 +19,9 @@ const DriverDetails = () => {
     driverDutyTime,
     driverDutyEnd,
     image,
+    licenseImage,
+    medicalReport,
   } = location.state || {};
-  console.log(contact);
 
   return (
     <>
@@ -70,6 +73,32 @@ const DriverDetails = () => {
           </div>
         </div>
         <div className="items-details">
+          <div className="d-flex flex-column">
+            <label className="label">License</label>
+            <img
+              src={
+                licenseImage
+                  ? licenseImage
+                  : require("../../assets/driver-avatar.png")
+              }
+              alt=""
+              className="square-image"
+            />
+          </div>
+          <div className="right-item d-flex flex-column">
+            <label className="label">Medical Report</label>
+            <img
+              src={
+                medicalReport
+                  ? medicalReport
+                  : require("../../assets/driver-avatar.png")
+              }
+              alt=""
+              className="square-image"
+            />
+          </div>
+        </div>
+        <div className="items-details">
           <div>
             <Detail label="Bus No" detail={busNo} />
           </div>
@@ -82,6 +111,16 @@ const DriverDetails = () => {
             <Detail label="Duty End" detail={driverDutyEnd} />
           </div>
         </div>
+
+        <button
+          className="btn btn-md btn-primary button"
+          onClick={() =>
+            navigate("/admin/driver_update/" + id, {
+              state: { ...location.state, isUpdated: true },
+            })
+          }>
+          Update Driver
+        </button>
       </div>
     </>
   );

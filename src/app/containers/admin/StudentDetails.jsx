@@ -1,10 +1,13 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Detail from "../../components/Detail";
 
 const StudentDetails = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const {
+    id,
+    rollNo,
     firstname,
     lastname,
     parent,
@@ -16,6 +19,7 @@ const StudentDetails = () => {
     postalcode,
     contact,
     busNo,
+    class: majorOrClass,
     image,
   } = location.state || {};
   return (
@@ -54,6 +58,9 @@ const StudentDetails = () => {
           <div>
             <Detail label="College/University" detail={institute} />
           </div>
+          <div className="right-item">
+            <Detail label="Roll No" detail={rollNo} />
+          </div>
         </div>
 
         <h4>Physical Address</h4>
@@ -79,7 +86,23 @@ const StudentDetails = () => {
           <div>
             <Detail label="Bus No" detail={busNo} />
           </div>
+          <div className="right-item">
+            <Detail label="Major or Class" detail={majorOrClass} />
+          </div>
         </div>
+
+        <button
+          className="btn btn-primary btn-md button"
+          onClick={() =>
+            navigate("/admin/student_update/" + id, {
+              state: {
+                ...location.state,
+                isUpdated: true,
+              },
+            })
+          }>
+          Update Student
+        </button>
       </div>
     </>
   );

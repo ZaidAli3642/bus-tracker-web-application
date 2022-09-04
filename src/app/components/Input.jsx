@@ -4,8 +4,8 @@ import { useFormikContext } from "formik";
 const Input = ({
   label,
   placeholder,
+  width = 50,
   classes,
-  list,
   type,
   inputClasses,
   name,
@@ -21,11 +21,11 @@ const Input = ({
       <input
         className={inputClasses}
         type={type}
-        list={list}
         value={values[name]}
         onBlur={() => setFieldTouched(name)}
         onChange={handleChange(name)}
         placeholder={placeholder}
+        width={width}
       />
       <ErrorMessage error={errors[name]} visible={touched[name]} />
     </div>

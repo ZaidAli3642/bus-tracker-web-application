@@ -6,9 +6,7 @@ import BusDetails from "./BusDetails";
 import UpdateAdminInfo from "./UpdateAdminInfo";
 import StudentsList from "./StudentsList";
 import StudentDetails from "./StudentDetails";
-import NotFound from "../NotFound";
 import Admin from "./Admin";
-import Location from "./Location";
 import BusInformationForm from "./BusInformationForm";
 import DriverInformationForm from "./DriverInformationForm";
 import StudentInformationForm from "./StudentInformationForm";
@@ -36,9 +34,7 @@ const AdminPanel = () => {
             <Route path="/bus_update/:id" element={<BusInformationForm />} />
             <Route path="/bus/:id" element={<BusDetails />} />
             <Route path="/bus" element={<BusLists />} />
-            <Route path="/location" element={<Location />} />
-            <Route path="/not-found" element={<NotFound />} />
-            <Route path="*" element={<Navigate to="/not-found" replace />} />
+            {/* <Route path="/location" element={<Location />} /> */}
           </Routes>
         </>
       </div>

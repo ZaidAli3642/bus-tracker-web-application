@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Slider from "../../components/Parent/Slider";
-import ScrollReveal from "scrollreveal";
 import { BiConfused } from "react-icons/bi";
 import {
   AiOutlineFacebook,
@@ -59,7 +58,7 @@ const Home = () => {
         })}
       </div>
 
-      <section className="card-section" data-aos="fade-right">
+      <section className="card-section">
         <section className="card">
           <div className="row card-header h-md-25 h-lg-25 h-sm-50 m-0">
             {cardHeader.map((cardDetails) => (

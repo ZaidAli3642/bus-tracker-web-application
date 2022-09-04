@@ -12,16 +12,14 @@ export default function useAuth() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setAuthUser(user ?? false);
       if (user) {
+        console.log(user.uid);
         const adminRef = collection(database, "admin");
         const q = query(adminRef, where("admin_id", "==", user.uid));
-
         const docSnap = await getDocs(q);
         docSnap.forEach((doc) => setUser({ id: doc.id, ...doc.data() }));
       }
     });
-
     return unsubscribe;
   }, [setUser]);
-  console.log(user);
   return { user: user || {}, authUser };
 }

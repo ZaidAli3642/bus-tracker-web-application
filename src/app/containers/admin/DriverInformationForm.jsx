@@ -29,6 +29,8 @@ const validationSchema = Yup.object().shape({
   contact: Yup.string().required().label("Contact"),
   busNo: Yup.number().required().label("Bus No"),
   image: Yup.string().nullable().required().label("Image"),
+  drivingLicense: Yup.string().nullable().required().label("Driving License"),
+  medicalReport: Yup.string().nullable().required().label("Medical Report"),
   driverDutyTime: Yup.string().required().label("Duty Start"),
   driverDutyEnd: Yup.string().required().label("Duty End"),
 });
@@ -55,6 +57,8 @@ const DriverInformationForm = () => {
     driverDutyEnd,
     image,
     isUpdated,
+    licenseImage,
+    medicalReport,
   } = location.state || {};
 
   const getBusDetails = async () => {
@@ -98,10 +102,18 @@ const DriverInformationForm = () => {
           data,
           "drivers",
           values.image,
-          match.params.id
+          match.params.id,
+          values.drivingLicense,
+          values.medicalReport
         );
       } else {
-        result = await addData(data, "drivers", values.image);
+        result = await addData(
+          data,
+          "drivers",
+          values.image,
+          values.medicalReport,
+          values.drivingLicense
+        );
       }
 
       if (result === undefined) {
@@ -142,6 +154,8 @@ const DriverInformationForm = () => {
               image: image || null,
               driverDutyTime: driverDutyTime || "",
               driverDutyEnd: driverDutyEnd || "",
+              drivingLicense: licenseImage || null,
+              medicalReport: medicalReport || null,
             }}
             onSubmit={handleDriverInformation}
             validationSchema={validationSchema}>
@@ -194,6 +208,38 @@ const DriverInformationForm = () => {
               />
             </div>
             <div className="line"></div>
+            <div className="items-details">
+              <div className="input-container">
+                <label className="label">Driving License Image</label>
+                <img
+                  src={
+                    licenseImage
+                      ? licenseImage
+                      : require("../../assets/no-image.jpg")
+                  }
+                  className="square-image"
+                  alt="license"
+                />
+              </div>
+              <SelectImageInput name="drivingLicense" />
+            </div>
+            <div className="line"></div>
+            <div className="items-details">
+              <div className="input-container">
+                <label className="label">Medical Report Image</label>
+                <img
+                  src={
+                    medicalReport
+                      ? medicalReport
+                      : require("../../assets/no-image.jpg")
+                  }
+                  className="square-image"
+                  alt="license"
+                />
+              </div>
+              <SelectImageInput name="medicalReport" />
+            </div>
+
             <h4>Physical Address</h4>
             <div className="items-details">
               <Input
