@@ -1,10 +1,11 @@
 import Detail from "./../../components/Detail";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const BusDetails = () => {
   const location = useLocation();
-
-  const { busNo, licenseNo, image, routes, maintainance } = location.state;
+  const navigate = useNavigate();
+  const { id, busNo, licenseNo, image, routes, maintainance, seatCapacity } =
+    location.state;
 
   return (
     <>
@@ -52,7 +53,23 @@ const BusDetails = () => {
 
         <div className="items-details">
           <Detail label="Maintainance" detail={maintainance} />
+          <div className="right-item">
+            <Detail label="Seat Capacity" detail={seatCapacity} />
+          </div>
         </div>
+
+        <button
+          className="btn btn-md btn-primary button"
+          onClick={() =>
+            navigate("/admin/bus_update/" + id, {
+              state: {
+                ...location.state,
+                isUpdated: true,
+              },
+            })
+          }>
+          Update Bus
+        </button>
       </div>
     </>
   );

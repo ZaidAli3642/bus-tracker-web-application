@@ -8,7 +8,6 @@ import {
   onSnapshot,
   orderBy,
   serverTimestamp,
-  collectionGroup,
 } from "firebase/firestore";
 
 import useAuth from "./../../context/auth/useAuth";
@@ -16,6 +15,7 @@ import MessagesBox from "../../components/MessagesBox";
 import {
   createChatConversation,
   getAdmins,
+  getParents,
   send,
 } from "../../firebase/firebaseCalls/chat";
 import ChatPeople from "../../components/ChatPeople";
@@ -49,9 +49,20 @@ const Messages = () => {
     }
   };
 
+  const getAllParents = async () => {
+    try {
+      const parents = await getParents(user);
+
+      return parents;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getAllPeople = async () => {
     const admins = await getAllAdmins();
-    setPersons([...admins]);
+    const parents = await getAllParents();
+    setPersons([...admins, ...parents]);
   };
 
   const sendMessage = async (values, { resetForm }) => {

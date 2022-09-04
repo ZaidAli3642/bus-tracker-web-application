@@ -9,10 +9,10 @@ const SelectImageInput = ({ name }) => {
       <input
         type="file"
         style={{ marginLeft: "10px", marginRight: "10px", height: "40px" }}
-        onBlur={() => setFieldTouched("image")}
-        onChange={(e) => setFieldValue("image", e.target.files)}
+        onBlur={() => setFieldTouched(name)}
+        onChange={(e) => setFieldValue(name, e.target.files)}
       />
-      <ErrorMessage error={errors["image"]} visible={touched["image"]} />
+      <ErrorMessage error={errors[name]} visible={touched[name]} />
     </div>
   );
 };

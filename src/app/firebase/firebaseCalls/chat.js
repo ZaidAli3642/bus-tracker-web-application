@@ -23,6 +23,19 @@ export const getAdmins = async (user) => {
   return admins;
 };
 
+export const getParents = async (user) => {
+  const parentCollection = collection(database, "parent");
+  const q = query(parentCollection, where("institute", "==", user.institute));
+
+  const parentSnapshot = await getDocs(q);
+  const parents = parentSnapshot.docs.map((admin) => ({
+    id: admin.id,
+    ...admin.data(),
+  }));
+
+  return parents;
+};
+
 export const send = async (data) => {
   const messagesCollections = collection(database, "messages");
   await addDoc(messagesCollections, data);
@@ -37,6 +50,7 @@ export const getChatConversation = async (collection, userId, receiverId) => {
     ...snapshot.data(),
   }));
 
+  console.log(conversations);
   const conversation = conversations.filter((convo) => {
     if (
       convo.conversation.includes(receiverId) &&
@@ -56,6 +70,8 @@ export const createChatConversation = async (data, user, header) => {
     user.id,
     header.id
   );
+
+  console.log(convo);
 
   if (convo.length === 0) {
     const result = await addDoc(conversationCollection, data);

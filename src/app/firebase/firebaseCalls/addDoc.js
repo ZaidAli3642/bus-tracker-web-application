@@ -33,28 +33,92 @@ const storeImage = async (collectionName, image) => {
   }
 };
 
-export const addData = async (data, collectionName, image) => {
+const storeDriverImages = async (
+  collectionName,
+  image,
+  licenseImage,
+  medicalReportImage
+) => {
+  const downloadedUrl = await Promise.all([
+    storeImage(collectionName + "/", image),
+    storeImage(collectionName + "/", licenseImage),
+    storeImage(collectionName + "/", medicalReportImage),
+  ]);
+
+  return downloadedUrl;
+};
+
+export const addData = async (
+  data,
+  collectionName,
+  image,
+  medicalReportImage,
+  licenseImage
+) => {
+  const collectionRef = collection(database, collectionName);
   const result = await storeImage(collectionName + "/", image);
+
+  const information = {
+    ...data,
+    image: result,
+  };
+
+  if (licenseImage || medicalReportImage) {
+    const downloadedUrl = await storeDriverImages(
+      collectionName,
+      image,
+      licenseImage,
+      medicalReportImage
+    );
+
+    if (downloadedUrl.includes(false)) return;
+
+    information.image = downloadedUrl[0];
+    information.licenseImage = downloadedUrl[1];
+    information.medicalReport = downloadedUrl[2];
+  }
 
   if (result === false) return;
 
-  const collectionRef = collection(database, collectionName);
-
-  const response = await addDoc(collectionRef, {
-    ...data,
-    image: result,
-  });
+  const response = await addDoc(collectionRef, information);
 
   return response;
 };
 
-export const updateData = async (data, collectionName, image, docId) => {
+export const updateData = async (
+  data,
+  collectionName,
+  image,
+  docId,
+  licenseImage,
+  medicalReportImage
+) => {
   const result = await storeImage(collectionName + "/", image);
+
+  const information = {
+    ...data,
+    image: result,
+  };
+  if (licenseImage || medicalReportImage) {
+    console.log("Hello", licenseImage);
+    const downloadedUrl = await storeDriverImages(
+      collectionName,
+      image,
+      licenseImage,
+      medicalReportImage
+    );
+
+    if (downloadedUrl.includes(false)) return;
+
+    information.image = downloadedUrl[0];
+    information.licenseImage = downloadedUrl[1];
+    information.medicalReport = downloadedUrl[2];
+  }
 
   if (result === false || result === undefined) return;
 
   const docRef = doc(database, collectionName, docId);
 
-  await updateDoc(docRef, { ...data, image: result });
+  await updateDoc(docRef, information);
   return true;
 };

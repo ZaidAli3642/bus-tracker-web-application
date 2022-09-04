@@ -4,7 +4,7 @@ const CardHeaderDetails = ({ cardDetails }) => {
     <div
       id={id}
       className="card-header-text col-md-3 col-sm-12 p-sm-3 d-flex justify-content-center align-items-center"
-      data-aos="fade-down"
+      data-aos="zoom-in"
       data-aos-delay="300">
       <div className="d-flex">
         <Icon className="icon" />
