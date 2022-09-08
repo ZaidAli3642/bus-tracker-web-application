@@ -38,10 +38,8 @@ const Location = () => {
           lat: parseFloat(route.latitude),
           lng: parseFloat(route.longitude),
         },
-        stopover: true,
       };
     });
-    console.log(routesCopy);
     const origin =
       routesCopy.length === 1
         ? // eslint-disable-next-line no-undef
@@ -58,6 +56,7 @@ const Location = () => {
             routesCopy[0].location.lng
           )
         : routesCopy.pop().location;
+    console.log(destination);
 
     // eslint-disable-next-line no-undef
     const directions = new google.maps.DirectionsService();
@@ -69,7 +68,6 @@ const Location = () => {
       travelMode: google.maps.TravelMode.DRIVING,
       waypoints: routesCopy,
     });
-
     setResponse(result);
   };
 
@@ -79,9 +77,11 @@ const Location = () => {
 
   useEffect(() => {
     directions();
-    getBusDetails();
   }, [routes]);
 
+  useEffect(() => {
+    getBusDetails();
+  }, []);
   if (!isLoaded) {
     return <Loader />;
   }
@@ -123,10 +123,9 @@ const Location = () => {
               fullscreenControl: false,
             }}
             onLoad={(map) => setMap(map.panTo(center))}>
-            <MarkerF position={center} />
-            {response && (
-              <DirectionsRenderer directions={response}></DirectionsRenderer>
-            )}
+            {!response && <MarkerF position={center} />}
+
+            <DirectionsRenderer directions={response}></DirectionsRenderer>
           </GoogleMap>
         </div>
       </div>

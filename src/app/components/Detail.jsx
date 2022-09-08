@@ -1,10 +1,12 @@
-const Detail = ({ label, detail, margin }) => {
+const Detail = ({ label, detail, margin, detailsClass, fontSize }) => {
   return (
-    <div style={{ margin: margin }}>
-      <label className="label" htmlFor="">
-        {label}
-      </label>
-      <p>{detail}</p>
+    <div style={{ margin: margin }} className={detailsClass}>
+      {label && (
+        <label className="label" htmlFor="">
+          {label}
+        </label>
+      )}
+      <p style={{ fontSize: fontSize }}>{detail}</p>
     </div>
   );
 };

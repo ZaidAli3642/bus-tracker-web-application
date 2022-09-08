@@ -1,13 +1,14 @@
 import { useFormikContext } from "formik";
 import ErrorMessage from "./ErrorMessage";
 
-const SelectImageInput = ({ name }) => {
+const SelectImageInput = ({ name, accept }) => {
   const { setFieldValue, setFieldTouched, errors, touched } =
     useFormikContext();
   return (
     <div className="input-container">
       <input
         type="file"
+        accept={accept}
         style={{ marginLeft: "10px", marginRight: "10px", height: "40px" }}
         onBlur={() => setFieldTouched(name)}
         onChange={(e) => setFieldValue(name, e.target.files)}

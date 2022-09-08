@@ -11,7 +11,6 @@ const Nav = () => {
   const location = useLocation();
   const { parent } = useParentAuth();
   const { setParent } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const logout = async () => {
     try {
@@ -81,7 +80,21 @@ const Nav = () => {
                     </NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink className="nav-link" to="/profile">
+                    <NavLink
+                      className="nav-link"
+                      to="/profile"
+                      state={{
+                        id: parent.id,
+                        parent_id: parent.parent_id,
+                        firstname: parent.firstname,
+                        lastname: parent.lastname,
+                        contact: parent.contact,
+                        email: parent.email,
+                        password: parent.password,
+                        rollno: parent.rollno,
+                        institute: parent.institute,
+                        image: parent.image,
+                      }}>
                       <span> Profile</span>
                     </NavLink>
                   </li>

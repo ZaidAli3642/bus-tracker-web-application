@@ -13,6 +13,7 @@ import NotFound from "./app/containers/NotFound";
 import ParentPrivateRoutes from "./app/routes/ParentPrivateRoute";
 import AuthContext from "./app/context/authContext";
 import LiveLocation from "./app/containers/parents/LiveLocation";
+import Profile from "./app/containers/parents/Profile";
 
 const routes = [
   "/",
@@ -20,6 +21,7 @@ const routes = [
   "/register",
   "/messages",
   "/location",
+  "/profile",
   "/route-not-found",
 ];
 
@@ -65,6 +67,14 @@ function App() {
                 element={
                   <ParentPrivateRoutes>
                     <LiveLocation />
+                  </ParentPrivateRoutes>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ParentPrivateRoutes>
+                    <Profile />
                   </ParentPrivateRoutes>
                 }
               />

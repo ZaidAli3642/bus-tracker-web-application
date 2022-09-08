@@ -1294,6 +1294,70 @@ header .contact-header .contact-details .icon {
   height: 80vh;
 }
 
+.profile-container {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 20px !important;
+}
+
+.profile-container .image-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.profile-container .image-container .profile-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+}
+
+.profile-container .image-container .update-text {
+  margin-left: 20px;
+  display: block;
+}
+
+.profile-container .label {
+  font-size: 20px;
+}
+
+.profile-container .items {
+  background-color: #ffffff;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  height: none;
+  padding: 10px;
+  margin-top: 2rem;
+  overflow: hidden;
+}
+
+.profile-container .items .items-details {
+  margin: 0;
+}
+
+.profile-container .input-container {
+  margin: 10px 0;
+}
+
+.profile-container .input-container .label {
+  font-size: 20px;
+}
+
+.profile-container .input-container .input {
+  width: 500px;
+}
+
+.profile-container .button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+}
+
 .footer {
   font-family: "Poppins", sans-serif;
   display: -webkit-box;
