@@ -16,6 +16,7 @@ const validateImage = (image) => {
 const storeImage = async (collectionName, image) => {
   try {
     const result = validateImage(image);
+
     let downloadedUrl = "";
     if (result === true) {
       const imageName = new Date().valueOf() + "_" + image[0].name;
@@ -25,7 +26,7 @@ const storeImage = async (collectionName, image) => {
 
       return downloadedUrl;
     }
-    if (result === image) return result;
+    if (result === image || result === "") return result;
     return false;
   } catch (error) {
     console.log(error);
