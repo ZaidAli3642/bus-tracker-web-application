@@ -1,9 +1,8 @@
 import { useState } from "react";
 import * as Yup from "yup";
-import { auth, database } from "../../firebase/firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { database } from "../../firebase/firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import Input from "../../components/Input";
 import Form from "../../components/Form";
@@ -13,51 +12,50 @@ import AuthContext from "../../context/authContext";
 import { toast } from "react-toastify";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email().required().label("Email"),
-  password: Yup.string().min(8).max(12).required().label("Password"),
+  nationalIdentityNumber: Yup.number("National Id must be a number")
+    .required()
+    .label("National Identity Number"),
+  password: Yup.string().min(2).max(12).required().label("Password"),
 });
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const { setParent } = useContext(AuthContext);
+  const { parent, setParent } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const login = async (values) => {
     setLoading(true);
 
     try {
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password
-      );
-
       const parentCollection = collection(database, "parent");
-      const q = query(
+      const q1 = query(
         parentCollection,
-        where("parent_id", "==", userCredentials.user.uid)
+        where("nationalIdentityNumber", "==", values.nationalIdentityNumber)
+      );
+      const q2 = query(
+        parentCollection,
+        where("password", "==", values.password)
       );
 
-      const parentSnap = await getDocs(q);
-      if (!parentSnap.empty)
-        parentSnap.forEach((doc) => setParent({ id: doc.id, ...doc.data() }));
-      else {
-        setLoading(false);
-        return toast.error(
-          "Something went wrong. Please make sure you have the right email and password for login."
-        );
-      }
+      const parentSnapshot = await getDocs(q1, q2);
 
+      const parent = parentSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setParent(parent[0]);
+      localStorage.setItem("parentAuth", JSON.stringify(parent));
       setLoading(false);
       navigate("/");
     } catch (error) {
       setLoading(false);
-      if (error.code === "auth/wrong-password")
-        return toast.error("Password is not correct.");
-      if (error.code === "auth/user-not-found")
-        return toast.error("Email is not correct.");
+      console.log(error);
+      toast.error("Something went wrong!");
     }
   };
+
+  if (parent) return <Navigate to="/" />;
 
   return (
     <div className="login-page">
@@ -81,16 +79,17 @@ const Login = () => {
             <div className="form" data-aos="fade-right">
               <Form
                 initialValues={{
-                  email: "",
+                  nationalIdentityNumber: "",
                   password: "",
                 }}
                 validationSchema={validationSchema}
-                onSubmit={login}>
+                onSubmit={login}
+              >
                 <Input
-                  name="email"
+                  name="nationalIdentityNumber"
                   inputClasses="input"
                   label="Email"
-                  type="text"
+                  type="number"
                 />
                 <Input
                   name="password"

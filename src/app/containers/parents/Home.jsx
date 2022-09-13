@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import Slider from "../../components/Parent/Slider";
 import { BiConfused } from "react-icons/bi";
 import {
   AiOutlineFacebook,
@@ -18,44 +16,20 @@ const cardHeader = [
 ];
 
 const Home = () => {
-  const [slider, setSlider] = useState([
-    { image: require("../../assets/student-1.jpg") },
-    { image: require("../../assets/student-4.jpg") },
-    { image: require("../../assets/school-4.jpg") },
-  ]);
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const lastIndex = slider.length - 1;
-    if (index < 0) {
-      setIndex(lastIndex);
-    }
-    if (index > lastIndex) {
-      setIndex(0);
-    }
-  }, [index, slider]);
-
-  useEffect(() => {
-    const slider = setInterval(() => setIndex(index + 1), 5000);
-    return () => clearInterval(slider);
-  }, [index]);
-
   return (
     <>
       <div className="slider-container">
-        {slider.map((slide, slideIndex) => {
-          let position = "nextSlide";
-          if (slideIndex === index) {
-            position = "active";
-          }
-          if (
-            slideIndex === index - 1 ||
-            (index === 0 && slideIndex === slider.length - 1)
-          ) {
-            position = "lastSlide";
-          }
-          return <Slider position={position} slide={slide} />;
-        })}
+        <div className={`slider active`}>
+          <img
+            src={require("../../assets/student-4.jpg")}
+            className="slider-image"
+            alt=""
+          />
+          <div className="slider-text">
+            <h1>Heading</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing e</p>
+          </div>
+        </div>
       </div>
 
       <section className="card-section">
@@ -83,19 +57,22 @@ const Home = () => {
                 <h1
                   className="card-image-heading"
                   data-aos="fade-right"
-                  data-aos-delay="300">
+                  data-aos-delay="300"
+                >
                   Heading
                 </h1>
                 <h2
                   className="card-image-tagline"
                   data-aos="fade-right"
-                  data-aos-delay="300">
+                  data-aos-delay="300"
+                >
                   Taglines
                 </h2>
                 <p
                   className="card-image-description"
                   data-aos="flip-right"
-                  data-aos-delay="300">
+                  data-aos-delay="300"
+                >
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Aperiam cum explicabo repudiandae aut ad! Qui, deserunt vero
                   quis officia, eveniet deleniti, eius eaque suscipit provident
@@ -104,7 +81,8 @@ const Home = () => {
                 <button
                   className="button mt-5"
                   data-aos="fade-up"
-                  data-aos-delay="300">
+                  data-aos-delay="300"
+                >
                   Button
                 </button>
               </div>

@@ -33,6 +33,9 @@ const validationSchema = Yup.object().shape({
   medicalReport: Yup.string().nullable().required().label("Medical Report"),
   driverDutyTime: Yup.string().required().label("Duty Start"),
   driverDutyEnd: Yup.string().required().label("Duty End"),
+  driverId: Yup.number("Driver Id should be a number")
+    .required()
+    .label("Driver"),
 });
 
 const DriverInformationForm = () => {
@@ -43,6 +46,7 @@ const DriverInformationForm = () => {
   const match = useMatch("/admin/driver_update/:id");
 
   const {
+    driverId,
     firstname,
     lastname,
     age,
@@ -80,6 +84,7 @@ const DriverInformationForm = () => {
     setIsProcessing(true);
     try {
       const data = {
+        driverId: values.driverId,
         firstname: values.firstname,
         lastname: values.lastname,
         age: values.age,
@@ -95,6 +100,24 @@ const DriverInformationForm = () => {
         driverDutyEnd: values.driverDutyEnd,
         institute: user.institute,
       };
+
+      const driverCollection = collection(database, "drivers");
+
+      const q = query(
+        driverCollection,
+        where("driverId", "==", values.driverId),
+        where("busNo", "==", values.busNo)
+      );
+
+      const driverDoc = await getDocs(q);
+      if (!driverDoc.empty) {
+        if (!isUpdated) {
+          setIsProcessing(false);
+          return toast.error(
+            `Driver is already assigned to ${values.busNo} Bus`
+          );
+        }
+      }
 
       let result;
       if (isUpdated) {
@@ -141,6 +164,7 @@ const DriverInformationForm = () => {
         <div className="items">
           <Form
             initialValues={{
+              driverId: driverId || "",
               firstname: firstname || "",
               lastname: lastname || "",
               age: age || "",
@@ -158,7 +182,8 @@ const DriverInformationForm = () => {
               medicalReport: medicalReport || null,
             }}
             onSubmit={handleDriverInformation}
-            validationSchema={validationSchema}>
+            validationSchema={validationSchema}
+          >
             <h4>Personal Information</h4>
             <div className="line"></div>
 
@@ -171,6 +196,14 @@ const DriverInformationForm = () => {
               <SelectImageInput name="image" />
             </div>
             <div className="line"></div>
+            <div className="items-details">
+              <Input
+                label="Driver Id"
+                name="driverId"
+                type="text"
+                placeholder="Enter Driver Id"
+              />
+            </div>
             <div className="items-details">
               <Input
                 label="First Name"

@@ -9,6 +9,7 @@ const Input = ({
   type,
   inputClasses,
   name,
+  ...otherProps
 }) => {
   const { errors, handleChange, setFieldTouched, touched, values } =
     useFormikContext();
@@ -26,6 +27,7 @@ const Input = ({
         onChange={handleChange(name)}
         placeholder={placeholder}
         width={width}
+        {...otherProps}
       />
       <ErrorMessage error={errors[name]} visible={touched[name]} />
     </div>

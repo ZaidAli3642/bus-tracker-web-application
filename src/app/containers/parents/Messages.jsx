@@ -7,7 +7,6 @@ import SubmitButton from "./../../components/SubmitButton";
 import { database } from "../../firebase/firebaseConfig";
 import {
   collection,
-  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -35,7 +34,8 @@ const Messages = () => {
   const [messages, setMessages] = useState([]);
   const [conversation, setConversation] = useState();
   const { getDocumentByInstitute } = useApi();
-  // un7S9CYFzPdHARedxOX5
+  console.log(parent);
+
   const getPersons = async () => {
     const admins = await getDocumentByInstitute("admin", parent.institute);
     setPersons([...admins]);

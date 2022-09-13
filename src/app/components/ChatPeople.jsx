@@ -6,7 +6,11 @@ const ChatPeople = ({ persons, handlePersonClick }) => {
       {persons.map((person) => (
         <PersonDetails
           image={person.image}
-          name={`${person.firstname} ${person.lastname}`}
+          name={
+            person.fullName
+              ? `${person.fullName}`
+              : `${person.firstname} ${person.lastname}`
+          }
           designation={person.designation}
           handleClick={() => handlePersonClick(person)}
         />
