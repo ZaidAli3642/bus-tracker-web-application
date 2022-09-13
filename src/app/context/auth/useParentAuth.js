@@ -8,22 +8,16 @@ export default function useParentAuth() {
   const [parentAuthUser, setParentAuthUser] = useState();
   const { parent, setParent } = useContext(AuthContext);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (parent) => {
-      setParentAuthUser(parent ?? false);
-      if (parent) {
-        const parentRef = collection(database, "parent");
-        const q = query(parentRef, where("parent_id", "==", parent.uid));
-        const docSnap = await getDocs(q);
+  const getAuth = () => {
+    const parentAuth = localStorage.getItem("parentAuth");
 
-        const parentUser = docSnap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setParent(parentUser[0]);
-      }
-    });
-    return () => unsubscribe();
-  }, [parent, setParent]);
+    const parentCred = JSON.parse(parentAuth);
+    if (parentCred === null) return;
+    setParent(parentCred[0]);
+  };
+
+  useEffect(() => {
+    getAuth();
+  }, []);
   return { parent, parentAuthUser };
 }

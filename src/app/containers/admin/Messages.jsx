@@ -85,7 +85,9 @@ const Messages = () => {
   const handlePersonClick = (person) => {
     setHeader({
       id: person.id,
-      name: person.firstname + " " + person.lastname,
+      name: person.fullName
+        ? person.fullName
+        : person.firstname + " " + person.lastname,
       image: person.image,
       designation: person.designation,
     });

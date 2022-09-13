@@ -1,15 +1,12 @@
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { useLocation } from "react-router-dom";
-import { auth } from "../../firebase/firebaseConfig";
-import { updateEmail, updatePassword } from "firebase/auth";
 
 import Form from "../../components/Form";
 import Input from "../../components/Input";
 import SelectImageInput from "../../components/SelectImageInput";
 import SubmitButton from "./../../components/SubmitButton";
 import { updateData } from "../../firebase/firebaseCalls/addDoc";
-import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
 import {
   getSpecificBus,
   getSpecificStudent,
@@ -19,10 +16,6 @@ import Detail from "../../components/Detail";
 import useParentAuth from "./../../context/auth/useParentAuth";
 
 const validationSchema = Yup.object().shape({
-  firstname: Yup.string().required().label("First Name"),
-  lastname: Yup.string().required().label("Last Name"),
-  contact: Yup.string().required().label("Contact"),
-  email: Yup.string().required().label("Email"),
   password: Yup.string().required().label("Password"),
 });
 
@@ -30,49 +23,27 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [student, setStudent] = useState({});
   const [bus, setBus] = useState({});
-  const location = useLocation();
   const { parent } = useParentAuth();
-
-  const {
-    id,
-    parent_id,
-    firstname,
-    lastname,
-    contact,
-    email,
-    password,
-    rollno,
-    institute,
-    image,
-  } = location.state || {};
 
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
       const data = {
-        firstname: values.firstname,
-        lastname: values.lastname,
-        contact: values.contact,
-        email: values.email,
         password: values.password,
-        rollno: rollno,
-        institute: institute,
       };
-
-      if (email !== values.email) {
-        await updateEmail(auth.currentUser, values.email);
-      }
-      if (password !== values.password)
-        updatePassword(auth.currentUser, values.password)
-          .then((response) => console.log(response))
-          .catch((err) => console.log(err));
-
-      const result = await updateData(data, "parent", values.image, id);
+      const result = await updateData(data, "parent", values.image, parent.id);
 
       if (result === undefined) {
         setLoading(false);
         toast.warning("Image should be in png, jpeg or jpg format.");
       }
+      const updatedParent = [
+        {
+          ...parent,
+          password: values.password,
+        },
+      ];
+      localStorage.setItem("parentAuth", JSON.stringify(updatedParent));
       toast.success("Profile is updated.");
       setLoading(false);
     } catch (error) {
@@ -82,7 +53,7 @@ const Profile = () => {
   };
 
   const getDetails = async () => {
-    const student = await getSpecificStudent(parent.rollno);
+    const student = await getSpecificStudent(parent.studentId);
     setStudent(student[0]);
 
     const bus = await getSpecificBus(student[0].busNo, student[0].institute);
@@ -99,29 +70,26 @@ const Profile = () => {
     <>
       <Form
         initialValues={{
-          firstname: firstname || "",
-          lastname: lastname || "",
-          // institute: "",
-          // rollno: "",
-          contact: contact || "",
-          email: email || "",
-          password: password || "",
-          image: image || null,
+          password: parent.password || "",
+          image: parent.image || null,
         }}
         onSubmit={handleSubmit}
-        validationSchema={validationSchema}>
+        validationSchema={validationSchema}
+      >
         <div className="container profile-container">
           <div className="image-container">
             <img
               src={
-                image ? image : require("../../assets/zaid-saleem-image.jpg")
+                parent.image
+                  ? parent.image
+                  : require("../../assets/zaid-saleem-image.jpg")
               }
               alt="Profile"
               className="profile-image"
             />
             <div className="update-text">
               <h1>Profile</h1>
-              <p>Update your personal details.</p>
+              <p>Your personal details.</p>
             </div>
 
             <SelectImageInput
@@ -133,52 +101,27 @@ const Profile = () => {
           <div className="line"></div>
 
           <h3>Personal Details</h3>
-          <Input
-            label="First Name"
-            name="firstname"
-            placeholder="First Name"
-            inputClasses="input"
-            type="text"
-          />
-          <Input
-            label="Last Name"
-            name="lastname"
-            placeholder="Last Name"
-            inputClasses="input"
-            type="text"
+          <Detail label="Full Name" detail={parent.fullName} />
+          <Detail
+            label="National Identity Number"
+            detail={parent.nationalIdentityNumber}
           />
 
           <div className="line"></div>
 
           <h3>Contact Information</h3>
+          <Detail label="Contact" detail={parent.parentcontact} />
 
-          <Input
-            label="Email"
-            name="email"
-            placeholder="Email"
-            inputClasses="input"
-            type="email"
-          />
-
-          <Input
-            label="Contact"
-            name="contact"
-            placeholder="Contact"
-            inputClasses="input"
-            type="text"
-          />
-          <Input
-            label="Password"
-            name="password"
-            placeholder="Password"
-            inputClasses="input"
-            type="password"
-          />
-          <SubmitButton
-            isParentButton={true}
-            isLoading={loading}
-            title="Update"
-          />
+          <div className="d-flex align-items-end">
+            <Input
+              label="Password"
+              name="password"
+              placeholder="Password"
+              inputClasses="input"
+              type="password"
+            />
+            <SubmitButton isLoading={loading} title="Update" />
+          </div>
           <div className="line"></div>
 
           <h3>Student Information</h3>
@@ -273,7 +216,8 @@ const Profile = () => {
               {bus?.busRoutes.map((route) => (
                 <div
                   className="input-container"
-                  style={{ flexDirection: "row" }}>
+                  style={{ flexDirection: "row" }}
+                >
                   <Detail label="Latitude" detail={route.latitude} />
                   <Detail
                     label="Longitude"

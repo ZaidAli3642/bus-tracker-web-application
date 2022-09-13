@@ -1,5 +1,5 @@
 import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
 
@@ -14,7 +14,7 @@ const Nav = () => {
 
   const logout = async () => {
     try {
-      await signOut(auth);
+      localStorage.removeItem("parentAuth");
       setParent(null);
       window.location = "/";
     } catch (error) {
@@ -52,18 +52,21 @@ const Nav = () => {
             data-bs-target="#navbarNav"
             aria-controls="navbarNav"
             aria-expanded="false"
-            aria-label="Toggle navigation">
+            aria-label="Toggle navigation"
+          >
             <span className="navbar-toggler-icon"></span>
           </button>
           <div
             className="collapse navbar-collapse d-md-flex justify-content-end me-md-5"
-            id="navbarNav">
+            id="navbarNav"
+          >
             <ul className="navbar-nav">
               <li className="nav-item">
                 <NavLink
                   className="nav-link active"
                   aria-current="page"
-                  to={"/"}>
+                  to={"/"}
+                >
                   Home
                 </NavLink>
               </li>
@@ -85,16 +88,16 @@ const Nav = () => {
                       to="/profile"
                       state={{
                         id: parent.id,
-                        parent_id: parent.parent_id,
-                        firstname: parent.firstname,
-                        lastname: parent.lastname,
-                        contact: parent.contact,
-                        email: parent.email,
+                        busNo: parent.busNo,
+                        fullName: parent.fullName,
+                        nationalIdentityNumber: parent.nationalIdentityNumber,
+                        parentcontact: parent.parentcontact,
                         password: parent.password,
-                        rollno: parent.rollno,
+                        studentId: parent.studentId,
                         institute: parent.institute,
                         image: parent.image,
-                      }}>
+                      }}
+                    >
                       <span> Profile</span>
                     </NavLink>
                   </li>
@@ -107,11 +110,11 @@ const Nav = () => {
                       <span>Login</span>
                     </NavLink>
                   </li>
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                     <NavLink className="nav-link" to="/register">
                       <span>Register</span>
                     </NavLink>
-                  </li>
+                  </li> */}
                 </>
               )}
 
@@ -121,7 +124,8 @@ const Nav = () => {
                     className="nav-link"
                     onClick={logout}
                     to="/"
-                    replace={true}>
+                    replace={true}
+                  >
                     <span>Logout</span>
                   </NavLink>
                 </li>

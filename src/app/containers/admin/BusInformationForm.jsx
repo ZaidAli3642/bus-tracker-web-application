@@ -11,6 +11,8 @@ import MultipleInputs from "../../components/MultipleInputs";
 import Select from "../../components/select";
 import { addData, updateData } from "../../firebase/firebaseCalls/addDoc";
 import useAuth from "../../context/auth/useAuth";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { database } from "../../firebase/firebaseConfig";
 
 const mantainanceStates = [
   { id: 1, label: "Excellent", values: "excellent" },
@@ -31,7 +33,6 @@ const BusInformationForm = () => {
   const location = useLocation();
   const match = useMatch("/admin/bus_update/:id");
   const { user } = useAuth();
-  console.log(user);
 
   const handleAddBusInformation = async (values, { resetForm }) => {
     setIsProcessing(true);
@@ -46,6 +47,26 @@ const BusInformationForm = () => {
         institute: user.institute,
         seatCapacity: values.seatCapacity,
       };
+
+      const busRef = collection(database, "bus");
+
+      const q1 = query(
+        busRef,
+        where("busNo", "==", values.busNo),
+        where("institute", "==", user.institute)
+      );
+      const q2 = query(busRef, where("licenseNo", "==", values.licenseNo));
+      const bus1 = await getDocs(q1);
+      const bus2 = await getDocs(q2);
+
+      if (!bus1.empty || !bus2.empty) {
+        if (!location?.state?.isUpdated) {
+          setIsProcessing(false);
+          return toast.error(
+            "Bus no or License No is already exist is already exist!"
+          );
+        }
+      }
 
       let result;
       if (location?.state?.isUpdated === true) {
@@ -86,7 +107,8 @@ const BusInformationForm = () => {
               seatCapacity: location?.state?.seatCapacity || "",
             }}
             onSubmit={handleAddBusInformation}
-            validationSchema={validationSchema}>
+            validationSchema={validationSchema}
+          >
             <h4>Personal Information</h4>
 
             <div className="line"></div>

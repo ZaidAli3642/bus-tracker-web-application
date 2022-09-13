@@ -2,14 +2,7 @@ import { useNavigate } from "react-router-dom";
 import ListItem from "../../components/ListItem";
 import { useEffect, useState } from "react";
 import { database } from "../../firebase/firebaseConfig";
-import {
-  collection,
-  onSnapshot,
-  query,
-  where,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import Loader from "../../components/Loader";
 import useAuth from "../../context/auth/useAuth";
 import useApi from "../../hooks/useApi";
@@ -60,6 +53,7 @@ const DriversList = () => {
               to={`/admin/driver`}
               state={{
                 id: driver.id,
+                driverId: driver.driverId,
                 firstname: driver.firstname,
                 lastname: driver.lastname,
                 contact: driver.contact,
@@ -83,6 +77,7 @@ const DriversList = () => {
                 navigate("/admin/driver_update/" + driver.id, {
                   state: {
                     id: driver.id,
+                    driverId: driver.driverId,
                     firstname: driver.firstname,
                     lastname: driver.lastname,
                     contact: driver.contact,

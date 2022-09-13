@@ -59,7 +59,7 @@ const StudentDetails = () => {
             <Detail label="College/University" detail={institute} />
           </div>
           <div className="right-item">
-            <Detail label="Roll No" detail={rollNo} />
+            <Detail label="Registeration Number" detail={rollNo} />
           </div>
         </div>
 
@@ -100,7 +100,8 @@ const StudentDetails = () => {
                 isUpdated: true,
               },
             })
-          }>
+          }
+        >
           Update Student
         </button>
       </div>
