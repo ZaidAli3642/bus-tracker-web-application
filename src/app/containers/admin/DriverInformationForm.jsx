@@ -106,7 +106,8 @@ const DriverInformationForm = () => {
       const q = query(
         driverCollection,
         where("driverId", "==", values.driverId),
-        where("busNo", "==", values.busNo)
+        where("busNo", "==", values.busNo),
+        where("institute", "==", user.institute)
       );
 
       const driverDoc = await getDocs(q);
