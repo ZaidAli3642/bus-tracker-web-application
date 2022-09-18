@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { database } from "../../firebase/firebaseConfig";
-import { collection, where, query, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  where,
+  query,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
 
 import ListItem from "../../components/ListItem";
 import useAuth from "../../context/auth/useAuth";
@@ -18,7 +24,11 @@ const BusLists = () => {
   const getBusInformation = () => {
     setIsLoading(true);
     const busCollection = collection(database, "bus");
-    const q = query(busCollection, where("institute", "==", user.institute));
+    const q = query(
+      busCollection,
+      where("institute", "==", user.institute),
+      orderBy("busNo", "asc")
+    );
 
     const unsubscribe = onSnapshot(q, (busSnapshot) => {
       const busList = busSnapshot.docs.map((bus) => ({
