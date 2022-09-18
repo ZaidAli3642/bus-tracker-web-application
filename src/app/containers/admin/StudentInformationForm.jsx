@@ -120,8 +120,8 @@ const StudentInformationForm = () => {
         class: values.class,
       };
       const parentData = {
-        nationalIdentityNumber: values.nationalIdentityNumber,
-        password: values.nationalIdentityNumber,
+        nationalIdentityNumber: String(values.nationalIdentityNumber),
+        password: String(values.nationalIdentityNumber),
         studentId: values.rollNo,
         busNo: values.busNo,
         institute: user.institute,
@@ -162,7 +162,7 @@ const StudentInformationForm = () => {
       }
 
       toast.success("Data Saved Successfully");
-      // resetForm();
+      resetForm();
     } catch (error) {
       console.log(error);
       setIsProcessing(false);

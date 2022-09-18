@@ -15,7 +15,7 @@ const validationSchema = Yup.object().shape({
   nationalIdentityNumber: Yup.number("National Id must be a number")
     .required()
     .label("National Identity Number"),
-  password: Yup.string().min(2).max(12).required().label("Password"),
+  password: Yup.string().required().label("Password"),
 });
 
 const Login = () => {
@@ -63,7 +63,7 @@ const Login = () => {
         <div className="row h-100 m-0">
           <div className="col-md-4 left-container p-0">
             <img
-              src={require("../../assets/student-4.jpg")}
+              src={require("../../assets/3.webp")}
               className="left-container-img"
               alt=""
             />
@@ -88,7 +88,7 @@ const Login = () => {
                 <Input
                   name="nationalIdentityNumber"
                   inputClasses="input"
-                  label="Email"
+                  label="National Id Number"
                   type="number"
                 />
                 <Input

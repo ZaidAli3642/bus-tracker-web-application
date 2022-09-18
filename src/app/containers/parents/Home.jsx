@@ -1,4 +1,6 @@
-import { BiConfused } from "react-icons/bi";
+import { BiChat } from "react-icons/bi";
+import { IoLocationSharp } from "react-icons/io5";
+import { BsFilePerson } from "react-icons/bs";
 import {
   AiOutlineFacebook,
   AiOutlineInstagram,
@@ -6,28 +8,46 @@ import {
   AiOutlineWhatsApp,
   AiOutlineTwitter,
 } from "react-icons/ai";
+import { FaRoute } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+import useParentAuth from "../../context/auth/useParentAuth";
 import CardHeaderDetails from "../../components/Parent/CardHeaderDetails";
 
 const cardHeader = [
-  { id: 1, Icon: BiConfused, heading: "Heading", tagline: "tagline" },
-  { id: 2, Icon: BiConfused, heading: "Heading", tagline: "tagline" },
-  { id: 3, Icon: BiConfused, heading: "Heading", tagline: "tagline" },
-  { id: 4, Icon: BiConfused, heading: "Heading", tagline: "tagline" },
+  { id: 1, Icon: BsFilePerson, heading: "Bus Attendence" },
+  {
+    id: 2,
+    Icon: FaRoute,
+    heading: "View Schedule Route",
+  },
+  {
+    id: 3,
+    Icon: IoLocationSharp,
+    heading: "Real-Time Location",
+  },
+  { id: 4, Icon: BiChat, heading: "Real-Time Chat" },
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { parent } = useParentAuth();
+
   return (
     <>
       <div className="slider-container">
         <div className={`slider active`}>
           <img
-            src={require("../../assets/student-4.jpg")}
+            src={require("../../assets/1.webp")}
             className="slider-image"
             alt=""
           />
           <div className="slider-text">
-            <h1>Heading</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing e</p>
+            <div>
+              <h1 className="heading">Right Bus</h1>
+              <h1 className="heading">Right Stop</h1>
+              <h1 className="heading">Right Time</h1>
+            </div>
           </div>
         </div>
       </div>
@@ -42,7 +62,7 @@ const Home = () => {
           <div className="row h-100 m-0">
             <div className="col-md-6 col-sm-12 p-0 overflow-hidden">
               <img
-                src={require("../../assets/school-3.jpg")}
+                src={require("../../assets/2.jpg")}
                 className="w-100 h-100 m-0 card-left-image"
                 alt=""
               />
@@ -59,32 +79,27 @@ const Home = () => {
                   data-aos="fade-right"
                   data-aos-delay="300"
                 >
-                  Heading
+                  Parent App
                 </h1>
                 <h2
                   className="card-image-tagline"
                   data-aos="fade-right"
                   data-aos-delay="300"
                 >
-                  Taglines
+                  A Helping Hand For Parents
                 </h2>
                 <p
                   className="card-image-description"
                   data-aos="flip-right"
                   data-aos-delay="300"
                 >
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Aperiam cum explicabo repudiandae aut ad! Qui, deserunt vero
-                  quis officia, eveniet deleniti, eius eaque suscipit provident
-                  quia molestias amet ducimus. Magni!
+                  <b>Are you worried about your school going children?</b>
+                  <p className="card-image-description">
+                    We have the solution. Our parent app can make you feel safe
+                    and happy. With our app, you can track the real-time where
+                    abouts of your children, and many more.
+                  </p>
                 </p>
-                <button
-                  className="button mt-5"
-                  data-aos="fade-up"
-                  data-aos-delay="300"
-                >
-                  Button
-                </button>
               </div>
             </div>
           </div>
@@ -96,23 +111,31 @@ const Home = () => {
           <div className="information" data-aos="fade-right">
             <h2>Bus Tracking App</h2>
             <p className="address">
-              Chak #95/12L
-              <br /> Tehsil Chichawatni
+              <br /> City Sahiwal
               <br /> District Sahiwal
             </p>
-            <p>123456789</p>
-            <p>zaidali36422@gmail.com</p>
+            <p>0404500415</p>
+            <p>bustrackingsystem9@gmail.com</p>
           </div>
+
           <div className="authentication" data-aos="fade-left">
-            <h4 className="mb-4">Login or Signup to get our services</h4>
-            <button className="button m-2">Login</button>
-            <button className="button m-2">Signup</button>
+            {!parent && (
+              <>
+                <h4 className="mb-4">Login to get our services</h4>
+                <button
+                  className="button m-2"
+                  onClick={() => navigate("/Login")}
+                >
+                  Login
+                </button>
+              </>
+            )}
           </div>
         </section>
         <section className="second-footer-section">
           <div>
             <span className="copyright-text">
-              Copyright All Right Reserved 2022, Zaid Saleem
+              Copyright All Right Reserved 2022, Bus Tracking System
             </span>
           </div>
           <div className="footer-icons">

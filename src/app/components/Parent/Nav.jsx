@@ -1,7 +1,5 @@
 import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai";
 import { NavLink, useLocation } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase/firebaseConfig";
 
 import useParentAuth from "./../../context/auth/useParentAuth";
 import { useContext } from "react";
@@ -31,7 +29,7 @@ const Nav = () => {
         <div className="contact-details">
           <div className="contact">
             <AiOutlineMail className="icon" />
-            <span>zaidali36422@gmail.com</span>
+            <span>bustrackingsystem9@gmail.com</span>
           </div>
           <div className="contact">
             <AiOutlinePhone className="icon ml-4" />

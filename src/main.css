@@ -350,6 +350,7 @@ header .contact-header .contact-details .icon {
   z-index: 1111;
   width: 50%;
   height: 100%;
+  text-align: left;
 }
 .slider-container .slider h1 {
   color: #ffffff;
@@ -409,6 +410,12 @@ header .contact-header .contact-details .icon {
 @media (min-width: 112.5em) {
   .card-section .card .card-header-text {
     font-size: 40px;
+  }
+}
+@media (max-width: 48em) {
+  .card-section .card .card-header-text {
+    justify-content: flex-start !important;
+    margin-left: 100px;
   }
 }
 .card-section .card .card-header-text .icon {

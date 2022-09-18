@@ -87,6 +87,7 @@
       z-index: 1111;
       width: 50%;
       height: 100%;
+      text-align: left;
     }
     h1 {
       color: $white;
@@ -147,6 +148,14 @@
 
       @include respond(big-desktop) {
         font-size: 40px;
+      }
+      @include respond(tab-port-sm) {
+        justify-content: flex-start !important;
+        margin-left: 100px;
+      }
+      @include respond(tab-port-land) {
+        justify-content: center !important;
+        margin-left: 150px;
       }
 
       .icon {
