@@ -29,6 +29,45 @@ const cardHeader = [
   { id: 4, Icon: BiChat, heading: "Real-Time Chat" },
 ];
 
+const features = [
+  {
+    id: 1,
+    label: "Real Time Notifications",
+    image: require("../../assets/feature-1.png"),
+  },
+  {
+    id: 2,
+    label: "View Scheduled Routes",
+    image: require("../../assets/feature-2.png"),
+  },
+  {
+    id: 3,
+    label: "Bus Allocations",
+    image: require("../../assets/feature-3.png"),
+  },
+  {
+    id: 4,
+    label: "Live Vehicle Tracking",
+    image: require("../../assets/feature-4.png"),
+  },
+  {
+    id: 5,
+    label: "Biometric Attendence",
+    image: require("../../assets/feature-5.png"),
+  },
+  {
+    id: 6,
+    label: "Live Chat",
+    image: require("../../assets/feature-6.png"),
+  },
+];
+
+const users = [
+  { id: 1, label: "Parents", image: require("../../assets/parent.png") },
+  { id: 2, label: "Institutes", image: require("../../assets/Institute.png") },
+  { id: 3, label: "Drivers", image: require("../../assets/taxi-driver.png") },
+];
+
 const Home = () => {
   const navigate = useNavigate();
   const { parent } = useParentAuth();
@@ -43,10 +82,9 @@ const Home = () => {
             alt=""
           />
           <div className="slider-text">
-            <div>
-              <h1 className="heading">Right Bus</h1>
-              <h1 className="heading">Right Stop</h1>
-              <h1 className="heading">Right Time</h1>
+            <div className="left-details">
+              <h1 className="heading">Bus Tracking System</h1>
+              <p>Right Bus, Right Stop, Right Time</p>
             </div>
           </div>
         </div>
@@ -79,15 +117,9 @@ const Home = () => {
                   data-aos="fade-right"
                   data-aos-delay="300"
                 >
-                  Parent App
+                  Safe and Secured Institute Bus Management!
                 </h1>
-                <h2
-                  className="card-image-tagline"
-                  data-aos="fade-right"
-                  data-aos-delay="300"
-                >
-                  A Helping Hand For Parents
-                </h2>
+
                 <p
                   className="card-image-description"
                   data-aos="flip-right"
@@ -106,14 +138,37 @@ const Home = () => {
         </section>
       </section>
 
+      <div className="line"></div>
+
+      <section className="features-container">
+        <h2>Our Features</h2>
+        <div className="features">
+          {features.map((feature) => (
+            <div key={feature.id} className="feature-item">
+              <img src={feature.image} alt="" />
+              <span>{feature.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="line"></div>
+
+      <section className="users">
+        <h2>Who can use our System?</h2>
+        <div className="users-container">
+          {users.map((user) => (
+            <div key={user.id} className="user">
+              <img src={user.image} alt="" />
+              <span>{user.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
       <footer className="footer">
         <section className="first-footer-section">
           <div className="information" data-aos="fade-right">
             <h2>Bus Tracking App</h2>
-            <p className="address">
-              <br /> City Sahiwal
-              <br /> District Sahiwal
-            </p>
             <p>0404500415</p>
             <p>bustrackingsystem9@gmail.com</p>
           </div>
