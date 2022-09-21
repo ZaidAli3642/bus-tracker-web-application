@@ -38,10 +38,14 @@ const Nav = () => {
         </div>
       </div>
 
-      <nav className={"navbar navbar-expand-lg bg-white"}>
-        <div className={`container-fluid d-flex h-50 p-2 bg-white`}>
+      <nav className={"navbar navbar-expand-lg bg-white "}>
+        <div className={`container-fluid d-flex h-50 p-2 bg-white shadow-sm`}>
           <NavLink className="navbar-brand ms-5" to={"/"}>
-            Navbar
+            <img
+              src={require("../../assets/BTS.png")}
+              alt="Logo"
+              className="logo"
+            />
           </NavLink>
           <button
             className="navbar-toggler"
@@ -66,6 +70,15 @@ const Nav = () => {
                   to={"/"}
                 >
                   Home
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link active"
+                  aria-current="page"
+                  to={"/"}
+                >
+                  How It Works
                 </NavLink>
               </li>
               {parent && (
