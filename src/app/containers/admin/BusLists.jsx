@@ -58,7 +58,12 @@ const BusLists = () => {
   return (
     <>
       <h1>BUSES LIST</h1>
-
+      <button
+        className="btn btn-md btn-primary my-3 ms-0"
+        onClick={() => navigate("/admin/bus_update/new")}
+      >
+        Add Buses and Routes
+      </button>
       <div className="items">
         <ol className="p-0">
           {buses.map((bus) => (

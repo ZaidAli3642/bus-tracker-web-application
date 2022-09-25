@@ -1,17 +1,9 @@
 import { BiChat } from "react-icons/bi";
 import { IoLocationSharp } from "react-icons/io5";
 import { BsFilePerson } from "react-icons/bs";
-import {
-  AiOutlineFacebook,
-  AiOutlineInstagram,
-  AiFillLinkedin,
-  AiOutlineWhatsApp,
-  AiOutlineTwitter,
-} from "react-icons/ai";
-import { FaRoute } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
-import useParentAuth from "../../context/auth/useParentAuth";
+import { FaRoute } from "react-icons/fa";
+
 import CardHeaderDetails from "../../components/Parent/CardHeaderDetails";
 
 const cardHeader = [
@@ -69,9 +61,6 @@ const users = [
 ];
 
 const Home = () => {
-  const navigate = useNavigate();
-  const { parent } = useParentAuth();
-
   return (
     <>
       <div className="slider-container">
@@ -165,43 +154,6 @@ const Home = () => {
           ))}
         </div>
       </section>
-      <footer className="footer">
-        <section className="first-footer-section">
-          <div className="information" data-aos="fade-right">
-            <h2>Bus Tracking App</h2>
-            <p>0404500415</p>
-            <p>bustrackingsystem9@gmail.com</p>
-          </div>
-
-          <div className="authentication" data-aos="fade-left">
-            {!parent && (
-              <>
-                <h4 className="mb-4">Login to get our services</h4>
-                <button
-                  className="button m-2"
-                  onClick={() => navigate("/Login")}
-                >
-                  Login
-                </button>
-              </>
-            )}
-          </div>
-        </section>
-        <section className="second-footer-section">
-          <div>
-            <span className="copyright-text">
-              Copyright All Right Reserved 2022, Bus Tracking System
-            </span>
-          </div>
-          <div className="footer-icons">
-            <AiOutlineFacebook className="icon" />
-            <AiOutlineInstagram className="icon" />
-            <AiOutlineWhatsApp className="icon" />
-            <AiOutlineTwitter className="icon" />
-            <AiFillLinkedin className="icon" />
-          </div>
-        </section>
-      </footer>
     </>
   );
 };

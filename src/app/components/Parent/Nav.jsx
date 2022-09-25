@@ -76,7 +76,7 @@ const Nav = () => {
                 <NavLink
                   className="nav-link active"
                   aria-current="page"
-                  to={"/"}
+                  to="/how-it-works"
                 >
                   How It Works
                 </NavLink>
@@ -118,14 +118,19 @@ const Nav = () => {
                 <>
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/login">
-                      <span>Login</span>
+                      <span>Login as parent</span>
                     </NavLink>
                   </li>
-                  {/* <li className="nav-item">
-                    <NavLink className="nav-link" to="/register">
-                      <span>Register</span>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/admin/login">
+                      <span>Login as Institute</span>
                     </NavLink>
-                  </li> */}
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/admin/register">
+                      <span>Register as Institute</span>
+                    </NavLink>
+                  </li>
                 </>
               )}
 

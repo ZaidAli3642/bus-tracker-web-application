@@ -4,6 +4,7 @@ import { BiBusSchool } from "react-icons/bi";
 import { FiLogOut } from "react-icons/fi";
 import { AiFillHome } from "react-icons/ai";
 import { FiMessageSquare } from "react-icons/fi";
+import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 
 import { auth } from "../../firebase/firebaseConfig";
@@ -17,16 +18,23 @@ const sidebar = [
   { id: 1, text: "Home", Icon: AiFillHome, to: "admin/home" },
   {
     id: 2,
+    text: "Profile",
+    Icon: CgProfile,
+    to: "admin/admin_update",
+    isAddId: true,
+  },
+  {
+    id: 3,
     text: "Location",
     Icon: GoLocation,
     to: "admin/location",
     target: "_blank",
   },
-  { id: 3, text: "Students", Icon: BiBusSchool, to: "admin/student" },
-  { id: 4, text: "Drivers", Icon: GoPerson, to: "admin/driver" },
-  { id: 5, text: "Buses", Icon: BiBusSchool, to: "admin/bus" },
+  { id: 4, text: "Students", Icon: BiBusSchool, to: "admin/student" },
+  { id: 5, text: "Drivers", Icon: GoPerson, to: "admin/driver" },
+  { id: 6, text: "Buses", Icon: BiBusSchool, to: "admin/bus" },
   {
-    id: 6,
+    id: 7,
     text: "Messages",
     Icon: FiMessageSquare,
     to: "admin/messages",
@@ -36,10 +44,9 @@ const sidebar = [
 
 const Sidebar = () => {
   const navigate = useNavigate();
-
   const { setUser } = useContext(AuthContext);
-
   const { user } = useAuth();
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -71,7 +78,7 @@ const Sidebar = () => {
             <SideItem
               key={item.id}
               Icon={item.Icon}
-              to={item.to}
+              to={item.isAddId ? `${item.to}/${user.id}` : item.to}
               text={item.text}
               target={item.target}
             />

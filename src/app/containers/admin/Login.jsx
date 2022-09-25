@@ -49,7 +49,7 @@ const Login = () => {
 
   if (authUser === undefined || Object.keys(user).length !== 0) return null;
   if (authUser && Object.keys(user).length === 0) {
-    return <Navigate to="/not-found" />;
+    return <Navigate to="/admin/home" />;
   }
 
   // if (Object.keys(user).length === 0 && authUser !== undefined) {
@@ -63,7 +63,8 @@ const Login = () => {
       <Form
         initialValues={{ email: "", password: "" }}
         onSubmit={handleLogin}
-        validationSchema={validationSchema}>
+        validationSchema={validationSchema}
+      >
         <Input
           label="EMAIL"
           type="email"
@@ -87,7 +88,8 @@ const Login = () => {
 
         <button
           className="btn btn-md btn-primary button"
-          onClick={() => navigate("/admin/register")}>
+          onClick={() => navigate("/admin/register")}
+        >
           Create New Account
         </button>
       </Form>
