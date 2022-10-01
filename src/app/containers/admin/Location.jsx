@@ -4,7 +4,6 @@ import {
   GoogleMap,
   MarkerF,
   DirectionsRenderer,
-  DirectionsService,
 } from "@react-google-maps/api";
 
 import Loader from "../../components/Loader";
@@ -17,15 +16,18 @@ const Location = () => {
   const [response, setResponse] = useState();
   const [open, setOpen] = useState(false);
   const [routes, setRoutes] = useState([]);
+  const [students, setStudents] = useState([]);
   const { user } = useAuth();
-  const { getDocumentByInstitute, data } = useApi();
-
+  const [buses, setBuses] = useState([]);
+  const { getDocumentByInstitute } = useApi();
+  const [filteredBuses, setFilteredBuses] = useState([]);
   const center = {
     lat: -3.745,
     lng: -38.523,
   };
 
   //,process.env.REACT_APP_GOOGLE_MAP_API_KEY
+  // "AIzaSyAuEoedfRUtYDOBUsLoGEZUPWeNJOEoXXg"
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "",
@@ -71,17 +73,39 @@ const Location = () => {
     setResponse(result);
   };
 
-  const getBusDetails = () => {
-    getDocumentByInstitute("bus", user.institute);
+  const getBusAndStudentDetails = async () => {
+    const buses = await getDocumentByInstitute("bus", user.institute);
+    const students = await getDocumentByInstitute("students", user.institute);
+
+    setStudents(students);
+    setBuses(buses);
+    setFilteredBuses(buses);
+  };
+
+  const handleSearch = (search) => {
+    if (!search) return setFilteredBuses(buses);
+
+    const studentBusNo = students.filter((student) =>
+      String(student.rollNo).includes(search)
+    );
+
+    const filtered = filteredBuses.filter(
+      (data) => data.busNo === search || studentBusNo[0]?.busNo === data.busNo
+    );
+
+    console.log(filtered);
+
+    setFilteredBuses(filtered);
   };
 
   useEffect(() => {
     directions();
-  }, [routes]);
+  }, [routes, filteredBuses]);
 
   useEffect(() => {
-    getBusDetails();
+    getBusAndStudentDetails();
   }, []);
+
   if (!isLoaded) {
     return <Loader />;
   }
@@ -93,14 +117,24 @@ const Location = () => {
           <ProSidebar style={{ width: "100%" }}>
             <Menu iconShape="square">
               <MenuItem>Dashboard</MenuItem>
-              {data.map((bus) => (
+              <div class="mb-3">
+                <input
+                  type="search"
+                  class="form-control w-75 ms-3"
+                  id="search"
+                  placeholder="Search Route"
+                  onChange={(e) => handleSearch(e.target.value)}
+                />
+              </div>
+              {filteredBuses.map((bus) => (
                 <SubMenu
                   onClick={() => setRoutes(bus.busRoutes)}
                   open={open}
                   onOpenChange={() =>
                     setOpen((prevState) => console.log(prevState))
                   }
-                  title={bus.busNo}>
+                  title={bus.busNo}
+                >
                   {bus.busRoutes.map((routes) => (
                     <MenuItem style={{ margin: 0 }}>
                       {`Latitude ${routes.latitude} & Longitude ${routes.longitude}`}
@@ -122,7 +156,8 @@ const Location = () => {
               mapTypeControl: false,
               fullscreenControl: false,
             }}
-            onLoad={(map) => setMap(map.panTo(center))}>
+            onLoad={(map) => setMap(map.panTo(center))}
+          >
             {!response && <MarkerF position={center} />}
 
             <DirectionsRenderer directions={response}></DirectionsRenderer>
