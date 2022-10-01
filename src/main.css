@@ -197,7 +197,6 @@ select:focus,
 .nav-link {
   margin: 0 20px;
   color: #000000 !important;
-  font-size: 20px !important;
   font-weight: 600 !important;
 }
 .nav-link::after {
@@ -286,6 +285,7 @@ header .contact-header .contact-details .icon {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   cursor: pointer;
   transition: all 0.5s ease-in-out;
 }
@@ -650,6 +650,164 @@ header .contact-header .contact-details .icon {
 }
 .users .users-container .user:hover {
   transform: scale(1.07);
+}
+
+.how-it-works-hero {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+}
+@media (max-width: 56.25em) {
+  .how-it-works-hero {
+    height: 700px;
+    flex-direction: column-reverse;
+  }
+}
+@media (max-width: 48em) {
+  .how-it-works-hero {
+    height: 550px;
+    flex-direction: column-reverse;
+  }
+}
+@media (max-width: 37.5em) {
+  .how-it-works-hero {
+    height: 600px;
+    flex-direction: column-reverse;
+  }
+}
+.how-it-works-hero .how-it-works-text-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 25px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+@media (max-width: 56.25em) {
+  .how-it-works-hero .how-it-works-text-container {
+    justify-content: flex-start;
+  }
+}
+.how-it-works-hero .how-it-works-text-container .text {
+  max-width: 600px;
+}
+.how-it-works-hero .how-it-works-text-container .text .heading {
+  font-size: 30px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+@media (max-width: 48em) {
+  .how-it-works-hero .how-it-works-text-container .text .heading {
+    font-size: 25px;
+  }
+}
+@media (max-width: 37.5em) {
+  .how-it-works-hero .how-it-works-text-container .text .heading {
+    font-size: 20px;
+  }
+}
+.how-it-works-hero .how-it-works-text-container .text .description {
+  font-size: 17px;
+  font-weight: 500;
+  text-align: justify;
+}
+@media (max-width: 48em) {
+  .how-it-works-hero .how-it-works-text-container .text .description {
+    font-size: 15px;
+  }
+}
+@media (max-width: 37.5em) {
+  .how-it-works-hero .how-it-works-text-container .text .description {
+    font-size: 15px;
+  }
+}
+.how-it-works-hero .how-it-works-image-container {
+  width: 100%;
+  height: 100%;
+}
+.how-it-works-hero .how-it-works-image-container .how-it-works-image {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.how-it-works-hero .how-it-works-image-container .how-it-works-image img {
+  height: 420px;
+}
+@media (max-width: 48em) {
+  .how-it-works-hero .how-it-works-image-container .how-it-works-image img {
+    height: 350px;
+  }
+}
+
+.working-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 70px;
+}
+.working-container .working-items {
+  width: 100%;
+  padding: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  justify-items: center;
+  gap: 20px;
+}
+.working-container .working-items .item {
+  width: 250px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+}
+.working-container .working-items .item:hover {
+  transform: scale(1.05);
+}
+.working-container .working-items .item .image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.working-container .working-items .item .image-container .image {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain !important;
+     object-fit: contain !important;
+}
+.working-container .working-items .item .image-container span {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: rgb(249, 249, 249);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  padding: 10px 30px;
+  border-radius: 20px;
+  color: blue !important;
+  font-weight: 700;
+  font-size: 17px;
+}
+.working-container .working-items .item .description {
+  width: 100%;
+  height: 100px;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  padding: 15px 10px;
+  padding-left: 10px !important;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
 }
 
 .sidebar {

@@ -7,12 +7,10 @@ import {
   where,
   query,
 } from "firebase/firestore";
-import useAuth from "../context/auth/useAuth";
 import { database } from "./../firebase/firebaseConfig";
 
 export default function useApi() {
   const [data, setData] = useState([]);
-  const { user } = useAuth();
 
   const deleteDocument = async (collectionName, id) => {
     const documentRef = doc(database, collectionName, id);

@@ -95,7 +95,7 @@ const Register = () => {
 
   if (authUser === undefined || Object.keys(user).length !== 0) return null;
   if (authUser && Object.keys(user).length === 0) {
-    return <Navigate to="/not-found" />;
+    return <Navigate to="/admin/home" />;
   }
 
   return (
@@ -117,7 +117,8 @@ const Register = () => {
           contact: "",
         }}
         onSubmit={handleSubmit}
-        validationSchema={validationSchema}>
+        validationSchema={validationSchema}
+      >
         <Input
           label="FIRST NAME"
           type="text"
@@ -167,7 +168,8 @@ const Register = () => {
 
         <button
           className="btn btn-md btn-primary button"
-          onClick={() => navigate("/admin/login")}>
+          onClick={() => navigate("/admin/login")}
+        >
           Sign in
         </button>
       </Form>

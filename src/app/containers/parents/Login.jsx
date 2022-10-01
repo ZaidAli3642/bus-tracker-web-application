@@ -26,23 +26,27 @@ const Login = () => {
   const login = async (values) => {
     setLoading(true);
 
+    console.log(typeof values.nationalIdentityNumber);
+
     try {
       const parentCollection = collection(database, "parent");
       const q1 = query(
         parentCollection,
-        where("nationalIdentityNumber", "==", values.nationalIdentityNumber)
-      );
-      const q2 = query(
-        parentCollection,
+        where(
+          "nationalIdentityNumber",
+          "==",
+          String(values.nationalIdentityNumber)
+        ),
         where("password", "==", values.password)
       );
 
-      const parentSnapshot = await getDocs(q1, q2);
+      const parentSnapshot = await getDocs(q1);
 
       const parent = parentSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
+      console.log(parent);
 
       setParent(parent[0]);
       localStorage.setItem("parentAuth", JSON.stringify(parent));

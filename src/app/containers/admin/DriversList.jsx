@@ -45,6 +45,12 @@ const DriversList = () => {
   return (
     <>
       <h1>DRIVERS LIST</h1>
+      <button
+        className="btn btn-md btn-primary ms-0  my-3"
+        onClick={() => navigate("/admin/driver_update/new")}
+      >
+        Add Driver
+      </button>
       <div className="items">
         <ol className="p-0">
           {drivers.map((driver) => (

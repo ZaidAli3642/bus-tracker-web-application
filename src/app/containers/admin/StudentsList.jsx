@@ -71,6 +71,12 @@ const StudentsList = () => {
           onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
+      <button
+        className="btn btn-md btn-primary m-0"
+        onClick={() => navigation("/admin/student_update/new")}
+      >
+        Add Students
+      </button>
       <div className="items">
         <ol className="ps-2">
           {filteredData.map((student) => (
