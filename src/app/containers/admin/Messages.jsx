@@ -15,6 +15,7 @@ import MessagesBox from "../../components/MessagesBox";
 import {
   createChatConversation,
   getAdmins,
+  getDrivers,
   getParents,
   send,
 } from "../../firebase/firebaseCalls/chat";
@@ -59,10 +60,21 @@ const Messages = () => {
     }
   };
 
+  const getAllDrivers = async () => {
+    try {
+      const drivers = await getDrivers(user);
+
+      return drivers;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getAllPeople = async () => {
     const admins = await getAllAdmins();
     const parents = await getAllParents();
-    setPersons([...admins, ...parents]);
+    const drivers = await getAllDrivers();
+    setPersons([...admins, ...parents, ...drivers]);
   };
 
   const sendMessage = async (values, { resetForm }) => {

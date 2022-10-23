@@ -86,7 +86,7 @@ const Location = () => {
     if (!search) return setFilteredBuses(buses);
 
     const studentBusNo = students.filter((student) =>
-      String(student.rollNo).includes(search)
+      String(student.rollNo).startsWith(search)
     );
 
     const filtered = filteredBuses.filter(

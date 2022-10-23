@@ -76,6 +76,7 @@ const DriversList = () => {
                 busNo: driver.busNo,
                 driverDutyTime: driver.driverDutyTime,
                 driverDutyEnd: driver.driverDutyEnd,
+                nationalIdentityNumber: driver.nationalIdentityNumber,
               }}
               title={driver.firstname}
               onDelete={handleDelete}
@@ -100,6 +101,7 @@ const DriversList = () => {
                     driverDutyEnd: driver.driverDutyEnd,
                     licenseImage: driver.licenseImage,
                     medicalReport: driver.medicalReport,
+                    nationalIdentityNumber: driver.nationalIdentityNumber,
                     isUpdated: true,
                   },
                 })

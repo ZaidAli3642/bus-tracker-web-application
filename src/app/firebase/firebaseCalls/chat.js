@@ -36,6 +36,36 @@ export const getParents = async (user) => {
   return parents;
 };
 
+export const getDrivers = async (user) => {
+  const driverCollection = collection(database, "drivers");
+  const q = query(driverCollection, where("institute", "==", user.institute));
+
+  const driverSnapshot = await getDocs(q);
+  const drivers = driverSnapshot.docs.map((driver) => ({
+    id: driver.id,
+    ...driver.data(),
+  }));
+
+  return drivers;
+};
+
+export const getSpecificDriver = async (user) => {
+  const driverCollection = collection(database, "drivers");
+  const q = query(
+    driverCollection,
+    where("institute", "==", user.institute),
+    where("busNo", "==", user.busNo)
+  );
+
+  const driverSnapshot = await getDocs(q);
+  const driver = driverSnapshot.docs.map((driver) => ({
+    id: driver.id,
+    ...driver.data(),
+  }));
+
+  return driver;
+};
+
 export const send = async (data) => {
   const messagesCollections = collection(database, "messages");
   await addDoc(messagesCollections, data);
