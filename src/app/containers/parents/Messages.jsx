@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import useApi from "./../../hooks/useApi";
 import {
   createChatConversation,
+  getSpecificDriver,
   send,
 } from "../../firebase/firebaseCalls/chat";
 
@@ -38,7 +39,10 @@ const Messages = () => {
 
   const getPersons = async () => {
     const admins = await getDocumentByInstitute("admin", parent.institute);
-    setPersons([...admins]);
+    const driver = await getSpecificDriver(parent);
+
+    console.log("driver : ", driver);
+    setPersons([...admins, ...driver]);
   };
 
   const handlePersonClick = (person) => {

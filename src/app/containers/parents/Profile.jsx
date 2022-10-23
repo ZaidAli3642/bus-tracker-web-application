@@ -58,7 +58,8 @@ const Profile = () => {
 
     const bus = await getSpecificBus(student[0].busNo, student[0].institute);
     setBus(bus[0]);
-    console.log(bus);
+
+    console.log("Bus : ", bus);
   };
 
   useEffect(() => {

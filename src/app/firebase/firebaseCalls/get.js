@@ -27,6 +27,7 @@ export const getSpecificStudent = async (rollNo) => {
     ...student.data(),
   }));
 
+  console.log("Students : ", students);
   return students;
 };
 

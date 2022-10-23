@@ -63,6 +63,7 @@ const DriverInformationForm = () => {
     isUpdated,
     licenseImage,
     medicalReport,
+    nationalIdentityNumber,
   } = location.state || {};
 
   const getBusDetails = async () => {
@@ -99,6 +100,8 @@ const DriverInformationForm = () => {
         driverDutyTime: values.driverDutyTime,
         driverDutyEnd: values.driverDutyEnd,
         institute: user.institute,
+        nationalIdentityNumber: values.nationalIdentityNumber,
+        password: values.nationalIdentityNumber,
       };
 
       const driverCollection = collection(database, "drivers");
@@ -181,6 +184,7 @@ const DriverInformationForm = () => {
               driverDutyEnd: driverDutyEnd || "",
               drivingLicense: licenseImage || null,
               medicalReport: medicalReport || null,
+              nationalIdentityNumber: nationalIdentityNumber || "",
             }}
             onSubmit={handleDriverInformation}
             validationSchema={validationSchema}
@@ -203,6 +207,12 @@ const DriverInformationForm = () => {
                 name="driverId"
                 type="text"
                 placeholder="Enter Driver Id"
+              />
+              <Input
+                label="National Identity Number"
+                name="nationalIdentityNumber"
+                type="text"
+                placeholder="Enter National ID Number"
               />
             </div>
             <div className="items-details">
