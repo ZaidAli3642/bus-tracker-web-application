@@ -18,7 +18,7 @@ const LiveLocation = () => {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "",
+    googleMapsApiKey: "AIzaSyAuEoedfRUtYDOBUsLoGEZUPWeNJOEoXXg",
   });
 
   if (!isLoaded) return <Loader />;
@@ -34,7 +34,8 @@ const LiveLocation = () => {
                 <SubMenu
                   open={open}
                   onOpenChange={() => setOpen(!open)}
-                  title={"component"}>
+                  title={"component"}
+                >
                   <MenuItem style={{ margin: 0 }}>{`Latitude`}</MenuItem>
                 </SubMenu>
               </Menu>
@@ -51,7 +52,8 @@ const LiveLocation = () => {
                 mapTypeControl: false,
                 fullscreenControl: false,
               }}
-              onLoad={(map) => setMap(map.panTo(center))}>
+              onLoad={(map) => setMap(map.panTo(center))}
+            >
               <MarkerF position={center} />
               {/* {response && (
               <DirectionsRenderer directions={response}></DirectionsRenderer>

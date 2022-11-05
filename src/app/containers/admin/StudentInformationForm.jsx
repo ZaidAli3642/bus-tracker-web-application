@@ -262,8 +262,7 @@ const StudentInformationForm = () => {
               <Input
                 label="National Identity Number"
                 name="nationalIdentityNumber"
-                type="number"
-                min="0"
+                type="text"
                 placeholder="Enter National Id"
               />
             </div>
