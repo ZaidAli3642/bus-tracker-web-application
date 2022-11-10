@@ -249,6 +249,12 @@ select:focus,
   color: #163269;
 }
 
+.pdf {
+  overflow: hidden;
+  width: 100%;
+  height: 50%;
+}
+
 header {
   font-family: "Poppins", sans-serif;
 }

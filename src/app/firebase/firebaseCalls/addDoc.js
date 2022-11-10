@@ -120,5 +120,5 @@ export const updateData = async (
   const docRef = doc(database, collectionName, docId);
 
   await updateDoc(docRef, information);
-  return true;
+  return information;
 };
