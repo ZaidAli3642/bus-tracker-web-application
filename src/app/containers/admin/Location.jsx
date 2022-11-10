@@ -30,7 +30,7 @@ const Location = () => {
   // "AIzaSyAuEoedfRUtYDOBUsLoGEZUPWeNJOEoXXg"
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "",
+    googleMapsApiKey: "AIzaSyAuEoedfRUtYDOBUsLoGEZUPWeNJOEoXXg",
   });
 
   const directions = async () => {

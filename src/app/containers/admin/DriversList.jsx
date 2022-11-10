@@ -40,7 +40,18 @@ const DriversList = () => {
 
   if (isLoading) return <Loader />;
 
-  if (drivers.length === 0) return <h3>No Drivers Added</h3>;
+  if (drivers.length === 0)
+    return (
+      <>
+        <h3>No Drivers Added</h3>
+        <button
+          className="btn btn-md btn-primary ms-0  my-3"
+          onClick={() => navigate("/admin/driver_update/new")}
+        >
+          Add Driver
+        </button>
+      </>
+    );
 
   return (
     <>

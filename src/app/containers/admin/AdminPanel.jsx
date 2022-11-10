@@ -10,6 +10,7 @@ import Admin from "./Admin";
 import BusInformationForm from "./BusInformationForm";
 import DriverInformationForm from "./DriverInformationForm";
 import StudentInformationForm from "./StudentInformationForm";
+import PDFFile from "./PDFFile";
 
 const AdminPanel = () => {
   return (
@@ -34,6 +35,7 @@ const AdminPanel = () => {
             <Route path="/bus_update/:id" element={<BusInformationForm />} />
             <Route path="/bus/:id" element={<BusDetails />} />
             <Route path="/bus" element={<BusLists />} />
+            <Route path="/pdf" element={<PDFFile />} />
             {/* <Route path="/location" element={<Location />} /> */}
           </Routes>
         </>

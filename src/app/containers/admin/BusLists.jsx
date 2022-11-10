@@ -53,7 +53,18 @@ const BusLists = () => {
 
   if (isLoading) return <Loader />;
 
-  if (buses.length === 0) return <h3>No Buses Added</h3>;
+  if (buses.length === 0)
+    return (
+      <>
+        <h3>No Buses Added</h3>
+        <button
+          className="btn btn-md btn-primary my-3 ms-0"
+          onClick={() => navigate("/admin/bus_update/new")}
+        >
+          Add Buses and Routes
+        </button>
+      </>
+    );
 
   return (
     <>

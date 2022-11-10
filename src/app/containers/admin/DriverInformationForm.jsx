@@ -102,6 +102,8 @@ const DriverInformationForm = () => {
         institute: user.institute,
         nationalIdentityNumber: values.nationalIdentityNumber,
         password: values.nationalIdentityNumber,
+        loginUser: "drivers",
+        isDriver: true,
       };
 
       const driverCollection = collection(database, "drivers");

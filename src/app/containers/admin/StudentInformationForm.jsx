@@ -4,6 +4,7 @@ import { collection, getDocs, where, query } from "firebase/firestore";
 import { database } from "../../firebase/firebaseConfig";
 import { useLocation, useMatch } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 import Input from "../../components/Input";
 import Form from "../../components/Form";
@@ -41,9 +42,11 @@ const validationSchema = Yup.object().shape({
 });
 
 const StudentInformationForm = () => {
+  const navigate = useNavigate();
   const [busNoList, setBusNoList] = useState([]);
   const [parentDetail, setParentDetail] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const location = useLocation();
@@ -127,7 +130,11 @@ const StudentInformationForm = () => {
         institute: user.institute,
         fullName: values.parent,
         parentcontact: values.parentcontact,
+        loginUser: "parent",
+        isParent: true,
       };
+
+      // generateQRCode(JSON.stringify(data));
 
       const studentCollection = collection(database, "students");
 
@@ -156,12 +163,27 @@ const StudentInformationForm = () => {
         result = await addData(data, "students", values.image);
       }
 
+      console.log("Result : ", result);
+
       setIsProcessing(false);
       if (result === undefined) {
         return toast.warning("Image should be in png, jpg or jpeg format");
       }
 
       toast.success("Data Saved Successfully");
+      navigate("/admin/pdf", {
+        state: {
+          studentdata: {
+            rollNo: values.rollNo,
+            firstname: values.firstname,
+            lastname: values.lastname,
+            institute: user.institute,
+            image: result.image,
+            busNo: values.busNo,
+            studentId: match.params.id,
+          },
+        },
+      });
       resetForm();
     } catch (error) {
       console.log(error);
@@ -262,8 +284,7 @@ const StudentInformationForm = () => {
               <Input
                 label="National Identity Number"
                 name="nationalIdentityNumber"
-                type="number"
-                min="0"
+                type="text"
                 placeholder="Enter National Id"
               />
             </div>
@@ -302,6 +323,9 @@ const StudentInformationForm = () => {
 
               <Input label="Major or Class" name="class" type="text" />
             </div>
+            {/* <a href={url} download="qrcode.png">
+              Download
+            </a> */}
 
             <SubmitButton title="SAVE STUDENT" isLoading={isProcessing} />
           </Form>

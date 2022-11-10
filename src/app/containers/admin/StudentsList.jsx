@@ -54,7 +54,18 @@ const StudentsList = () => {
 
   if (isLoading) return <Loader />;
 
-  if (students.length === 0) return <h3>No Students Added</h3>;
+  if (students.length === 0)
+    return (
+      <>
+        <h3>No Students Added</h3>
+        <button
+          className="btn btn-md btn-primary m-0"
+          onClick={() => navigation("/admin/student_update/new")}
+        >
+          Add Students
+        </button>
+      </>
+    );
 
   return (
     <>

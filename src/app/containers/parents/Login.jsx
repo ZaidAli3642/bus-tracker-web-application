@@ -32,11 +32,7 @@ const Login = () => {
       const parentCollection = collection(database, "parent");
       const q1 = query(
         parentCollection,
-        where(
-          "nationalIdentityNumber",
-          "==",
-          String(values.nationalIdentityNumber)
-        ),
+        where("nationalIdentityNumber", "==", values.nationalIdentityNumber),
         where("password", "==", values.password)
       );
 
@@ -93,7 +89,7 @@ const Login = () => {
                   name="nationalIdentityNumber"
                   inputClasses="input"
                   label="National Id Number"
-                  type="number"
+                  type="text"
                 />
                 <Input
                   name="password"
