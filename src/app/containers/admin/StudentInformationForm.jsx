@@ -20,6 +20,7 @@ const validationSchema = Yup.object().shape({
   lastname: Yup.string().required().label("Last Name"),
   parent: Yup.string().required().label("Father/Guardian"),
   parentcontact: Yup.number("Parent Contact must be numbers.")
+    .typeError("Contact must be numbers")
     .required()
     .label("Parent Contact"),
   country: Yup.string().required().label("Country"),
@@ -30,13 +31,17 @@ const validationSchema = Yup.object().shape({
     .max(5, "Postal Code must be 5 digits")
     .required()
     .label("Postal Code"),
-  contact: Yup.number("Contact must be numbers").required().label("Contact"),
+  contact: Yup.number("Contact must be numbers")
+    .typeError("Contact must be numbers")
+    .required()
+    .label("Contact"),
   busNo: Yup.string().required().label("Bus No"),
   class: Yup.string().required().label("Class"),
   image: Yup.string().nullable().required().label("Student Image"),
   nationalIdentityNumber: Yup.number(
     "National Identity Number should be number."
   )
+    .typeError("National Identity Number should be number.")
     .required()
     .label("National Identity Number"),
 });
