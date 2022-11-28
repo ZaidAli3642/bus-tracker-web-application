@@ -1,4 +1,10 @@
-const PersonDetails = ({ image, name, designation, handleClick }) => {
+const PersonDetails = ({
+  image,
+  name,
+  designation,
+  handleClick,
+  messagesNumber,
+}) => {
   return (
     <>
       <div className="people-details" onClick={handleClick}>
@@ -12,6 +18,7 @@ const PersonDetails = ({ image, name, designation, handleClick }) => {
           <h6>{designation}</h6>
           <div className="line"></div>
         </div>
+        {messagesNumber !== 0 && <span>{`(${messagesNumber})`}</span>}
       </div>
     </>
   );

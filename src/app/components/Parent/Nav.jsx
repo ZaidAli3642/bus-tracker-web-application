@@ -4,11 +4,30 @@ import { NavLink, useLocation } from "react-router-dom";
 import useParentAuth from "./../../context/auth/useParentAuth";
 import { useContext } from "react";
 import AuthContext from "./../../context/authContext";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { useState } from "react";
+import { database } from "../../firebase/firebaseConfig";
+import { useEffect } from "react";
 
 const Nav = () => {
+  const [messagesNumber, setMessagesNumber] = useState(0);
   const location = useLocation();
   const { parent } = useParentAuth();
   const { setParent } = useContext(AuthContext);
+
+  const getMessagesNumber = async () => {
+    const messagesCollection = collection(database, "notifications");
+    const q = query(
+      messagesCollection,
+      where("notificationReceive", "==", parent.institute),
+      where("receiverId", "==", parent.id),
+      where("messageRead", "==", false)
+    );
+    const messagesSnapshot = await getDocs(q);
+
+    setMessagesNumber(messagesSnapshot.size);
+    console.log("Messages NUmber : ", messagesNumber);
+  };
 
   const logout = async () => {
     try {
@@ -19,6 +38,10 @@ const Nav = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (parent) getMessagesNumber();
+  }, [parent]);
 
   if (location.pathname === "/login" || location.pathname === "/register")
     return null;
@@ -91,6 +114,21 @@ const Nav = () => {
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/messages">
                       Messages
+                      {messagesNumber !== 0 && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: 25,
+                            backgroundColor: "blue",
+                            color: "white",
+                            borderRadius: 25,
+                            width: 35,
+                            textAlign: "center",
+                          }}
+                        >
+                          {messagesNumber}
+                        </span>
+                      )}
                     </NavLink>
                   </li>
                   <li className="nav-item">

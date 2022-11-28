@@ -11,10 +11,11 @@ import BusInformationForm from "./BusInformationForm";
 import DriverInformationForm from "./DriverInformationForm";
 import StudentInformationForm from "./StudentInformationForm";
 import PDFFile from "./PDFFile";
+import AdminNotifications from "./AdminNotifications";
 
 const AdminPanel = () => {
   return (
-    <div className="col-10">
+    <div className="col-9">
       <div className="admin">
         <>
           <Routes>
@@ -36,6 +37,7 @@ const AdminPanel = () => {
             <Route path="/bus/:id" element={<BusDetails />} />
             <Route path="/bus" element={<BusLists />} />
             <Route path="/pdf" element={<PDFFile />} />
+            <Route path="/notifications" element={<AdminNotifications />} />
             {/* <Route path="/location" element={<Location />} /> */}
           </Routes>
         </>
