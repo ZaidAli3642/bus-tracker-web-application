@@ -9,7 +9,9 @@ const SideItem = ({
   Icon,
   target,
   handleClick,
+  notifications,
 }) => {
+  console.log("Helllo :", notifications);
   return (
     <li className="side-item">
       <Icon color={color} size={size} />
@@ -21,6 +23,7 @@ const SideItem = ({
       >
         {text}
       </Link>
+      <span className="number">{notifications !== 0 && notifications}</span>
     </li>
   );
 };

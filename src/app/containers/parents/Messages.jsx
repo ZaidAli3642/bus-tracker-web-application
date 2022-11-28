@@ -7,10 +7,13 @@ import SubmitButton from "./../../components/SubmitButton";
 import { database } from "../../firebase/firebaseConfig";
 import {
   collection,
+  doc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import useParentAuth from "./../../context/auth/useParentAuth";
@@ -19,7 +22,9 @@ import useApi from "./../../hooks/useApi";
 import {
   createChatConversation,
   getSpecificDriver,
+  messageNotifications,
   send,
+  unReadMessages,
 } from "../../firebase/firebaseCalls/chat";
 
 const Messages = () => {
@@ -34,6 +39,7 @@ const Messages = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [conversation, setConversation] = useState();
+  const [messagesNumber, setMessagesNumber] = useState();
   const { getDocumentByInstitute } = useApi();
   console.log(parent);
 
@@ -45,13 +51,17 @@ const Messages = () => {
     setPersons([...admins, ...driver]);
   };
 
-  const handlePersonClick = (person) => {
+  const handlePersonClick = async (person) => {
     setHeader({
       id: person.id,
       name: person.firstname + " " + person.lastname,
       image: person.image,
       designation: person.designation,
     });
+
+    console.log("Person : ", person);
+    const docRef = doc(database, "notifications", person.messageNumberId);
+    await updateDoc(docRef, { messageRead: true });
   };
 
   const createConversation = async () => {
@@ -69,6 +79,22 @@ const Messages = () => {
     }
   };
 
+  const getMessagesNumber = async () => {
+    const messagesCollection = collection(database, "notifications");
+    const q = query(
+      messagesCollection,
+      where("notificationReceive", "==", parent.institute),
+      where("receiverId", "==", parent.id),
+      where("messageRead", "==", false)
+    );
+    const messagesSnapshot = await getDocs(q);
+    const messages = messagesSnapshot.docs.map((messages) => ({
+      id: messages.id,
+      ...messages.data(),
+    }));
+    setMessagesNumber(messages);
+  };
+
   const sendMessage = async (values, { resetForm }) => {
     try {
       const data = {
@@ -78,8 +104,32 @@ const Messages = () => {
         conversationId: conversation.conversationId,
         createdAt: serverTimestamp(),
       };
+
+      const messageNotification = {
+        messageRead: false,
+        notificationReceive: parent.institute,
+        receiverId: header.id,
+        senderId: parent.id,
+        conversationId: conversation.conversationId,
+        data: [],
+      };
       resetForm();
       await send(data);
+      const unReadMessage = await unReadMessages(parent, conversation);
+      console.log("Messages Zaid Saleem: ", unReadMessage);
+
+      delete data.createdAt;
+      if (unReadMessage.length > 0) {
+        // update the collection
+        messageNotification.data = [...unReadMessage[0].data, data];
+
+        const docRef = doc(database, "notifications", unReadMessage[0].id);
+
+        await updateDoc(docRef, messageNotification);
+        return;
+      }
+      messageNotification.data = [data];
+      await messageNotifications(messageNotification);
       // dummy.current.scrollIntoView({ behavior: "smooth" });
     } catch (error) {
       console.log(error);
@@ -114,6 +164,7 @@ const Messages = () => {
   }, [header]);
 
   useEffect(() => {
+    getMessagesNumber();
     getPersonChat();
     getPersons();
   }, [messages, conversation]);
@@ -122,14 +173,25 @@ const Messages = () => {
     <div className="container-fluid parent-message-container p-0">
       <div className="row parent-messages">
         <div className="col-4 parent-chat-people p-0 ps-2">
-          {persons.map((person) => (
-            <PersonDetails
-              name={person.firstname + " " + person.lastname}
-              designation={person.designation}
-              image={person.image}
-              handleClick={() => handlePersonClick(person)}
-            />
-          ))}
+          {persons.map((person) => {
+            person.messagesCount = 0;
+            person.messageNumberId = "";
+            messagesNumber.forEach((messages) => {
+              if (messages.senderId === person.id) {
+                person.messagesCount = messages.data.length;
+                person.messageNumberId = messages.id;
+              }
+            });
+            return (
+              <PersonDetails
+                name={person.firstname + " " + person.lastname}
+                designation={person.designation}
+                image={person.image}
+                messagesNumber={person.messagesCount}
+                handleClick={() => handlePersonClick(person)}
+              />
+            );
+          })}
         </div>
 
         <div className="col-8 message-container">

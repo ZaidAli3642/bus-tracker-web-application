@@ -255,6 +255,11 @@ select:focus,
   height: 50%;
 }
 
+.number {
+  color: #ff1a4a;
+  margin: 0 10px;
+}
+
 header {
   font-family: "Poppins", sans-serif;
 }
@@ -1454,4 +1459,20 @@ header .contact-header .contact-details .icon {
 .footer .second-footer-section .footer-icons .icon:hover {
   color: #ababab;
   transform: scale(1.1);
+}
+
+.notification-container {
+  width: 100%;
+  height: 100%;
+}
+.notification-container .items .notification {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 20px;
+}
+.notification-container .items .notification .notification-details {
+  margin-left: 20px;
 }/*# sourceMappingURL=main.css.map */
