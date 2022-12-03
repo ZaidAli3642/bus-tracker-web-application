@@ -83,6 +83,28 @@ const Messages = () => {
     setPersons([...admins, ...parents, ...drivers]);
   };
 
+  async function sendPushNotification(expoPushToken, title, body) {
+    const message = {
+      to: expoPushToken,
+      sound: "default",
+      title: title,
+      body: body,
+      data: { someData: "goes here" },
+    };
+
+    console.log("TOken ,", message);
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  }
+
   const sendMessage = async (values, { resetForm }) => {
     try {
       const data = {
@@ -103,6 +125,8 @@ const Messages = () => {
       };
       resetForm();
       await send(data);
+      if (header.pushToken)
+        sendPushNotification(header.pushToken, "New message", values.message);
       const unReadMessage = await unReadMessages(user, conversation);
       console.log("Messages Zaid Saleem: ", unReadMessage);
 
@@ -132,6 +156,7 @@ const Messages = () => {
         : person.firstname + " " + person.lastname,
       image: person.image,
       designation: person.designation,
+      pushToken: person.pushToken,
     });
     const docRef = doc(database, "notifications", person.messageNumberId);
     await updateDoc(docRef, { messageRead: true });

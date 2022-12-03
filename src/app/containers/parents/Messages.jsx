@@ -57,6 +57,7 @@ const Messages = () => {
       name: person.firstname + " " + person.lastname,
       image: person.image,
       designation: person.designation,
+      pushToken: person.pushToken,
     });
 
     console.log("Person : ", person);
@@ -95,6 +96,28 @@ const Messages = () => {
     setMessagesNumber(messages);
   };
 
+  async function sendPushNotification(expoPushToken, title, body) {
+    const message = {
+      to: expoPushToken,
+      sound: "default",
+      title: title,
+      body: body,
+      data: { someData: "goes here" },
+    };
+
+    console.log("TOken ,", message);
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  }
+
   const sendMessage = async (values, { resetForm }) => {
     try {
       const data = {
@@ -113,8 +136,12 @@ const Messages = () => {
         conversationId: conversation.conversationId,
         data: [],
       };
+
+      console.log("Header : ", header);
       resetForm();
       await send(data);
+      if (header.pushToken)
+        sendPushNotification(header.pushToken, "New message", values.message);
       const unReadMessage = await unReadMessages(parent, conversation);
       console.log("Messages Zaid Saleem: ", unReadMessage);
 
@@ -140,19 +167,19 @@ const Messages = () => {
     if (!header.id) return null;
 
     setIsLoading(true);
-    const chatCollections = collection(database, "messages");
-    const q = query(
-      chatCollections,
-      where("conversationId", "==", conversation.conversationId),
-      orderBy("createdAt", "asc")
-    );
-    onSnapshot(q, (chatSnapshot) => {
-      const chats = chatSnapshot.docs.map((chat) => ({
-        id: chat.id,
-        ...chat.data(),
-      }));
-      setMessages(chats);
-    });
+    // const chatCollections = collection(database, "messages");
+    // const q = query(
+    //   chatCollections,
+    //   where("conversationId", "==", conversation.conversationId),
+    //   orderBy("createdAt", "asc")
+    // );
+    // onSnapshot(q, (chatSnapshot) => {
+    //   const chats = chatSnapshot.docs.map((chat) => ({
+    //     id: chat.id,
+    //     ...chat.data(),
+    //   }));
+    //   setMessages(chats);
+    // });
 
     console.log(messages);
 
