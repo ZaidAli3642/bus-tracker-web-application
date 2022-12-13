@@ -31,9 +31,8 @@ const steps = [
   },
   {
     id: 6,
-    description:
-      "Students can mark their attendance by biometric fingerprintin",
-    image: require("../../assets/working-6.png"),
+    description: "Students can mark their attendance by scanning QR",
+    image: require("../../assets/working-6-1.png"),
   },
   {
     id: 7,

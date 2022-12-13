@@ -1,30 +1,30 @@
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import React from "react";
-import { useState } from "react";
 import { useEffect } from "react";
-
-import useAuth from "../../context/auth/useAuth";
+import { useState } from "react";
+import { format } from "timeago.js";
+import useParentAuth from "../../context/auth/useParentAuth";
 import { getDrivers } from "../../firebase/firebaseCalls/chat";
 import { database } from "../../firebase/firebaseConfig";
-import { format } from "timeago.js";
 
-function AdminNotifications() {
-  const { user } = useAuth();
+export default function ParentNotifications() {
   const [alerts, setAlerts] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const { parent } = useParentAuth();
 
   const getInstituteDrivers = async () => {
-    const drivers = await getDrivers(user);
+    const drivers = await getDrivers(parent);
 
     setDrivers(drivers);
   };
 
   const getAlerts = async () => {
     const alertCollection = collection(database, "alert");
-
     const q = query(
       alertCollection,
-      where("institute", "==", user.institute),
+      where("institute", "==", parent.institute),
+      where("parent", "==", true),
+      where("busNo", "==", parent.busNo),
       orderBy("created_at", "desc")
     );
     const alertSnapshot = await getDocs(q);
@@ -38,22 +38,29 @@ function AdminNotifications() {
 
   useEffect(() => {
     getInstituteDrivers();
-
     getAlerts();
   }, []);
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        // justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
       <h1>Notifications</h1>
-      <div className="notification-container">
-        <div className="items">
-          {alerts.map((alert) => {
-            let image = require("../../assets/profile-avatar.jpg");
-            drivers.forEach((driver) => {
-              if (driver.busNo === alert.busNo) image = driver.image;
-            });
-            return (
-              <div className="notification">
+      <div className="parent_notification-container">
+        {alerts.map((alert) => {
+          let image = require("../../assets/profile-avatar.jpg");
+          drivers.forEach((driver) => {
+            if (driver.busNo === alert.busNo) image = driver.image;
+          });
+
+          return (
+            <>
+              <div className="parent_notification">
                 <div className="d-flex">
                   <img src={image} className="profile-image" />
                   <div className="notification-details">
@@ -66,12 +73,10 @@ function AdminNotifications() {
                   <span>{format(alert.created_at.toDate())}</span>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </>
+          );
+        })}
       </div>
-    </>
+    </div>
   );
 }
-
-export default AdminNotifications;

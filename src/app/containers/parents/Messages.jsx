@@ -167,19 +167,19 @@ const Messages = () => {
     if (!header.id) return null;
 
     setIsLoading(true);
-    // const chatCollections = collection(database, "messages");
-    // const q = query(
-    //   chatCollections,
-    //   where("conversationId", "==", conversation.conversationId),
-    //   orderBy("createdAt", "asc")
-    // );
-    // onSnapshot(q, (chatSnapshot) => {
-    //   const chats = chatSnapshot.docs.map((chat) => ({
-    //     id: chat.id,
-    //     ...chat.data(),
-    //   }));
-    //   setMessages(chats);
-    // });
+    const chatCollections = collection(database, "messages");
+    const q = query(
+      chatCollections,
+      where("conversationId", "==", conversation.conversationId),
+      orderBy("createdAt", "asc")
+    );
+    onSnapshot(q, (chatSnapshot) => {
+      const chats = chatSnapshot.docs.map((chat) => ({
+        id: chat.id,
+        ...chat.data(),
+      }));
+      setMessages(chats);
+    });
 
     console.log(messages);
 

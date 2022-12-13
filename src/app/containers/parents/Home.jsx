@@ -44,8 +44,8 @@ const features = [
   },
   {
     id: 5,
-    label: "Biometric Attendence",
-    image: require("../../assets/feature-5.png"),
+    label: "QR Code Scan",
+    image: require("../../assets/feature-5-1.png"),
   },
   {
     id: 6,

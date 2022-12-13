@@ -1468,11 +1468,28 @@ header .contact-header .contact-details .icon {
 .notification-container .items .notification {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: white;
   padding: 10px 20px;
   margin: 10px 0;
   border-radius: 20px;
 }
 .notification-container .items .notification .notification-details {
+  margin-left: 20px;
+}
+
+.parent_notification-container {
+  width: 40rem;
+}
+.parent_notification-container .parent_notification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: whitesmoke;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 20px;
+}
+.parent_notification-container .parent_notification .notification-details {
   margin-left: 20px;
 }/*# sourceMappingURL=main.css.map */
