@@ -16,6 +16,7 @@ import LiveLocation from "./app/containers/parents/LiveLocation";
 import Profile from "./app/containers/parents/Profile";
 import Footer from "./app/components/Parent/Footer";
 import HowItWorks from "./app/containers/parents/HowItWorks";
+import ParentNotifications from "./app/containers/parents/ParentNotifications";
 
 const routes = [
   "/",
@@ -26,6 +27,7 @@ const routes = [
   "/profile",
   "/how-it-works",
   "/route-not-found",
+  "/notifications",
 ];
 
 function App() {
@@ -70,6 +72,15 @@ function App() {
                 element={
                   <ParentPrivateRoutes>
                     <LiveLocation />
+                  </ParentPrivateRoutes>
+                }
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <ParentPrivateRoutes>
+                    {/* <LiveLocation /> */}
+                    <ParentNotifications />
                   </ParentPrivateRoutes>
                 }
               />

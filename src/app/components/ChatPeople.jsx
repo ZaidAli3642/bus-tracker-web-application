@@ -13,6 +13,7 @@ const ChatPeople = ({ persons, handlePersonClick, messagesNumber = [] }) => {
           }
         });
 
+        console.log("Chat people : ", person);
         return (
           <PersonDetails
             image={person.image}
@@ -23,6 +24,7 @@ const ChatPeople = ({ persons, handlePersonClick, messagesNumber = [] }) => {
             }
             messagesNumber={person.messagesCount}
             designation={person.designation}
+            isParent={person.isParent}
             handleClick={() => handlePersonClick(person)}
           />
         );

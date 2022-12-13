@@ -29,6 +29,7 @@
     "react-to-pdf": "^0.0.14",
     "react-to-print": "^2.14.8",
     "react-toastify": "^9.0.8",
+    "timeago.js": "^4.0.2",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },
