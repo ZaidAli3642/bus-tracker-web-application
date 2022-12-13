@@ -4,12 +4,15 @@ import {
   GoogleMap,
   MarkerF,
   DirectionsRenderer,
+  Marker,
 } from "@react-google-maps/api";
 
 import Loader from "../../components/Loader";
 import { ProSidebar, MenuItem, SubMenu, Menu } from "react-pro-sidebar";
 import useApi from "../../hooks/useApi";
 import useAuth from "../../context/auth/useAuth";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { database } from "../../firebase/firebaseConfig";
 
 const Location = () => {
   const [map, setMap] = useState();
@@ -21,10 +24,15 @@ const Location = () => {
   const [buses, setBuses] = useState([]);
   const { getDocumentByInstitute } = useApi();
   const [filteredBuses, setFilteredBuses] = useState([]);
-  const center = {
+  const [busNo, setBusNo] = useState();
+  const [driverLocation, setDriverLocation] = useState({
     lat: -3.745,
     lng: -38.523,
-  };
+  });
+
+  console.log("Routes : ", routes);
+
+  console.log("Set busses : ", buses);
 
   //,process.env.REACT_APP_GOOGLE_MAP_API_KEY
   // "AIzaSyAuEoedfRUtYDOBUsLoGEZUPWeNJOEoXXg"
@@ -70,6 +78,7 @@ const Location = () => {
       travelMode: google.maps.TravelMode.DRIVING,
       waypoints: routesCopy,
     });
+
     setResponse(result);
   };
 
@@ -96,6 +105,30 @@ const Location = () => {
     console.log(filtered);
 
     setFilteredBuses(filtered);
+  };
+
+  const getDriverLocation = (busNo) => {
+    const locationCollection = collection(database, "location");
+    const q = query(
+      locationCollection,
+      where("institute", "==", user.institute),
+      where("busNo", "==", busNo)
+    );
+
+    onSnapshot(q, (locationSnapshot) => {
+      const location = locationSnapshot.docs.map((location) => ({
+        id: location.id,
+        ...location.data(),
+      }));
+
+      console.log("Location : ", location);
+      setDriverLocation({
+        lat: location[0].latitude,
+        lng: location[0].longitude,
+      });
+    });
+
+    console.log("ROute Chagned");
   };
 
   useEffect(() => {
@@ -128,7 +161,10 @@ const Location = () => {
               </div>
               {filteredBuses.map((bus) => (
                 <SubMenu
-                  onClick={() => setRoutes(bus.busRoutes)}
+                  onClick={() => {
+                    getDriverLocation(bus.busNo);
+                    setRoutes(bus.busRoutes);
+                  }}
                   open={open}
                   onOpenChange={() =>
                     setOpen((prevState) => console.log(prevState))
@@ -149,16 +185,18 @@ const Location = () => {
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "100%" }}
             zoom={15}
-            center={center}
+            center={driverLocation}
             options={{
               zoomControl: false,
               streetViewControl: false,
               mapTypeControl: false,
               fullscreenControl: false,
             }}
-            onLoad={(map) => setMap(map.panTo(center))}
+            onLoad={(map) => setMap(map.panTo(driverLocation))}
           >
-            {!response && <MarkerF position={center} />}
+            {driverLocation && (
+              <MarkerF position={driverLocation} title="It's your driver" />
+            )}
 
             <DirectionsRenderer directions={response}></DirectionsRenderer>
           </GoogleMap>
