@@ -81,7 +81,7 @@ const DriverInformationForm = () => {
     setBusNoList(busDetails);
   };
 
-  const handleDriverInformation = async (values) => {
+  const handleDriverInformation = async (values, { resetForm }) => {
     setIsProcessing(true);
     try {
       const data = {
@@ -151,6 +151,7 @@ const DriverInformationForm = () => {
       }
 
       setIsProcessing(false);
+      resetForm();
       toast.success("Data Saved Successfully.");
     } catch (error) {
       console.log(error);

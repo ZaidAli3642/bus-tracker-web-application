@@ -42,9 +42,12 @@ function AdminNotifications() {
     getAlerts();
   }, []);
 
+  if (alerts.length === 0) return <h1>No Notifications Yet</h1>;
+
   return (
     <>
       <h1>Notifications</h1>
+
       <div className="notification-container">
         <div className="items">
           {alerts.map((alert) => {

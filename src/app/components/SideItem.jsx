@@ -11,7 +11,6 @@ const SideItem = ({
   handleClick,
   notifications,
 }) => {
-  console.log("Helllo :", notifications);
   return (
     <li className="side-item">
       <Icon color={color} size={size} />
