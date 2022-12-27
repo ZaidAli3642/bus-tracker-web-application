@@ -1,10 +1,15 @@
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Detail from "../../components/Detail";
+import Loader from "../../components/Loader";
+import { database } from "../../firebase/firebaseConfig";
 
 const StudentDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
+  const [parentDetail, setParentDetail] = useState({});
   const {
     id,
     rollNo,
@@ -21,7 +26,32 @@ const StudentDetails = () => {
     busNo,
     class: majorOrClass,
     image,
+    nationalIdentityNumber,
   } = location.state || {};
+
+  const getParentDetails = async () => {
+    if (!rollNo) return;
+    setLoading(true);
+    const parentCollection = collection(database, "parent");
+
+    const q = query(parentCollection, where("studentId", "==", rollNo));
+
+    const parentSnapshot = await getDocs(q);
+
+    const parentDetails = parentSnapshot.docs.map((parent) => ({
+      id: parent.id,
+      ...parent.data(),
+    }));
+    setParentDetail(parentDetails[0]);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getParentDetails();
+  }, []);
+
+  if (loading) return <Loader />;
+
   return (
     <>
       <h1>Student Details</h1>
@@ -60,6 +90,15 @@ const StudentDetails = () => {
           </div>
           <div className="right-item">
             <Detail label="Registeration Number" detail={rollNo} />
+          </div>
+        </div>
+
+        <div className="items-details">
+          <div>
+            <Detail
+              label="National Identity Number"
+              detail={parentDetail?.nationalIdentityNumber}
+            />
           </div>
         </div>
 

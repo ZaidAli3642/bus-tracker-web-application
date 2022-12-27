@@ -6,6 +6,7 @@ import Loader from "./../../components/Loader";
 const Home = () => {
   const { authUser } = useAuth();
 
+  console.log("Auth User : ", authUser);
   if (authUser === undefined) {
     return <Loader />;
   }

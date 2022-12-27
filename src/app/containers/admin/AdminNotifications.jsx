@@ -1,4 +1,12 @@
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -7,11 +15,16 @@ import useAuth from "../../context/auth/useAuth";
 import { getDrivers } from "../../firebase/firebaseCalls/chat";
 import { database } from "../../firebase/firebaseConfig";
 import { format } from "timeago.js";
+import { useLocation } from "react-router-dom";
 
 function AdminNotifications() {
   const { user } = useAuth();
   const [alerts, setAlerts] = useState([]);
   const [drivers, setDrivers] = useState([]);
+
+  const location = useLocation();
+
+  const { messageRead } = location.state || {};
 
   const getInstituteDrivers = async () => {
     const drivers = await getDrivers(user);
@@ -36,9 +49,15 @@ function AdminNotifications() {
     setAlerts(alerts);
   };
 
+  const handleAlertRead = async () => {
+    const docRef = doc(database, "notifications", messageRead);
+
+    await updateDoc(docRef, { messageRead: true });
+  };
+
   useEffect(() => {
     getInstituteDrivers();
-
+    handleAlertRead();
     getAlerts();
   }, []);
 

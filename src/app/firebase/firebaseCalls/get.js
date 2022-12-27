@@ -17,9 +17,12 @@ export const getInstitutes = async () => {
   return institutes;
 };
 
-export const getSpecificStudent = async (rollNo) => {
+export const getSpecificStudent = async (parent) => {
   const studentRef = collection(database, "students");
-  const q = query(studentRef, where("rollNo", "==", rollNo));
+  const q = query(
+    studentRef,
+    where("fatherNID", "==", parent.nationalIdentityNumber)
+  );
 
   const studentSnapshot = await getDocs(q);
   let students = studentSnapshot.docs.map((student) => ({

@@ -65,6 +65,7 @@ const MessagesBox = ({
             placeholder="Send Message"
             name="message"
             type="text"
+            isFieldTouch={false}
           />
           <SubmitButton
             className="btn btn-primary btn-md"

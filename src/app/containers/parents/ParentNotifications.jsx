@@ -1,4 +1,11 @@
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -27,13 +34,15 @@ export default function ParentNotifications() {
       where("busNo", "==", parent.busNo),
       orderBy("created_at", "desc")
     );
-    const alertSnapshot = await getDocs(q);
-    const alerts = alertSnapshot.docs.map((alert) => ({
-      id: alert.id,
-      ...alert.data(),
-    }));
 
-    setAlerts(alerts);
+    onSnapshot(q, (alertSnapshot) => {
+      const alerts = alertSnapshot.docs.map((alert) => ({
+        id: alert.id,
+        ...alert.data(),
+      }));
+
+      setAlerts(alerts);
+    });
   };
 
   useEffect(() => {
@@ -57,6 +66,26 @@ export default function ParentNotifications() {
           drivers.forEach((driver) => {
             if (driver.busNo === alert.busNo) image = driver.image;
           });
+
+          console.log("ALertssss : ", alert);
+          if (alert.type && alert.type === "fee")
+            return (
+              <>
+                <div className="parent_notification">
+                  <div className="d-flex">
+                    <img src={image} className="profile-image" />
+                    <div className="notification-details">
+                      <span>{alert.title}</span>
+                      <p>{alert.description}</p>
+                    </div>
+                  </div>
+                  <div className="d-flex flex-column align-items-end">
+                    <span>BY Admin</span>
+                    <span>{format(alert.created_at.toDate())}</span>
+                  </div>
+                </div>
+              </>
+            );
 
           return (
             <>
