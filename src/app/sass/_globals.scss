@@ -39,7 +39,6 @@ p {
 
 .admin-panel {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  height: 100vh;
 }
 
 .items {
@@ -248,4 +247,8 @@ select,
 .number {
   color: $danger;
   margin: 0 10px;
+}
+
+.table-head {
+  cursor: pointer;
 }

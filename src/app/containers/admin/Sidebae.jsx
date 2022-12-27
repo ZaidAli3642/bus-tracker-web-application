@@ -13,12 +13,25 @@ import { signOut } from "firebase/auth";
 import SideItem from "../../components/SideItem";
 import AuthContext from "../../context/authContext";
 import useAuth from "../../context/auth/useAuth";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useEffect } from "react";
 import { useState } from "react";
+import { async } from "@firebase/util";
 
 const Sidebar = () => {
   const [messagesNumber, setMessagesNumber] = useState(0);
+  const [alertsNumber, setAlertsNumber] = useState(0);
+  const [messageRead, setMessageRead] = useState();
+
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
   const { user } = useAuth();
@@ -56,6 +69,8 @@ const Sidebar = () => {
       text: "Notifications",
       Icon: AiFillNotification,
       to: "admin/notifications",
+      notifications: alertsNumber,
+      state: { messageRead },
     },
   ];
 
@@ -67,9 +82,27 @@ const Sidebar = () => {
       where("receiverId", "==", user.id),
       where("messageRead", "==", false)
     );
-    const messagesSnapshot = await getDocs(q);
 
-    setMessagesNumber(messagesSnapshot.size);
+    onSnapshot(q, (messagesSnapshot) =>
+      setMessagesNumber(messagesSnapshot.size)
+    );
+  };
+
+  const getAlertsNumber = async () => {
+    const alertsCollection = collection(database, "notifications");
+    const q = query(
+      alertsCollection,
+      where("institute", "==", user.institute),
+      where("alert", "==", true),
+      where("messageRead", "==", false)
+    );
+
+    onSnapshot(q, (alertsSnapshot) => {
+      const alerts = alertsSnapshot.docs.map((alerts) => {
+        setAlertsNumber(alerts.get("data").length);
+        setMessageRead(alerts.id);
+      });
+    });
   };
 
   const logout = async () => {
@@ -84,6 +117,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     getMessagesNumber();
+    getAlertsNumber();
   }, []);
 
   return (
@@ -111,6 +145,7 @@ const Sidebar = () => {
               text={item.text}
               target={item.target}
               notifications={item.notifications}
+              state={item.state}
             />
           ))}
         </ul>

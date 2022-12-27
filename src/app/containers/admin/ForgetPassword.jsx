@@ -3,7 +3,10 @@ import * as Yup from "yup";
 import { useNavigate, Navigate } from "react-router-dom";
 
 import { auth, database } from "../../firebase/firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { getDocs, collection, query, where } from "firebase/firestore";
 
 import Input from "../../components/Input";
@@ -15,44 +18,24 @@ import { toast } from "react-toastify";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
-  password: Yup.string().required().label("Password"),
 });
 
-const Login = () => {
+const ForgetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { user, authUser } = useAuth();
   const navigate = useNavigate();
 
   const { setUser } = useContext(AuthContext);
 
-  const handleLogin = async (values) => {
-    setIsLoading(true);
+  const sendPasswordResetLink = async (values) => {
     try {
-      const userCred = await signInWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password
-      );
-      console.log("user cred : ", userCred);
-      const adminRef = collection(database, "admin");
-      const q = query(adminRef, where("admin_id", "==", userCred.user.uid));
-
-      const docSnap = await getDocs(q);
-
-      console.log("credentials : ", docSnap.empty);
-      docSnap.forEach((doc) => setUser({ id: doc.id, ...doc.data() }));
-
-      toast.success("Successfull");
-      navigate("/admin/home");
-      setIsLoading(false);
+      await sendPasswordResetEmail(auth, values.email);
+      toast.success("Password reset link send to your email");
     } catch (error) {
-      console.log(error.message);
-      setIsLoading(false);
       if (error.message.includes("auth/user-not-found"))
-        return toast.error("Email is not valid");
+        return toast.error("User not found.");
 
-      if (error.message.includes("auth/wrong-password"))
-        return toast.error("You have entered wrong password");
+      toast.error("Something went wrong.");
     }
   };
 
@@ -71,8 +54,8 @@ const Login = () => {
       <h1 className="sign-in-text">Sign in</h1>
 
       <Form
-        initialValues={{ email: "", password: "" }}
-        onSubmit={handleLogin}
+        initialValues={{ email: "" }}
+        onSubmit={sendPasswordResetLink}
         validationSchema={validationSchema}
       >
         <Input
@@ -83,22 +66,8 @@ const Login = () => {
           name="email"
         />
 
-        <Input
-          label="PASSWORD"
-          type="password"
-          placeholder="ENTER PASSWORD"
-          classes="input"
-          name="password"
-        />
+        <SubmitButton title="Send Password Link" isLoading={isLoading} />
 
-        <SubmitButton title="Sign in" isLoading={isLoading} />
-
-        <p
-          className="forgot-password label"
-          onClick={() => navigate("/admin/forget")}
-        >
-          forgot your password?
-        </p>
         <h5 className="new-account-text">Don't have an Admin Account?</h5>
 
         <button
@@ -112,4 +81,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgetPassword;

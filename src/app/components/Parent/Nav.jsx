@@ -4,7 +4,13 @@ import { NavLink, useLocation } from "react-router-dom";
 import useParentAuth from "./../../context/auth/useParentAuth";
 import { useContext } from "react";
 import AuthContext from "./../../context/authContext";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { useState } from "react";
 import { database } from "../../firebase/firebaseConfig";
 import { useEffect } from "react";
@@ -23,10 +29,9 @@ const Nav = () => {
       where("receiverId", "==", parent.id),
       where("messageRead", "==", false)
     );
-    const messagesSnapshot = await getDocs(q);
-
-    setMessagesNumber(messagesSnapshot.size);
-    console.log("Messages NUmber : ", messagesNumber);
+    onSnapshot(q, (messagesSnapshot) =>
+      setMessagesNumber(messagesSnapshot.size)
+    );
   };
 
   const logout = async () => {

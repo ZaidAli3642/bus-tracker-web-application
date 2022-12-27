@@ -185,12 +185,13 @@ const Messages = () => {
       where("receiverId", "==", user.id),
       where("messageRead", "==", false)
     );
-    const messagesSnapshot = await getDocs(q);
-    const messages = messagesSnapshot.docs.map((messages) => ({
-      id: messages.id,
-      ...messages.data(),
-    }));
-    setMessagesNumber(messages);
+    onSnapshot(q, (messagesSnapshot) => {
+      const messages = messagesSnapshot.docs.map((messages) => ({
+        id: messages.id,
+        ...messages.data(),
+      }));
+      setMessagesNumber(messages);
+    });
   };
 
   const getPersonChat = () => {

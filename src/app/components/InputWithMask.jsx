@@ -1,7 +1,8 @@
 import ErrorMessage from "./ErrorMessage";
 import { useFormikContext } from "formik";
+import InputMask from "react-input-mask";
 
-const Input = ({
+const InputWithMask = ({
   label,
   placeholder,
   width = 50,
@@ -9,7 +10,7 @@ const Input = ({
   type,
   inputClasses,
   name,
-  isFieldTouch = true,
+  mask,
   ...otherProps
 }) => {
   const { errors, handleChange, setFieldTouched, touched, values } =
@@ -20,11 +21,12 @@ const Input = ({
       <label htmlFor="" className="label">
         {label}
       </label>
-      <input
+      <InputMask
+        mask={mask}
         className={inputClasses}
         type={type}
         value={values[name]}
-        onBlur={() => isFieldTouch && setFieldTouched(name)}
+        onBlur={() => setFieldTouched(name)}
         onChange={handleChange(name)}
         placeholder={placeholder}
         width={width}
@@ -35,4 +37,4 @@ const Input = ({
   );
 };
 
-export default Input;
+export default InputWithMask;

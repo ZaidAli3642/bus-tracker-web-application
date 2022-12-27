@@ -43,6 +43,14 @@
       }
     }
 
+    &-fee {
+      margin: 0 4rem;
+      background-color: rgb(255, 188, 188);
+      &:hover {
+        background-color: rgb(252, 172, 172);
+      }
+    }
+
     p {
       color: $dark;
       font-weight: 500;

@@ -9,6 +9,8 @@ import NotFound from "./../NotFound";
 import AuthContext from "./../../context/authContext";
 import Messages from "./Messages";
 import Location from "./Location";
+import EmailVerification from "./EmailVerification";
+import ForgetPassword from "./ForgetPassword";
 
 const AdminRoutes = () => {
   const [user, setUser] = useState(null);
@@ -20,7 +22,8 @@ const AdminRoutes = () => {
         location.pathname === "/admin/location"
           ? "container-fluid"
           : "container"
-      }>
+      }
+    >
       <AuthContext.Provider value={{ user, setUser }}>
         <Routes>
           <Route element={<PrivateRoutes />}>
@@ -29,7 +32,9 @@ const AdminRoutes = () => {
             <Route path="/admin/location" element={<Location />} />
           </Route>
           <Route path="/admin/register" element={<Register />} />
+          <Route path="/admin/emailVerify" element={<EmailVerification />} />
           <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin/forget" element={<ForgetPassword />} />
           <Route path="/not-found" element={<NotFound />} />
           <Route
             path="/not-found"

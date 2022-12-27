@@ -10,9 +10,12 @@ import SubmitButton from "../../components/SubmitButton";
 import { useContext } from "react";
 import AuthContext from "../../context/authContext";
 import { toast } from "react-toastify";
+import InputWithMask from "../../components/InputWithMask";
 
 const validationSchema = Yup.object().shape({
-  nationalIdentityNumber: Yup.number("National Id must be a number")
+  nationalIdentityNumber: Yup.string()
+    .min(15)
+    .max(15)
     .required()
     .label("National Identity Number"),
   password: Yup.string().required().label("Password"),
@@ -26,6 +29,7 @@ const Login = () => {
   const login = async (values) => {
     setLoading(true);
 
+    console.log("Values : ", values);
     console.log(typeof values.nationalIdentityNumber);
 
     try {
@@ -38,6 +42,10 @@ const Login = () => {
 
       const parentSnapshot = await getDocs(q1);
 
+      if (parentSnapshot.empty) {
+        setLoading(false);
+        return toast.error("Your NID doesn't match with password.");
+      }
       const parent = parentSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -46,6 +54,7 @@ const Login = () => {
 
       setParent(parent[0]);
       localStorage.setItem("parentAuth", JSON.stringify(parent));
+      toast.success("Successfull");
       setLoading(false);
       navigate("/");
     } catch (error) {
@@ -85,11 +94,12 @@ const Login = () => {
                 validationSchema={validationSchema}
                 onSubmit={login}
               >
-                <Input
+                <InputWithMask
                   name="nationalIdentityNumber"
                   inputClasses="input"
                   label="National Id Number"
                   type="text"
+                  mask={"99999-9999999-9"}
                 />
                 <Input
                   name="password"

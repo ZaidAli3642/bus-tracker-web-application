@@ -21,7 +21,7 @@ const validationSchema = Yup.object().shape({
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
-  const [student, setStudent] = useState({});
+  const [student, setStudent] = useState([]);
   const [bus, setBus] = useState({});
   const { parent } = useParentAuth();
 
@@ -53,8 +53,9 @@ const Profile = () => {
   };
 
   const getDetails = async () => {
-    const student = await getSpecificStudent(parent.studentId);
-    setStudent(student[0]);
+    const student = await getSpecificStudent(parent);
+    console.log("Student : ", student);
+    setStudent(student);
 
     const bus = await getSpecificBus(student[0].busNo, student[0].institute);
     setBus(bus[0]);
@@ -81,9 +82,7 @@ const Profile = () => {
           <div className="image-container">
             <img
               src={
-                parent.image
-                  ? parent.image
-                  : require("../../assets/zaid-saleem-image.jpg")
+                parent.image ? parent.image : require("../../assets/parent.png")
               }
               alt="Profile"
               className="profile-image"
@@ -126,75 +125,79 @@ const Profile = () => {
           <div className="line"></div>
 
           <h3>Student Information</h3>
+
+          {student.map((stud) => (
+            <>
+              <div className="line"></div>
+              <div className="image-container justify-content-start align-items-start">
+                <img
+                  src={
+                    stud.image
+                      ? stud.image
+                      : require("../../assets/student-avatar.jpg")
+                  }
+                  alt="Profile"
+                  className="profile-image"
+                />
+                <div className="d-flex flex-column m-4">
+                  <Detail
+                    fontSize={40}
+                    detail={stud.firstname + " " + stud.lastname}
+                  />
+                  <Detail fontSize={20} detail={stud.parent} />
+                  <Detail fontSize={20} detail={stud.rollNo} />
+                </div>
+              </div>
+              <div className="line"></div>
+              <div className="items">
+                <div className="items-details my-4">
+                  <Detail fontSize={20} label="Contact" detail={stud.contact} />
+                  <div className="right-item">
+                    <Detail
+                      fontSize={20}
+                      label="Parent Contact"
+                      detail={stud.parentcontact}
+                    />
+                  </div>
+                </div>
+
+                <div className="items-details my-4">
+                  <Detail fontSize={20} label="Address" detail={stud.address} />
+                  <div className="right-item">
+                    <Detail
+                      fontSize={20}
+                      label="Country"
+                      detail={stud.country}
+                    />
+                  </div>
+                </div>
+                <div className="items-details my-4">
+                  <Detail fontSize={20} label="City" detail={stud.city} />
+                  <div className="right-item">
+                    <Detail
+                      fontSize={20}
+                      label="Institute"
+                      detail={stud.institute}
+                    />
+                  </div>
+                </div>
+
+                <div className="items-details my-4">
+                  <Detail fontSize={20} label="Bus No" detail={stud.busNo} />
+                  <div className="right-item">
+                    <Detail
+                      fontSize={20}
+                      label="Postal Code"
+                      detail={stud.postalcode}
+                    />
+                  </div>
+                </div>
+              </div>
+            </>
+          ))}
           <div className="line"></div>
-          <div className="image-container justify-content-start align-items-start">
-            <img
-              src={
-                student.image
-                  ? student.image
-                  : require("../../assets/zaid-saleem-image.jpg")
-              }
-              alt="Profile"
-              className="profile-image"
-            />
-            <div className="d-flex flex-column m-4">
-              <Detail
-                fontSize={40}
-                detail={student.firstname + " " + student.lastname}
-              />
-              <Detail fontSize={20} detail={student.parent} />
-              <Detail fontSize={20} detail={student.rollNo} />
-            </div>
-          </div>
+          <h3>Bus Details</h3>
           <div className="line"></div>
-          <div className="items">
-            <div className="items-details my-4">
-              <Detail fontSize={20} label="Contact" detail={student.contact} />
-              <div className="right-item">
-                <Detail
-                  fontSize={20}
-                  label="Parent Contact"
-                  detail={student.parentcontact}
-                />
-              </div>
-            </div>
-
-            <div className="items-details my-4">
-              <Detail fontSize={20} label="Address" detail={student.address} />
-              <div className="right-item">
-                <Detail
-                  fontSize={20}
-                  label="Country"
-                  detail={student.country}
-                />
-              </div>
-            </div>
-            <div className="items-details my-4">
-              <Detail fontSize={20} label="City" detail={student.city} />
-              <div className="right-item">
-                <Detail
-                  fontSize={20}
-                  label="Institute"
-                  detail={student.institute}
-                />
-              </div>
-            </div>
-
-            <div className="items-details my-4">
-              <Detail fontSize={20} label="Bus No" detail={student.busNo} />
-              <div className="right-item">
-                <Detail
-                  fontSize={20}
-                  label="Postal Code"
-                  detail={student.postalcode}
-                />
-              </div>
-            </div>
-
-            <div className="line"></div>
-            <h3>Bus Details</h3>
-            <div className="line"></div>
-          </div>
           <div className="image-container justify-content-start align-items-start">
             <img
               src={

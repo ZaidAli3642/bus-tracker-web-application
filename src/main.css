@@ -50,7 +50,6 @@ p {
 
 .admin-panel {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  height: 100vh;
 }
 
 .items {
@@ -260,6 +259,10 @@ select:focus,
   margin: 0 10px;
 }
 
+.table-head {
+  cursor: pointer;
+}
+
 header {
   font-family: "Poppins", sans-serif;
 }
@@ -325,6 +328,13 @@ header .contact-header .contact-details .icon {
 }
 .update-container .update-bus:hover {
   background-color: rgb(219, 255, 133);
+}
+.update-container .update-fee {
+  margin: 0 4rem;
+  background-color: rgb(255, 188, 188);
+}
+.update-container .update-fee:hover {
+  background-color: rgb(252, 172, 172);
 }
 .update-container .update p {
   color: rgb(79, 84, 94);
@@ -828,7 +838,6 @@ header .contact-header .contact-details .icon {
   border-right: 1px solid rgba(79, 84, 94, 0.1);
   padding: 20px 0;
   background-color: rgb(121, 95, 205);
-  height: 100%;
 }
 .sidebar .image-container {
   border: 1px solid #ffffff;
@@ -1492,4 +1501,24 @@ header .contact-header .contact-details .icon {
 }
 .parent_notification-container .parent_notification .notification-details {
   margin-left: 20px;
+}
+
+.email-verify-container {
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.email-verify-container .email-verify-image {
+  width: 400px !important;
+  height: 400px !important;
+}
+.email-verify-container .text-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }/*# sourceMappingURL=main.css.map */

@@ -12,16 +12,28 @@ import SubmitButton from "../../components/SubmitButton";
 import Select from "../../components/select";
 import SelectImageInput from "../../components/SelectImageInput";
 import useAuth from "./../../context/auth/useAuth";
+import InputWithMask from "../../components/InputWithMask";
 
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
   lastname: Yup.string().required().label("Last Name"),
-  age: Yup.number().min(20).max(40).required().label("Age"),
-  salary: Yup.number().min(20000).max(40000).required().label("Salary"),
+  age: Yup.number()
+    .typeError("Age must be a number")
+    .min(20)
+    .max(40)
+    .required()
+    .label("Age"),
+  salary: Yup.number()
+    .typeError("Salary must be a number")
+    .min(20000)
+    .max(40000)
+    .required()
+    .label("Salary"),
   country: Yup.string().required().label("Country"),
   city: Yup.string().required().label("City"),
   address: Yup.string().required().label("Address"),
   postalcode: Yup.string()
+    .matches(/^[0-9]+$/, "Must be only digits")
     .min(5, "Postal Code must be 5 digits")
     .max(5, "Postal Code must be 5 digits")
     .required()
@@ -34,8 +46,10 @@ const validationSchema = Yup.object().shape({
   driverDutyTime: Yup.string().required().label("Duty Start"),
   driverDutyEnd: Yup.string().required().label("Duty End"),
   driverId: Yup.number("Driver Id should be a number")
+    .typeError("Driver Id must be a number")
     .required()
     .label("Driver"),
+  nationalIdentityNumber: Yup.string().required().label("NID"),
 });
 
 const DriverInformationForm = () => {
@@ -211,11 +225,12 @@ const DriverInformationForm = () => {
                 type="text"
                 placeholder="Enter Driver Id"
               />
-              <Input
+              <InputWithMask
                 label="National Identity Number"
                 name="nationalIdentityNumber"
                 type="text"
                 placeholder="Enter National ID Number"
+                mask={"99999-9999999-9"}
               />
             </div>
             <div className="items-details">

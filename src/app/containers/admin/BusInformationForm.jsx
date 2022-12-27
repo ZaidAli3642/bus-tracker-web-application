@@ -21,8 +21,14 @@ const mantainanceStates = [
 ];
 
 const validationSchema = Yup.object().shape({
-  busNo: Yup.number().required().label("Bus No"),
-  licenseNo: Yup.number().required().label("License No"),
+  busNo: Yup.number()
+    .typeError("Bus No must be a number")
+    .required()
+    .label("Bus No"),
+  licenseNo: Yup.number()
+    .typeError("License No must be a number")
+    .required()
+    .label("License No"),
   image: Yup.string().required().nullable().label("License Image"),
   maintainance: Yup.string().required().label("Maintainance"),
   seatCapacity: Yup.number().required().label("Seat Capacity"),

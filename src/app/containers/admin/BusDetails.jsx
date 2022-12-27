@@ -26,9 +26,7 @@ const BusDetails = () => {
           <div className="input-container">
             <label className="label">License Picture</label>
             <img
-              src={
-                image ? image : require("../../assets/zaid-saleem-image.jpg")
-              }
+              src={image ? image : require("../../assets/driver-avatar.png")}
               className="square-image"
               alt="license"
             />
@@ -67,7 +65,8 @@ const BusDetails = () => {
                 isUpdated: true,
               },
             })
-          }>
+          }
+        >
           Update Bus
         </button>
       </div>

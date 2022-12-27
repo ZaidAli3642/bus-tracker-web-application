@@ -10,6 +10,7 @@ const SideItem = ({
   target,
   handleClick,
   notifications,
+  state,
 }) => {
   return (
     <li className="side-item">
@@ -19,6 +20,7 @@ const SideItem = ({
         to={`/${to}`}
         className="item-text"
         target={target}
+        state={state}
       >
         {text}
       </Link>
