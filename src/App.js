@@ -14,6 +14,9 @@ import ParentPrivateRoutes from "./app/routes/ParentPrivateRoute";
 import AuthContext from "./app/context/authContext";
 import LiveLocation from "./app/containers/parents/LiveLocation";
 import Profile from "./app/containers/parents/Profile";
+import Footer from "./app/components/Parent/Footer";
+import HowItWorks from "./app/containers/parents/HowItWorks";
+import ParentNotifications from "./app/containers/parents/ParentNotifications";
 
 const routes = [
   "/",
@@ -22,7 +25,9 @@ const routes = [
   "/messages",
   "/location",
   "/profile",
+  "/how-it-works",
   "/route-not-found",
+  "/notifications",
 ];
 
 function App() {
@@ -71,6 +76,15 @@ function App() {
                 }
               />
               <Route
+                path="/notifications"
+                element={
+                  <ParentPrivateRoutes>
+                    {/* <LiveLocation /> */}
+                    <ParentNotifications />
+                  </ParentPrivateRoutes>
+                }
+              />
+              <Route
                 path="/profile"
                 element={
                   <ParentPrivateRoutes>
@@ -79,13 +93,17 @@ function App() {
                 }
               />
               <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
               <Route path="/route-not-found" element={<NotFound />} />
+              <Route path="/how-it-works" element={<HowItWorks />} />
               <Route
                 path="*"
                 element={<Navigate to={"/route-not-found"} replace />}
               />
             </Routes>
+            {location.pathname === "/how-it-works" ||
+            location.pathname === "/" ? (
+              <Footer />
+            ) : null}
           </AuthContext.Provider>
         </>
       )}

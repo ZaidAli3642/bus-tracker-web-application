@@ -12,16 +12,28 @@ import SubmitButton from "../../components/SubmitButton";
 import Select from "../../components/select";
 import SelectImageInput from "../../components/SelectImageInput";
 import useAuth from "./../../context/auth/useAuth";
+import InputWithMask from "../../components/InputWithMask";
 
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
   lastname: Yup.string().required().label("Last Name"),
-  age: Yup.number().min(20).max(40).required().label("Age"),
-  salary: Yup.number().min(20000).max(40000).required().label("Salary"),
+  age: Yup.number()
+    .typeError("Age must be a number")
+    .min(20)
+    .max(40)
+    .required()
+    .label("Age"),
+  salary: Yup.number()
+    .typeError("Salary must be a number")
+    .min(20000)
+    .max(40000)
+    .required()
+    .label("Salary"),
   country: Yup.string().required().label("Country"),
   city: Yup.string().required().label("City"),
   address: Yup.string().required().label("Address"),
   postalcode: Yup.string()
+    .matches(/^[0-9]+$/, "Must be only digits")
     .min(5, "Postal Code must be 5 digits")
     .max(5, "Postal Code must be 5 digits")
     .required()
@@ -33,6 +45,11 @@ const validationSchema = Yup.object().shape({
   medicalReport: Yup.string().nullable().required().label("Medical Report"),
   driverDutyTime: Yup.string().required().label("Duty Start"),
   driverDutyEnd: Yup.string().required().label("Duty End"),
+  driverId: Yup.number("Driver Id should be a number")
+    .typeError("Driver Id must be a number")
+    .required()
+    .label("Driver"),
+  nationalIdentityNumber: Yup.string().required().label("NID"),
 });
 
 const DriverInformationForm = () => {
@@ -43,6 +60,7 @@ const DriverInformationForm = () => {
   const match = useMatch("/admin/driver_update/:id");
 
   const {
+    driverId,
     firstname,
     lastname,
     age,
@@ -59,6 +77,7 @@ const DriverInformationForm = () => {
     isUpdated,
     licenseImage,
     medicalReport,
+    nationalIdentityNumber,
   } = location.state || {};
 
   const getBusDetails = async () => {
@@ -76,10 +95,11 @@ const DriverInformationForm = () => {
     setBusNoList(busDetails);
   };
 
-  const handleDriverInformation = async (values) => {
+  const handleDriverInformation = async (values, { resetForm }) => {
     setIsProcessing(true);
     try {
       const data = {
+        driverId: values.driverId,
         firstname: values.firstname,
         lastname: values.lastname,
         age: values.age,
@@ -94,7 +114,30 @@ const DriverInformationForm = () => {
         driverDutyTime: values.driverDutyTime,
         driverDutyEnd: values.driverDutyEnd,
         institute: user.institute,
+        nationalIdentityNumber: values.nationalIdentityNumber,
+        password: values.nationalIdentityNumber,
+        loginUser: "drivers",
+        isDriver: true,
       };
+
+      const driverCollection = collection(database, "drivers");
+
+      const q = query(
+        driverCollection,
+        where("driverId", "==", values.driverId),
+        where("busNo", "==", values.busNo),
+        where("institute", "==", user.institute)
+      );
+
+      const driverDoc = await getDocs(q);
+      if (!driverDoc.empty) {
+        if (!isUpdated) {
+          setIsProcessing(false);
+          return toast.error(
+            `Driver is already assigned to ${values.busNo} Bus`
+          );
+        }
+      }
 
       let result;
       if (isUpdated) {
@@ -122,6 +165,7 @@ const DriverInformationForm = () => {
       }
 
       setIsProcessing(false);
+      resetForm();
       toast.success("Data Saved Successfully.");
     } catch (error) {
       console.log(error);
@@ -141,6 +185,7 @@ const DriverInformationForm = () => {
         <div className="items">
           <Form
             initialValues={{
+              driverId: driverId || "",
               firstname: firstname || "",
               lastname: lastname || "",
               age: age || "",
@@ -156,9 +201,11 @@ const DriverInformationForm = () => {
               driverDutyEnd: driverDutyEnd || "",
               drivingLicense: licenseImage || null,
               medicalReport: medicalReport || null,
+              nationalIdentityNumber: nationalIdentityNumber || "",
             }}
             onSubmit={handleDriverInformation}
-            validationSchema={validationSchema}>
+            validationSchema={validationSchema}
+          >
             <h4>Personal Information</h4>
             <div className="line"></div>
 
@@ -171,6 +218,21 @@ const DriverInformationForm = () => {
               <SelectImageInput name="image" />
             </div>
             <div className="line"></div>
+            <div className="items-details">
+              <Input
+                label="Driver Id"
+                name="driverId"
+                type="text"
+                placeholder="Enter Driver Id"
+              />
+              <InputWithMask
+                label="National Identity Number"
+                name="nationalIdentityNumber"
+                type="text"
+                placeholder="Enter National ID Number"
+                mask={"99999-9999999-9"}
+              />
+            </div>
             <div className="items-details">
               <Input
                 label="First Name"

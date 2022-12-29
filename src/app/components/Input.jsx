@@ -9,6 +9,8 @@ const Input = ({
   type,
   inputClasses,
   name,
+  isFieldTouch = true,
+  ...otherProps
 }) => {
   const { errors, handleChange, setFieldTouched, touched, values } =
     useFormikContext();
@@ -22,10 +24,11 @@ const Input = ({
         className={inputClasses}
         type={type}
         value={values[name]}
-        onBlur={() => setFieldTouched(name)}
+        onBlur={() => isFieldTouch && setFieldTouched(name)}
         onChange={handleChange(name)}
         placeholder={placeholder}
         width={width}
+        {...otherProps}
       />
       <ErrorMessage error={errors[name]} visible={touched[name]} />
     </div>

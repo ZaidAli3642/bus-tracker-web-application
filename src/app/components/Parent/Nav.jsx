@@ -1,26 +1,52 @@
 import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase/firebaseConfig";
+import { NavLink, useLocation } from "react-router-dom";
 
 import useParentAuth from "./../../context/auth/useParentAuth";
 import { useContext } from "react";
 import AuthContext from "./../../context/authContext";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { useState } from "react";
+import { database } from "../../firebase/firebaseConfig";
+import { useEffect } from "react";
 
 const Nav = () => {
+  const [messagesNumber, setMessagesNumber] = useState(0);
   const location = useLocation();
   const { parent } = useParentAuth();
   const { setParent } = useContext(AuthContext);
 
+  const getMessagesNumber = async () => {
+    const messagesCollection = collection(database, "notifications");
+    const q = query(
+      messagesCollection,
+      where("notificationReceive", "==", parent.institute),
+      where("receiverId", "==", parent.id),
+      where("messageRead", "==", false)
+    );
+    onSnapshot(q, (messagesSnapshot) =>
+      setMessagesNumber(messagesSnapshot.size)
+    );
+  };
+
   const logout = async () => {
     try {
-      await signOut(auth);
+      localStorage.removeItem("parentAuth");
       setParent(null);
       window.location = "/";
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (parent) getMessagesNumber();
+  }, [parent]);
 
   if (location.pathname === "/login" || location.pathname === "/register")
     return null;
@@ -31,7 +57,7 @@ const Nav = () => {
         <div className="contact-details">
           <div className="contact">
             <AiOutlineMail className="icon" />
-            <span>zaidali36422@gmail.com</span>
+            <span>bustrackingsystem9@gmail.com</span>
           </div>
           <div className="contact">
             <AiOutlinePhone className="icon ml-4" />
@@ -40,10 +66,14 @@ const Nav = () => {
         </div>
       </div>
 
-      <nav className={"navbar navbar-expand-lg bg-white"}>
-        <div className={`container-fluid d-flex h-50 p-2 bg-white`}>
+      <nav className={"navbar navbar-expand-lg bg-white "}>
+        <div className={`container-fluid d-flex h-50 p-2 bg-white shadow-sm`}>
           <NavLink className="navbar-brand ms-5" to={"/"}>
-            Navbar
+            <img
+              src={require("../../assets/BTS.png")}
+              alt="Logo"
+              className="logo"
+            />
           </NavLink>
           <button
             className="navbar-toggler"
@@ -52,19 +82,31 @@ const Nav = () => {
             data-bs-target="#navbarNav"
             aria-controls="navbarNav"
             aria-expanded="false"
-            aria-label="Toggle navigation">
+            aria-label="Toggle navigation"
+          >
             <span className="navbar-toggler-icon"></span>
           </button>
           <div
             className="collapse navbar-collapse d-md-flex justify-content-end me-md-5"
-            id="navbarNav">
+            id="navbarNav"
+          >
             <ul className="navbar-nav">
               <li className="nav-item">
                 <NavLink
                   className="nav-link active"
                   aria-current="page"
-                  to={"/"}>
+                  to={"/"}
+                >
                   Home
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link active"
+                  aria-current="page"
+                  to="/how-it-works"
+                >
+                  How It Works
                 </NavLink>
               </li>
               {parent && (
@@ -77,6 +119,26 @@ const Nav = () => {
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/messages">
                       Messages
+                      {messagesNumber !== 0 && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: 25,
+                            backgroundColor: "blue",
+                            color: "white",
+                            borderRadius: 25,
+                            width: 35,
+                            textAlign: "center",
+                          }}
+                        >
+                          {messagesNumber}
+                        </span>
+                      )}
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/notifications">
+                      Notifications
                     </NavLink>
                   </li>
                   <li className="nav-item">
@@ -85,16 +147,16 @@ const Nav = () => {
                       to="/profile"
                       state={{
                         id: parent.id,
-                        parent_id: parent.parent_id,
-                        firstname: parent.firstname,
-                        lastname: parent.lastname,
-                        contact: parent.contact,
-                        email: parent.email,
+                        busNo: parent.busNo,
+                        fullName: parent.fullName,
+                        nationalIdentityNumber: parent.nationalIdentityNumber,
+                        parentcontact: parent.parentcontact,
                         password: parent.password,
-                        rollno: parent.rollno,
+                        studentId: parent.studentId,
                         institute: parent.institute,
                         image: parent.image,
-                      }}>
+                      }}
+                    >
                       <span> Profile</span>
                     </NavLink>
                   </li>
@@ -104,12 +166,17 @@ const Nav = () => {
                 <>
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/login">
-                      <span>Login</span>
+                      <span>Login as parent</span>
                     </NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink className="nav-link" to="/register">
-                      <span>Register</span>
+                    <NavLink className="nav-link" to="/admin/login">
+                      <span>Login as Institute</span>
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/admin/register">
+                      <span>Register as Institute</span>
                     </NavLink>
                   </li>
                 </>
@@ -121,7 +188,8 @@ const Nav = () => {
                     className="nav-link"
                     onClick={logout}
                     to="/"
-                    replace={true}>
+                    replace={true}
+                  >
                     <span>Logout</span>
                   </NavLink>
                 </li>

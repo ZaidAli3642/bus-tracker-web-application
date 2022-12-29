@@ -10,13 +10,22 @@ export default function useAuth() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log("User registered: ", user);
+
       setAuthUser(user ?? false);
       if (user) {
         console.log(user.uid);
         const adminRef = collection(database, "admin");
         const q = query(adminRef, where("admin_id", "==", user.uid));
         const docSnap = await getDocs(q);
-        docSnap.forEach((doc) => setUser({ id: doc.id, ...doc.data() }));
+        console.log("DOc Snap : ", docSnap.empty);
+        docSnap.forEach((doc) =>
+          setUser({
+            id: doc.id,
+            emailVerified: user?.emailVerified,
+            ...doc.data(),
+          })
+        );
       }
     });
     return unsubscribe;

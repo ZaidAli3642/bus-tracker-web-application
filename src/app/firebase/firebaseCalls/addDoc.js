@@ -101,7 +101,6 @@ export const updateData = async (
     image: result,
   };
   if (licenseImage || medicalReportImage) {
-    console.log("Hello", licenseImage);
     const downloadedUrl = await storeDriverImages(
       collectionName,
       image,
@@ -121,5 +120,5 @@ export const updateData = async (
   const docRef = doc(database, collectionName, docId);
 
   await updateDoc(docRef, information);
-  return true;
+  return information;
 };

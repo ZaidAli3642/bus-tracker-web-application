@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { database } from "../../firebase/firebaseConfig";
-import { collection, where, query, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  where,
+  query,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
 
 import ListItem from "../../components/ListItem";
 import useAuth from "../../context/auth/useAuth";
@@ -18,7 +24,11 @@ const BusLists = () => {
   const getBusInformation = () => {
     setIsLoading(true);
     const busCollection = collection(database, "bus");
-    const q = query(busCollection, where("institute", "==", user.institute));
+    const q = query(
+      busCollection,
+      where("institute", "==", user.institute),
+      orderBy("busNo", "asc")
+    );
 
     const unsubscribe = onSnapshot(q, (busSnapshot) => {
       const busList = busSnapshot.docs.map((bus) => ({
@@ -43,12 +53,28 @@ const BusLists = () => {
 
   if (isLoading) return <Loader />;
 
-  if (buses.length === 0) return <h3>No Buses Added</h3>;
+  if (buses.length === 0)
+    return (
+      <>
+        <h3>No Buses Added</h3>
+        <button
+          className="btn btn-md btn-primary my-3 ms-0"
+          onClick={() => navigate("/admin/bus_update/new")}
+        >
+          Add Buses and Routes
+        </button>
+      </>
+    );
 
   return (
     <>
       <h1>BUSES LIST</h1>
-
+      <button
+        className="btn btn-md btn-primary my-3 ms-0"
+        onClick={() => navigate("/admin/bus_update/new")}
+      >
+        Add Buses and Routes
+      </button>
       <div className="items">
         <ol className="p-0">
           {buses.map((bus) => (

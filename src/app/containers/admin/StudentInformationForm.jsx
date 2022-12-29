@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import * as Yup from "yup";
-import { collection, getDocs, where, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  where,
+  query,
+  serverTimestamp,
+} from "firebase/firestore";
 import { database } from "../../firebase/firebaseConfig";
 import { useLocation, useMatch } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 import Input from "../../components/Input";
 import Form from "../../components/Form";
@@ -12,33 +19,54 @@ import Select from "./../../components/select";
 import useAuth from "../../context/auth/useAuth";
 import SelectImageInput from "../../components/SelectImageInput";
 import { addData, updateData } from "../../firebase/firebaseCalls/addDoc";
+import Loader from "../../components/Loader";
+import InputWithMask from "../../components/InputWithMask";
 
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
   lastname: Yup.string().required().label("Last Name"),
   parent: Yup.string().required().label("Father/Guardian"),
-  parentcontact: Yup.string().required().label("Parent Contact"),
+  parentcontact: Yup.number("Parent Contact must be numbers.")
+    .typeError("Contact must be numbers")
+    .required()
+    .label("Parent Contact"),
   country: Yup.string().required().label("Country"),
   city: Yup.string().required().label("City"),
   address: Yup.string().required().label("Address"),
   postalcode: Yup.string()
+    .matches(/^[0-9]+$/, "Must be only digits")
     .min(5, "Postal Code must be 5 digits")
     .max(5, "Postal Code must be 5 digits")
     .required()
     .label("Postal Code"),
-  contact: Yup.string().required().label("Contact"),
+  contact: Yup.number("Contact must be numbers")
+    .typeError("Contact must be numbers")
+    .required()
+    .label("Contact"),
   busNo: Yup.string().required().label("Bus No"),
   class: Yup.string().required().label("Class"),
   image: Yup.string().nullable().required().label("Student Image"),
+  nationalIdentityNumber: Yup.string()
+    .required()
+    .label("National Identity Number"),
 });
 
 const StudentInformationForm = () => {
+  const navigate = useNavigate();
   const [busNoList, setBusNoList] = useState([]);
+  const [collectFee, setCollectFee] = useState([
+    { id: 2, label: "pending", value: "pending" },
+    { id: 1, label: "collected", value: "collected" },
+  ]);
+  const [parentDetail, setParentDetail] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const location = useLocation();
   const match = useMatch("/admin/student_update/:id");
 
+  console.log("Location of bus : ", location);
   const {
     firstname,
     rollNo,
@@ -55,9 +83,33 @@ const StudentInformationForm = () => {
     image,
     class: majorOrClass,
     isUpdated,
+    fatherNID,
+    collectFee: fee,
+    busSeatCapacity: seatCapacity,
   } = location.state || {};
 
-  console.log("Hello", majorOrClass);
+  console.log("Location for student: ", location);
+
+  const getParentDetails = async () => {
+    if (!fatherNID) return;
+    setLoading(true);
+    const parentCollection = collection(database, "parent");
+
+    const q = query(
+      parentCollection,
+      where("nationalIdentityNumber", "==", fatherNID)
+    );
+
+    const parentSnapshot = await getDocs(q);
+
+    const parentDetails = parentSnapshot.docs.map((parent) => ({
+      id: parent.id,
+      ...parent.data(),
+    }));
+    setParentDetail(parentDetails[0]);
+    setLoading(false);
+  };
+
   const getBusDetails = async () => {
     const busCollection = collection(database, "bus");
 
@@ -69,7 +121,9 @@ const StudentInformationForm = () => {
       id: bus.id,
       label: bus.get("busNo"),
       value: bus.get("busNo"),
+      seatCapacity: bus.get("seatCapacity"),
     }));
+    console.log("Bus Details : ", busDetails);
     setBusNoList(busDetails);
   };
 
@@ -77,6 +131,13 @@ const StudentInformationForm = () => {
     setIsProcessing(true);
 
     try {
+      const filteredBusNo = busNoList.filter(
+        (busNo) => busNo.value == values.busNo
+      );
+      if (filteredBusNo[0].seatCapacity === seatCapacity) {
+        setIsProcessing(false);
+        return toast.error(`Bus No ${values.busNo} seat capacity is full`);
+      }
       const data = {
         firstname: values.firstname,
         lastname: values.lastname,
@@ -92,10 +153,40 @@ const StudentInformationForm = () => {
         rollNo: values.rollNo,
         imageName: values.image[0].name || imageName,
         class: values.class,
+        collectFee: values.collectFee,
+        fatherNID: String(values.nationalIdentityNumber),
       };
+
+      const parentData = {
+        nationalIdentityNumber: String(values.nationalIdentityNumber),
+        password: String(values.nationalIdentityNumber),
+        studentId: values.rollNo,
+        busNo: values.busNo,
+        institute: user.institute,
+        fullName: values.parent,
+        parentcontact: values.parentcontact,
+        loginUser: "parent",
+        isParent: true,
+      };
+
+      // generateQRCode(JSON.stringify(data));
+
+      const studentCollection = collection(database, "students");
+
+      const q = query(studentCollection, where("rollNo", "==", values.rollNo));
+
+      const studentDoc = await getDocs(q);
+
+      if (!studentDoc.empty) {
+        if (!isUpdated) {
+          setIsProcessing(false);
+          return toast.error("Registeration No is already exist");
+        }
+      }
 
       let result;
       if (isUpdated === true) {
+        await updateData(parentData, "parent", ...[,], parentDetail.id);
         result = await updateData(
           data,
           "students",
@@ -103,8 +194,27 @@ const StudentInformationForm = () => {
           match.params.id
         );
       } else {
+        const parentCollection = collection(database, "parent");
+
+        const q = query(
+          parentCollection,
+          where("institute", "==", user.institute),
+          where(
+            "nationalIdentityNumber",
+            "==",
+            String(values.nationalIdentityNumber)
+          )
+        );
+
+        const parentSnapshot = await getDocs(q);
+
+        if (values.collectFee === "collected")
+          data.feeSubmittedTime = serverTimestamp();
+        if (parentSnapshot.empty) await addData(parentData, "parent");
         result = await addData(data, "students", values.image);
       }
+
+      console.log("Result : ", result);
 
       setIsProcessing(false);
       if (result === undefined) {
@@ -112,15 +222,33 @@ const StudentInformationForm = () => {
       }
 
       toast.success("Data Saved Successfully");
+      navigate("/admin/pdf", {
+        state: {
+          studentdata: {
+            rollNo: values.rollNo,
+            firstname: values.firstname,
+            lastname: values.lastname,
+            institute: user.institute,
+            image: result.image,
+            busNo: values.busNo,
+            studentId: match.params.id,
+          },
+        },
+      });
+      resetForm();
     } catch (error) {
       console.log(error);
+      setIsProcessing(false);
       toast.error("Error Occured while saving data.");
     }
   };
 
   useEffect(() => {
     getBusDetails();
+    getParentDetails();
   }, []);
+
+  if (loading) return <Loader />;
 
   return (
     <>
@@ -142,9 +270,14 @@ const StudentInformationForm = () => {
               image: image || null,
               class: majorOrClass || "",
               rollNo: rollNo || "",
+              nationalIdentityNumber:
+                parentDetail?.nationalIdentityNumber || "",
+              password: "",
+              collectFee: fee || "",
             }}
             onSubmit={handleStudentInformation}
-            validationSchema={validationSchema}>
+            validationSchema={validationSchema}
+          >
             <h4>Personal Information</h4>
             <div className="line"></div>
 
@@ -174,12 +307,16 @@ const StudentInformationForm = () => {
             <div className="items-details">
               <Input
                 label="Father/Guardian Name"
-                value="Father/Guardian Name"
                 name="parent"
                 placeholder="Enter Father/Guardian Name"
                 type="text"
               />
-              <Input label="Roll No" name="rollNo" type="number" />
+              <Input
+                label="Registeration No"
+                name="rollNo"
+                min="0"
+                type="number"
+              />
             </div>
             <div className="items-details">
               <Input
@@ -190,10 +327,24 @@ const StudentInformationForm = () => {
               />
               <Input
                 label="Father/Guardian No"
-                value="Father/Guardian No"
                 name="parentcontact"
                 type="text"
                 placeholder="Enter Father/Guardian Contact"
+              />
+            </div>
+            <div className="items-details">
+              {/* <Input
+                label="National Identity Number"
+                name="nationalIdentityNumber"
+                type="text"
+                placeholder="Enter National Id"
+              /> */}
+              <InputWithMask
+                label="National Identity Number"
+                name="nationalIdentityNumber"
+                type="text"
+                placeholder="Enter National Id"
+                mask={"99999-9999999-9"}
               />
             </div>
             <div className="line"></div>
@@ -221,7 +372,6 @@ const StudentInformationForm = () => {
               />
               <Input
                 label="Postal Code"
-                value="Postal Code"
                 name="postalcode"
                 type="text"
                 placeholder="Enter Postal Code"
@@ -232,6 +382,12 @@ const StudentInformationForm = () => {
 
               <Input label="Major or Class" name="class" type="text" />
             </div>
+            <div className="items-details">
+              <Select label="Bus No" name="collectFee" options={collectFee} />
+            </div>
+            {/* <a href={url} download="qrcode.png">
+              Download
+            </a> */}
 
             <SubmitButton title="SAVE STUDENT" isLoading={isProcessing} />
           </Form>

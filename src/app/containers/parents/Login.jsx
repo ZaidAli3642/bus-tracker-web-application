@@ -1,9 +1,8 @@
 import { useState } from "react";
 import * as Yup from "yup";
-import { auth, database } from "../../firebase/firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { database } from "../../firebase/firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import Input from "../../components/Input";
 import Form from "../../components/Form";
@@ -11,53 +10,61 @@ import SubmitButton from "../../components/SubmitButton";
 import { useContext } from "react";
 import AuthContext from "../../context/authContext";
 import { toast } from "react-toastify";
+import InputWithMask from "../../components/InputWithMask";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email().required().label("Email"),
-  password: Yup.string().min(8).max(12).required().label("Password"),
+  nationalIdentityNumber: Yup.string()
+    .min(15)
+    .max(15)
+    .required()
+    .label("National Identity Number"),
+  password: Yup.string().required().label("Password"),
 });
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const { setParent } = useContext(AuthContext);
+  const { parent, setParent } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const login = async (values) => {
     setLoading(true);
 
+    console.log("Values : ", values);
+    console.log(typeof values.nationalIdentityNumber);
+
     try {
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password
-      );
-
       const parentCollection = collection(database, "parent");
-      const q = query(
+      const q1 = query(
         parentCollection,
-        where("parent_id", "==", userCredentials.user.uid)
+        where("nationalIdentityNumber", "==", values.nationalIdentityNumber),
+        where("password", "==", values.password)
       );
 
-      const parentSnap = await getDocs(q);
-      if (!parentSnap.empty)
-        parentSnap.forEach((doc) => setParent({ id: doc.id, ...doc.data() }));
-      else {
-        setLoading(false);
-        return toast.error(
-          "Something went wrong. Please make sure you have the right email and password for login."
-        );
-      }
+      const parentSnapshot = await getDocs(q1);
 
+      if (parentSnapshot.empty) {
+        setLoading(false);
+        return toast.error("Your NID doesn't match with password.");
+      }
+      const parent = parentSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(parent);
+
+      setParent(parent[0]);
+      localStorage.setItem("parentAuth", JSON.stringify(parent));
+      toast.success("Successfull");
       setLoading(false);
       navigate("/");
     } catch (error) {
       setLoading(false);
-      if (error.code === "auth/wrong-password")
-        return toast.error("Password is not correct.");
-      if (error.code === "auth/user-not-found")
-        return toast.error("Email is not correct.");
+      console.log(error);
+      toast.error("Something went wrong!");
     }
   };
+
+  if (parent) return <Navigate to="/" />;
 
   return (
     <div className="login-page">
@@ -65,7 +72,7 @@ const Login = () => {
         <div className="row h-100 m-0">
           <div className="col-md-4 left-container p-0">
             <img
-              src={require("../../assets/student-4.jpg")}
+              src={require("../../assets/3.webp")}
               className="left-container-img"
               alt=""
             />
@@ -81,16 +88,18 @@ const Login = () => {
             <div className="form" data-aos="fade-right">
               <Form
                 initialValues={{
-                  email: "",
+                  nationalIdentityNumber: "",
                   password: "",
                 }}
                 validationSchema={validationSchema}
-                onSubmit={login}>
-                <Input
-                  name="email"
+                onSubmit={login}
+              >
+                <InputWithMask
+                  name="nationalIdentityNumber"
                   inputClasses="input"
-                  label="Email"
+                  label="National Id Number"
                   type="text"
+                  mask={"99999-9999999-9"}
                 />
                 <Input
                   name="password"

@@ -21,6 +21,7 @@ const DriverDetails = () => {
     image,
     licenseImage,
     medicalReport,
+    nationalIdentityNumber,
   } = location.state || {};
 
   return (
@@ -51,6 +52,11 @@ const DriverDetails = () => {
           </div>
           <div className="right-item">
             <Detail label="Contact" detail={contact} />
+          </div>
+        </div>
+        <div className="items-details">
+          <div>
+            <Detail label="Salary" detail={nationalIdentityNumber} />
           </div>
         </div>
 
@@ -118,7 +124,8 @@ const DriverDetails = () => {
             navigate("/admin/driver_update/" + id, {
               state: { ...location.state, isUpdated: true },
             })
-          }>
+          }
+        >
           Update Driver
         </button>
       </div>

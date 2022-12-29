@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { database } from "../../firebase/firebaseConfig";
 
 import ListItem from "../../components/ListItem";
@@ -13,6 +19,7 @@ const StudentsList = () => {
   const navigation = useNavigate();
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const { filterData, filteredData, setFilteredData } = useSearch(students);
   const { deleteDocument } = useApi();
   const { user } = useAuth();
@@ -39,8 +46,25 @@ const StudentsList = () => {
     return unsubscribe;
   };
 
-  const handleDelete = (id) => {
-    deleteDocument("students", id);
+  console.log("Student list : ", students);
+  const handleDelete = async (student) => {
+    deleteDocument("students", student.id);
+    const parentCollection = collection(database, "parent");
+    const q = query(
+      parentCollection,
+      where("institute", "==", user.institute),
+      where("studentId", "==", student.rollNo)
+    );
+
+    const list = students.filter(
+      (stud) => stud.fatherNID === student.fatherNID
+    );
+
+    if (list.length === 1) {
+      const parentSnapshot = await getDocs(q);
+      const parent = parentSnapshot.docs.map((parent) => ({ id: parent.id }));
+      deleteDocument("parent", parent[0].id);
+    }
   };
 
   useEffect(() => {
@@ -54,7 +78,18 @@ const StudentsList = () => {
 
   if (isLoading) return <Loader />;
 
-  if (students.length === 0) return <h3>No Students Added</h3>;
+  if (students.length === 0)
+    return (
+      <>
+        <h3>No Students Added</h3>
+        <button
+          className="btn btn-md btn-primary m-0"
+          onClick={() => navigation("/admin/student_update/new")}
+        >
+          Add Students
+        </button>
+      </>
+    );
 
   return (
     <>
@@ -71,6 +106,18 @@ const StudentsList = () => {
           onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
+      <button
+        className="btn btn-md btn-primary m-0"
+        onClick={() =>
+          navigation("/admin/student_update/new", {
+            state: {
+              busSeatCapacity: students.length,
+            },
+          })
+        }
+      >
+        Add Students
+      </button>
       <div className="items">
         <ol className="ps-2">
           {filteredData.map((student) => (
@@ -94,9 +141,26 @@ const StudentsList = () => {
                 imageName: student.imageName,
                 image: student.image,
                 class: student.class,
+                fatherNID: student.fatherNID,
+                collectFee: student.collectFee,
               }}
               title={`${student.firstname} ${student.lastname}`}
-              onDelete={() => handleDelete(student.id)}
+              onDelete={() => handleDelete(student)}
+              onGenerateCard={() =>
+                navigate("/admin/pdf", {
+                  state: {
+                    studentdata: {
+                      rollNo: student.rollNo,
+                      firstname: student.firstname,
+                      lastname: student.lastname,
+                      institute: user.institute,
+                      image: student.image,
+                      busNo: student.busNo,
+                      studentId: student.id,
+                    },
+                  },
+                })
+              }
               onClick={() =>
                 navigation("/admin/student_update/" + student.id, {
                   state: {
@@ -116,6 +180,8 @@ const StudentsList = () => {
                     image: student.image,
                     class: student.class,
                     isUpdated: true,
+                    fatherNID: student.fatherNID,
+                    collectFee: student.collectFee,
                   },
                 })
               }

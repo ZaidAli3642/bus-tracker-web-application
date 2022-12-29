@@ -8,6 +8,9 @@ import {
   onSnapshot,
   orderBy,
   serverTimestamp,
+  getDocs,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 
 import useAuth from "./../../context/auth/useAuth";
@@ -15,8 +18,11 @@ import MessagesBox from "../../components/MessagesBox";
 import {
   createChatConversation,
   getAdmins,
+  getDrivers,
   getParents,
+  messageNotifications,
   send,
+  unReadMessages,
 } from "../../firebase/firebaseCalls/chat";
 import ChatPeople from "../../components/ChatPeople";
 
@@ -33,10 +39,11 @@ const Messages = () => {
     image: "",
     designation: "",
   });
+  const [messagesNumber, setMessagesNumber] = useState();
   const [messages, setMessages] = useState([]);
   const [conversation, setConversation] = useState();
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log("User messages : ", user);
   const dummy = useRef();
 
   const getAllAdmins = async () => {
@@ -59,11 +66,44 @@ const Messages = () => {
     }
   };
 
+  const getAllDrivers = async () => {
+    try {
+      const drivers = await getDrivers(user);
+
+      return drivers;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getAllPeople = async () => {
     const admins = await getAllAdmins();
     const parents = await getAllParents();
-    setPersons([...admins, ...parents]);
+    const drivers = await getAllDrivers();
+    setPersons([...admins, ...parents, ...drivers]);
   };
+
+  async function sendPushNotification(expoPushToken, title, body) {
+    const message = {
+      to: expoPushToken,
+      sound: "default",
+      title: title,
+      body: body,
+      data: { someData: "goes here" },
+    };
+
+    console.log("TOken ,", message);
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  }
 
   const sendMessage = async (values, { resetForm }) => {
     try {
@@ -74,21 +114,52 @@ const Messages = () => {
         conversationId: conversation.conversationId,
         createdAt: serverTimestamp(),
       };
+
+      const messageNotification = {
+        messageRead: false,
+        notificationReceive: user.institute,
+        receiverId: header.id,
+        conversationId: conversation.conversationId,
+        senderId: user.id,
+        data: [],
+      };
       resetForm();
       await send(data);
+      if (header.pushToken)
+        sendPushNotification(header.pushToken, "New message", values.message);
+      const unReadMessage = await unReadMessages(user, conversation);
+      console.log("Messages Zaid Saleem: ", unReadMessage);
+
+      delete data.createdAt;
+      if (unReadMessage.length > 0) {
+        // update the collection
+        messageNotification.data = [...unReadMessage[0].data, data];
+
+        const docRef = doc(database, "notifications", unReadMessage[0].id);
+
+        await updateDoc(docRef, messageNotification);
+        return;
+      }
+      messageNotification.data = [data];
+      await messageNotifications(messageNotification);
       dummy.current.scrollIntoView({ behavior: "smooth" });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handlePersonClick = (person) => {
+  const handlePersonClick = async (person) => {
     setHeader({
       id: person.id,
-      name: person.firstname + " " + person.lastname,
+      name: person.fullName
+        ? person.fullName
+        : person.firstname + " " + person.lastname,
       image: person.image,
       designation: person.designation,
+      pushToken: person.pushToken,
     });
+    const docRef = doc(database, "notifications", person.messageNumberId);
+    await updateDoc(docRef, { messageRead: true });
   };
 
   const createConversation = async () => {
@@ -104,6 +175,23 @@ const Messages = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const getMessagesNumber = async () => {
+    const messagesCollection = collection(database, "notifications");
+    const q = query(
+      messagesCollection,
+      where("notificationReceive", "==", user.institute),
+      where("receiverId", "==", user.id),
+      where("messageRead", "==", false)
+    );
+    onSnapshot(q, (messagesSnapshot) => {
+      const messages = messagesSnapshot.docs.map((messages) => ({
+        id: messages.id,
+        ...messages.data(),
+      }));
+      setMessagesNumber(messages);
+    });
   };
 
   const getPersonChat = () => {
@@ -133,7 +221,7 @@ const Messages = () => {
 
   useEffect(() => {
     getAllPeople();
-
+    getMessagesNumber();
     getPersonChat();
   }, [messages, conversation]);
 
@@ -151,7 +239,11 @@ const Messages = () => {
           isLoading={isLoading}
         />
 
-        <ChatPeople persons={persons} handlePersonClick={handlePersonClick} />
+        <ChatPeople
+          persons={persons}
+          messagesNumber={messagesNumber}
+          handlePersonClick={handlePersonClick}
+        />
       </div>
     </div>
   );

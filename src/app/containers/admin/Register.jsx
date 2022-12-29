@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { auth, database } from "../../firebase/firebaseConfig";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 
 import Input from "../../components/Input";
 import SubmitButton from "./../../components/SubmitButton";
@@ -13,21 +16,27 @@ import useAuth from "./../../context/auth/useAuth";
 import Datalist from "../../components/Datalist";
 
 const validationSchema = Yup.object().shape({
-  firstname: Yup.string().required().label("First Name"),
-  lastname: Yup.string().required().label("Last Name"),
+  firstname: Yup.string().max(10).required().label("First Name"),
+  lastname: Yup.string().max(10).required().label("Last Name"),
   email: Yup.string().email().required().label("Email"),
   password: Yup.string().min(8).max(12).required().label("Password"),
-  designation: Yup.string().required().label("Designation"),
-  institute: Yup.string().required().label("Institute"),
-  country: Yup.string().required().label("Country"),
-  city: Yup.string().required().label("City"),
-  address: Yup.string().required().label("Address"),
+  designation: Yup.string().max(20).required().label("Designation"),
+  institute: Yup.string().max(20).required().label("Institute"),
+  country: Yup.string().max(15).required().label("Country"),
+  city: Yup.string().max(15).required().label("City"),
+  address: Yup.string().max(20).required().label("Address"),
   postalcode: Yup.string()
+    .matches(/^[0-9]+$/, "Must be only digits")
     .min(5, "Postal Code must be 5 digits")
     .max(5, "Postal Code must be 5 digits")
     .required()
     .label("Postal Code"),
-  contact: Yup.string().required().label("Contact"),
+  contact: Yup.string()
+    .matches(/^[0-9]+$/, "Must be only digits")
+    .min(11)
+    .max(11)
+    .required()
+    .label("Contact"),
 });
 
 const Register = () => {
@@ -75,13 +84,21 @@ const Register = () => {
         address: values.address,
         postalcode: values.postalcode,
         contact: values.contact,
+        image: "",
       });
 
-      const result = await addDoc(instituteRef, {
-        institute: values.institute,
-      });
+      const q = query(instituteRef, where("institute", "==", values.institute));
+      const instituteSnapshot = await getDocs(q);
 
-      if (result) navigate("/admin/home");
+      if (instituteSnapshot.empty) {
+        const result = await addDoc(instituteRef, {
+          institute: values.institute,
+        });
+      }
+      const emailSend = await sendEmailVerification(userCredentials.user);
+      console.log("Email sent : ", emailSend);
+
+      // if (result) navigate("/admin/home");
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -95,7 +112,7 @@ const Register = () => {
 
   if (authUser === undefined || Object.keys(user).length !== 0) return null;
   if (authUser && Object.keys(user).length === 0) {
-    return <Navigate to="/not-found" />;
+    return <Navigate to="/admin/home" />;
   }
 
   return (
@@ -117,7 +134,8 @@ const Register = () => {
           contact: "",
         }}
         onSubmit={handleSubmit}
-        validationSchema={validationSchema}>
+        validationSchema={validationSchema}
+      >
         <Input
           label="FIRST NAME"
           type="text"
@@ -167,7 +185,8 @@ const Register = () => {
 
         <button
           className="btn btn-md btn-primary button"
-          onClick={() => navigate("/admin/login")}>
+          onClick={() => navigate("/admin/login")}
+        >
           Sign in
         </button>
       </Form>

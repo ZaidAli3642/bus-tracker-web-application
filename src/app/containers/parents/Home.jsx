@@ -1,61 +1,82 @@
-import { useEffect, useState } from "react";
-import Slider from "../../components/Parent/Slider";
-import { BiConfused } from "react-icons/bi";
-import {
-  AiOutlineFacebook,
-  AiOutlineInstagram,
-  AiFillLinkedin,
-  AiOutlineWhatsApp,
-  AiOutlineTwitter,
-} from "react-icons/ai";
+import { BiChat } from "react-icons/bi";
+import { IoLocationSharp } from "react-icons/io5";
+import { BsFilePerson } from "react-icons/bs";
+
+import { FaRoute } from "react-icons/fa";
+
 import CardHeaderDetails from "../../components/Parent/CardHeaderDetails";
 
 const cardHeader = [
-  { id: 1, Icon: BiConfused, heading: "Heading", tagline: "tagline" },
-  { id: 2, Icon: BiConfused, heading: "Heading", tagline: "tagline" },
-  { id: 3, Icon: BiConfused, heading: "Heading", tagline: "tagline" },
-  { id: 4, Icon: BiConfused, heading: "Heading", tagline: "tagline" },
+  { id: 1, Icon: BsFilePerson, heading: "Bus Attendence" },
+  {
+    id: 2,
+    Icon: FaRoute,
+    heading: "View Schedule Route",
+  },
+  {
+    id: 3,
+    Icon: IoLocationSharp,
+    heading: "Real-Time Location",
+  },
+  { id: 4, Icon: BiChat, heading: "Real-Time Chat" },
+];
+
+const features = [
+  {
+    id: 1,
+    label: "Real Time Notifications",
+    image: require("../../assets/feature-1.png"),
+  },
+  {
+    id: 2,
+    label: "View Scheduled Routes",
+    image: require("../../assets/feature-2.png"),
+  },
+  {
+    id: 3,
+    label: "Bus Allocations",
+    image: require("../../assets/feature-3.png"),
+  },
+  {
+    id: 4,
+    label: "Live Vehicle Tracking",
+    image: require("../../assets/feature-4.png"),
+  },
+  {
+    id: 5,
+    label: "QR Code Scan",
+    image: require("../../assets/feature-5-1.png"),
+  },
+  {
+    id: 6,
+    label: "Live Chat",
+    image: require("../../assets/feature-6.png"),
+  },
+];
+
+const users = [
+  { id: 1, label: "Parents", image: require("../../assets/parent.png") },
+  { id: 2, label: "Institutes", image: require("../../assets/Institute.png") },
+  { id: 3, label: "Drivers", image: require("../../assets/taxi-driver.png") },
 ];
 
 const Home = () => {
-  const [slider, setSlider] = useState([
-    { image: require("../../assets/student-1.jpg") },
-    { image: require("../../assets/student-4.jpg") },
-    { image: require("../../assets/school-4.jpg") },
-  ]);
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const lastIndex = slider.length - 1;
-    if (index < 0) {
-      setIndex(lastIndex);
-    }
-    if (index > lastIndex) {
-      setIndex(0);
-    }
-  }, [index, slider]);
-
-  useEffect(() => {
-    const slider = setInterval(() => setIndex(index + 1), 5000);
-    return () => clearInterval(slider);
-  }, [index]);
-
   return (
     <>
       <div className="slider-container">
-        {slider.map((slide, slideIndex) => {
-          let position = "nextSlide";
-          if (slideIndex === index) {
-            position = "active";
-          }
-          if (
-            slideIndex === index - 1 ||
-            (index === 0 && slideIndex === slider.length - 1)
-          ) {
-            position = "lastSlide";
-          }
-          return <Slider position={position} slide={slide} />;
-        })}
+        <div className={`slider active`}>
+          <img
+            src={require("../../assets/1.webp")}
+            className="slider-image"
+            alt=""
+          />
+          <div className="slider-text">
+            <div className="left-details">
+              <h1 className="heading">Bus Tracking System</h1>
+              <p>Right Bus, Right Stop, Right Time</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <section className="card-section">
@@ -68,7 +89,7 @@ const Home = () => {
           <div className="row h-100 m-0">
             <div className="col-md-6 col-sm-12 p-0 overflow-hidden">
               <img
-                src={require("../../assets/school-3.jpg")}
+                src={require("../../assets/2.jpg")}
                 className="w-100 h-100 m-0 card-left-image"
                 alt=""
               />
@@ -83,69 +104,56 @@ const Home = () => {
                 <h1
                   className="card-image-heading"
                   data-aos="fade-right"
-                  data-aos-delay="300">
-                  Heading
+                  data-aos-delay="300"
+                >
+                  Safe and Secured Institute Bus Management!
                 </h1>
-                <h2
-                  className="card-image-tagline"
-                  data-aos="fade-right"
-                  data-aos-delay="300">
-                  Taglines
-                </h2>
+
                 <p
                   className="card-image-description"
                   data-aos="flip-right"
-                  data-aos-delay="300">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Aperiam cum explicabo repudiandae aut ad! Qui, deserunt vero
-                  quis officia, eveniet deleniti, eius eaque suscipit provident
-                  quia molestias amet ducimus. Magni!
+                  data-aos-delay="300"
+                >
+                  <b>Are you worried about your school going children?</b>
+                  <p className="card-image-description">
+                    We have the solution. Our parent app can make you feel safe
+                    and happy. With our app, you can track the real-time where
+                    abouts of your children, and many more.
+                  </p>
                 </p>
-                <button
-                  className="button mt-5"
-                  data-aos="fade-up"
-                  data-aos-delay="300">
-                  Button
-                </button>
               </div>
             </div>
           </div>
         </section>
       </section>
 
-      <footer className="footer">
-        <section className="first-footer-section">
-          <div className="information" data-aos="fade-right">
-            <h2>Bus Tracking App</h2>
-            <p className="address">
-              Chak #95/12L
-              <br /> Tehsil Chichawatni
-              <br /> District Sahiwal
-            </p>
-            <p>123456789</p>
-            <p>zaidali36422@gmail.com</p>
-          </div>
-          <div className="authentication" data-aos="fade-left">
-            <h4 className="mb-4">Login or Signup to get our services</h4>
-            <button className="button m-2">Login</button>
-            <button className="button m-2">Signup</button>
-          </div>
-        </section>
-        <section className="second-footer-section">
-          <div>
-            <span className="copyright-text">
-              Copyright All Right Reserved 2022, Zaid Saleem
-            </span>
-          </div>
-          <div className="footer-icons">
-            <AiOutlineFacebook className="icon" />
-            <AiOutlineInstagram className="icon" />
-            <AiOutlineWhatsApp className="icon" />
-            <AiOutlineTwitter className="icon" />
-            <AiFillLinkedin className="icon" />
-          </div>
-        </section>
-      </footer>
+      <div className="line"></div>
+
+      <section className="features-container">
+        <h2>Our Features</h2>
+        <div className="features">
+          {features.map((feature) => (
+            <div key={feature.id} className="feature-item">
+              <img src={feature.image} alt="" />
+              <span>{feature.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="line"></div>
+
+      <section className="users">
+        <h2>Who can use our System?</h2>
+        <div className="users-container">
+          {users.map((user) => (
+            <div key={user.id} className="user">
+              <img src={user.image} alt="" />
+              <span>{user.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
     </>
   );
 };

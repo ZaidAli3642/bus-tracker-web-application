@@ -11,10 +11,11 @@ import SubmitButton from "./../../components/SubmitButton";
 import Form from "./../../components/Form";
 import useAuth from "../../context/auth/useAuth";
 import AuthContext from "../../context/authContext";
+import { toast } from "react-toastify";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
-  password: Yup.string().min(8).max(12).required().label("Password"),
+  password: Yup.string().required().label("Password"),
 });
 
 const Login = () => {
@@ -32,24 +33,33 @@ const Login = () => {
         values.email,
         values.password
       );
+      console.log("user cred : ", userCred);
       const adminRef = collection(database, "admin");
       const q = query(adminRef, where("admin_id", "==", userCred.user.uid));
 
       const docSnap = await getDocs(q);
 
+      console.log("credentials : ", docSnap.empty);
       docSnap.forEach((doc) => setUser({ id: doc.id, ...doc.data() }));
 
+      toast.success("Successfull");
       navigate("/admin/home");
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       setIsLoading(false);
+      if (error.message.includes("auth/user-not-found"))
+        return toast.error("Email is not valid");
+
+      if (error.message.includes("auth/wrong-password"))
+        return toast.error("You have entered wrong password");
     }
   };
 
   if (authUser === undefined || Object.keys(user).length !== 0) return null;
+
   if (authUser && Object.keys(user).length === 0) {
-    return <Navigate to="/not-found" />;
+    return <Navigate to="/admin/home" />;
   }
 
   // if (Object.keys(user).length === 0 && authUser !== undefined) {
@@ -63,7 +73,8 @@ const Login = () => {
       <Form
         initialValues={{ email: "", password: "" }}
         onSubmit={handleLogin}
-        validationSchema={validationSchema}>
+        validationSchema={validationSchema}
+      >
         <Input
           label="EMAIL"
           type="email"
@@ -82,12 +93,18 @@ const Login = () => {
 
         <SubmitButton title="Sign in" isLoading={isLoading} />
 
-        <p className="forgot-password label">forgot your password?</p>
+        <p
+          className="forgot-password label"
+          onClick={() => navigate("/admin/forget")}
+        >
+          forgot your password?
+        </p>
         <h5 className="new-account-text">Don't have an Admin Account?</h5>
 
         <button
           className="btn btn-md btn-primary button"
-          onClick={() => navigate("/admin/register")}>
+          onClick={() => navigate("/admin/register")}
+        >
           Create New Account
         </button>
       </Form>

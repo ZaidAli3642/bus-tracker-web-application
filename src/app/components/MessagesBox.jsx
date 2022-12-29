@@ -13,6 +13,7 @@ const MessagesBox = ({
   validationSchema,
   isLoading,
 }) => {
+  console.log(header);
   return (
     <div className="col-8 message-container">
       <header className="message-header">
@@ -57,12 +58,14 @@ const MessagesBox = ({
         <Form
           initialValues={{ message: "" }}
           onSubmit={sendMessage}
-          validationSchema={validationSchema}>
+          validationSchema={validationSchema}
+        >
           <Input
             inputClasses={"messages-input"}
             placeholder="Send Message"
             name="message"
             type="text"
+            isFieldTouch={false}
           />
           <SubmitButton
             className="btn btn-primary btn-md"
