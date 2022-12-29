@@ -232,15 +232,18 @@ const Admin = () => {
           </div>
         </div>
 
-        <div
-          className="update-container"
-          onClick={() => navigate("/admin/fee")}
-        >
-          <div className="update update-fee mx-0">
+        <div className="update-container">
+          <div
+            className="update update-fee mx-0"
+            onClick={() => navigate("/admin/fee")}
+          >
             <p>Fee Management</p>
           </div>
-          <div className="update update-bus me-0">
-            <p>Routes</p>
+          <div
+            className="update update-bus me-0"
+            onClick={() => navigate("/admin/attendance")}
+          >
+            <p>Attendance Record</p>
           </div>
         </div>
       </div>
