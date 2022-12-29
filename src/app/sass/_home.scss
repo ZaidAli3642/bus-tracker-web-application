@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     cursor: pointer;
     @include transition-ease();
 
@@ -42,6 +43,14 @@
       }
     }
 
+    &-fee {
+      margin: 0 4rem;
+      background-color: rgb(255, 188, 188);
+      &:hover {
+        background-color: rgb(252, 172, 172);
+      }
+    }
+
     p {
       color: $dark;
       font-weight: 500;
@@ -63,6 +72,7 @@
     position: absolute;
     top: 0;
     left: 0;
+
     width: 100%;
     height: 100%;
     opacity: 0;
@@ -87,12 +97,43 @@
       z-index: 1111;
       width: 50%;
       height: 100%;
+      text-align: left;
+
+      @include respond(tab-port) {
+        width: 100%;
+      }
     }
-    h1 {
-      color: $white;
-    }
-    p {
-      color: $white;
+
+    .left-details {
+      width: 500px;
+      h1 {
+        color: $white;
+        font-size: 65px;
+        font-weight: bold;
+
+        @include respond(tab-land) {
+          font-size: 40px;
+          text-align: center;
+        }
+
+        @include respond(phone) {
+          font-size: 40px;
+          text-align: center;
+        }
+      }
+      p {
+        color: $white;
+        font-size: 25px;
+        letter-spacing: 2px;
+        @include respond(phone) {
+          font-size: 20px;
+          text-align: center;
+        }
+        @include respond(tab-land) {
+          font-size: 20px;
+          text-align: center;
+        }
+      }
     }
   }
 
@@ -116,23 +157,23 @@
   position: relative;
 
   width: 100%;
-  height: 700px;
+  height: 500px;
 
   @include respond(phone-xs) {
-    height: 1500px;
+    height: 1300px;
   }
   @include respond(phone) {
-    height: 1500px;
+    height: 1300px;
   }
   @include respond(tab-port-sm) {
-    height: 1500px;
+    height: 1300px;
   }
 
   @include respond(tab-port-land) {
-    height: 1000px;
+    height: 700px;
   }
   @include respond(big-desktop) {
-    height: 1000px;
+    height: 700px;
   }
 
   .card {
@@ -148,13 +189,22 @@
       @include respond(big-desktop) {
         font-size: 40px;
       }
+      @include respond(tab-port-sm) {
+        justify-content: flex-start !important;
+        margin-left: 100px;
+      }
+      @include respond(tab-port-land) {
+        justify-content: center !important;
+        margin-left: 150px;
+      }
 
       .icon {
         font-size: 30px;
       }
 
       .card-headings {
-        color: $dark-blue;
+        color: $black;
+        font-style: normal;
         font-weight: 700;
       }
     }
@@ -175,14 +225,22 @@
       left: 0;
       width: 100%;
       height: 100%;
-      opacity: 0.9;
+      opacity: 0.8;
+      padding: 20px !important;
 
       background-color: $dark-blue;
 
       .card-image-heading {
-        color: $white;
+        color: $green;
         font-weight: 700;
-        font-size: 60px !important;
+        font-size: 40px !important;
+
+        @include respond(tab-port) {
+          font-size: 20px !important;
+        }
+        @include respond(tab-land) {
+          font-size: 20px !important;
+        }
       }
 
       .card-image-tagline {
@@ -198,7 +256,7 @@
       .card-image-description {
         padding-top: 40px;
         color: $white;
-        font-size: 25px;
+        font-size: 20px;
 
         @include respond(phone) {
           font-size: 20px;
@@ -210,10 +268,123 @@
 
         @include respond(tab-port) {
           font-size: 15px;
+          padding-top: 10px !important;
         }
         @include respond(tab-land) {
           font-size: 20px;
+          padding-top: 10px !important;
         }
+      }
+    }
+  }
+}
+
+.features-container {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .features {
+    margin-top: 20px;
+    width: 100%;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    justify-items: center;
+    gap: 20px;
+
+    @include respond(tab-port) {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+
+    @include respond(phone) {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    .feature-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 200px;
+      height: 200px;
+      @include transition-ease;
+      cursor: pointer;
+      img {
+        width: 60px;
+        height: 60px;
+      }
+
+      span {
+        font-size: 20px;
+        text-align: center;
+      }
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+.users {
+  width: 100%;
+  margin: 20px 0px;
+  // box-shadow: 0px 0px 5px 0px rgb(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px 0;
+
+  .users-container {
+    margin-top: 20px;
+    width: 100%;
+    padding: 40px 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    justify-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    @include respond(tab-land) {
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+
+    @include respond(tab-port) {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    @include respond(tab-port-sm) {
+      gap: 60px;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    @include respond(phone) {
+      gap: 60px;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    }
+
+    .user {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 200px;
+      height: 200px;
+      box-shadow: 0px 0px 10px 0px rgb(0, 0, 0, 0.1);
+      border-radius: 20px;
+      @include transition-ease;
+      cursor: pointer;
+      img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 10px;
+      }
+      span {
+        font-size: 25px;
+      }
+
+      &:hover {
+        transform: scale(1.07);
       }
     }
   }
