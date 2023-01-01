@@ -17,6 +17,7 @@ import Profile from "./app/containers/parents/Profile";
 import Footer from "./app/components/Parent/Footer";
 import HowItWorks from "./app/containers/parents/HowItWorks";
 import ParentNotifications from "./app/containers/parents/ParentNotifications";
+import AttendanceRecord from "./app/containers/parents/AttendanceRecord";
 
 const routes = [
   "/",
@@ -28,6 +29,7 @@ const routes = [
   "/how-it-works",
   "/route-not-found",
   "/notifications",
+  "/attendance",
 ];
 
 function App() {
@@ -89,6 +91,14 @@ function App() {
                 element={
                   <ParentPrivateRoutes>
                     <Profile />
+                  </ParentPrivateRoutes>
+                }
+              />
+              <Route
+                path="/attendance"
+                element={
+                  <ParentPrivateRoutes>
+                    <AttendanceRecord />
                   </ParentPrivateRoutes>
                 }
               />

@@ -20,6 +20,7 @@ import { useLocation } from "react-router-dom";
 function AdminNotifications() {
   const { user } = useAuth();
   const [alerts, setAlerts] = useState([]);
+
   const [drivers, setDrivers] = useState([]);
 
   const location = useLocation();
@@ -45,7 +46,7 @@ function AdminNotifications() {
       id: alert.id,
       ...alert.data(),
     }));
-
+    console.log("Alerts : ", alerts);
     setAlerts(alerts);
   };
 
@@ -74,7 +75,8 @@ function AdminNotifications() {
             drivers.forEach((driver) => {
               if (driver.busNo === alert.busNo) image = driver.image;
             });
-            return (
+
+            return alert?.type === "fee" ? null : (
               <div className="notification">
                 <div className="d-flex">
                   <img src={image} className="profile-image" />

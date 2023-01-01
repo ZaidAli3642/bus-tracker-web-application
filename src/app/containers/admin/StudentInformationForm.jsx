@@ -134,7 +134,7 @@ const StudentInformationForm = () => {
       const filteredBusNo = busNoList.filter(
         (busNo) => busNo.value == values.busNo
       );
-      if (filteredBusNo[0].seatCapacity === seatCapacity) {
+      if (filteredBusNo[0].seatCapacity >= seatCapacity) {
         setIsProcessing(false);
         return toast.error(`Bus No ${values.busNo} seat capacity is full`);
       }
@@ -231,6 +231,7 @@ const StudentInformationForm = () => {
             institute: user.institute,
             image: result.image,
             busNo: values.busNo,
+            fatherNID: values.fatherNID,
             studentId: match.params.id,
           },
         },
@@ -383,7 +384,11 @@ const StudentInformationForm = () => {
               <Input label="Major or Class" name="class" type="text" />
             </div>
             <div className="items-details">
-              <Select label="Bus No" name="collectFee" options={collectFee} />
+              <Select
+                label="Fee Collect"
+                name="collectFee"
+                options={collectFee}
+              />
             </div>
             {/* <a href={url} download="qrcode.png">
               Download

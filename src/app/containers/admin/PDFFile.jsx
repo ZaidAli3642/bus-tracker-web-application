@@ -49,6 +49,7 @@ function PDFFile() {
       rollNo: students[0].rollNo,
       institute: students[0].institute,
       studentId: students[0].id,
+      fatherNID: students[0].fatherNID,
       busNo: students[0].busNo,
     };
 

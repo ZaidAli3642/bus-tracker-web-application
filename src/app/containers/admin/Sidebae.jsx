@@ -53,9 +53,9 @@ const Sidebar = () => {
       to: "admin/location",
       target: "_blank",
     },
-    { id: 4, text: "Students", Icon: BiBusSchool, to: "admin/student" },
+    { id: 4, text: "Buses", Icon: BiBusSchool, to: "admin/bus" },
     { id: 5, text: "Drivers", Icon: GoPerson, to: "admin/driver" },
-    { id: 6, text: "Buses", Icon: BiBusSchool, to: "admin/bus" },
+    { id: 6, text: "Students", Icon: BiBusSchool, to: "admin/student" },
     {
       id: 7,
       text: "Messages",

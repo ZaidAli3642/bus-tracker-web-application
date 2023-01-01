@@ -14,6 +14,7 @@ import {
 import Loader from "../../components/Loader";
 import Detail from "../../components/Detail";
 import useParentAuth from "./../../context/auth/useParentAuth";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
   password: Yup.string().required().label("Password"),
@@ -22,6 +23,7 @@ const validationSchema = Yup.object().shape({
 const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [student, setStudent] = useState([]);
+  const navigate = useNavigate();
   const [bus, setBus] = useState({});
   const { parent } = useParentAuth();
 
@@ -126,6 +128,12 @@ const Profile = () => {
 
           <h3>Student Information</h3>
 
+          <button
+            className="btn btn-sm btn-primary m-0 mt-2"
+            onClick={() => navigate("/attendance")}
+          >
+            Check Student Attendance Record
+          </button>
           {student.map((stud) => (
             <>
               <div className="line"></div>
@@ -146,6 +154,29 @@ const Profile = () => {
                   />
                   <Detail fontSize={20} detail={stud.parent} />
                   <Detail fontSize={20} detail={stud.rollNo} />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                    }}
+                  >
+                    <Detail fontSize={20} detail={"Status "} />
+                    <div
+                      style={{
+                        marginLeft: 10,
+                        width: 15,
+                        height: 15,
+                        backgroundColor:
+                          stud.onAndOffBoard === undefined ||
+                          stud.onAndOffBoard === false
+                            ? "red"
+                            : "green",
+                        borderRadius: 15 / 2,
+                      }}
+                    ></div>
+                  </div>
                 </div>
               </div>
               <div className="line"></div>

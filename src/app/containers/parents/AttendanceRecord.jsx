@@ -17,9 +17,11 @@ import { useState } from "react";
 import Loader from "../../components/Loader";
 import TableHeader from "../../components/TableHeader";
 import useAuth from "../../context/auth/useAuth";
+import useParentAuth from "../../context/auth/useParentAuth";
 import { database } from "../../firebase/firebaseConfig";
 
 export default function AttendanceRecord() {
+  const { parent } = useParentAuth();
   const [students, setStudents] = useState([]);
   const [filteredStudent, setFilteredStudent] = useState([]);
   const [drivers, setDrivers] = useState([]);
@@ -29,16 +31,7 @@ export default function AttendanceRecord() {
     order: "asc",
   });
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
-  const tableHeader = [
-    { id: 1, label: "#" },
-    { id: 2, label: "Reg no", key: "rollNo" },
-    { id: 3, label: "Student name", key: "firstname" },
-    { id: 4, label: "Driver Name", key: "driverName" },
-    { id: 5, label: "bus No", key: "busNo" },
-    { id: 6, label: "Time", key: "timeOnAndOffBoard" },
-    { id: 7, label: "status", key: "onAndOffBoard" },
-  ];
+
   const tableHeader1 = [
     { id: 1, label: "#" },
     { id: 2, label: "Reg no", key: "rollNo" },
@@ -65,7 +58,10 @@ export default function AttendanceRecord() {
   const getAllDrivers = async () => {
     const driverCollection = collection(database, "drivers");
 
-    const q = query(driverCollection, where("institute", "==", user.institute));
+    const q = query(
+      driverCollection,
+      where("institute", "==", parent.institute)
+    );
 
     const driverSnapshot = await getDocs(q);
     const drivers = driverSnapshot.docs.map((drivers) => ({
@@ -78,16 +74,15 @@ export default function AttendanceRecord() {
   const getStudents = async () => {
     try {
       await getAllDrivers();
-      const studentCollection = collection(database, "students");
+      const studentCollection = collection(database, "attendance");
       const q = query(
         studentCollection,
-        where("institute", "==", user.institute)
+        where("institute", "==", parent.institute),
+        where("fatherNID", "==", parent.nationalIdentityNumber)
       );
 
       const studentSnapshot = await getDocs(q);
-      //   onSnapshot(q, (studentSnapshot) => {
 
-      //   });
       const students = studentSnapshot.docs.map((student) => ({
         id: student.id,
         ...student.data(),
@@ -125,7 +120,8 @@ export default function AttendanceRecord() {
     const attendanceCollection = collection(database, "attendance");
     const q = query(
       attendanceCollection,
-      where("institute", "==", user.institute),
+      where("institute", "==", parent.institute),
+      where("fatherNID", "==", parent.nationalIdentityNumber),
       where("month", "==", month + 1),
       where("year", "==", year)
     );
@@ -154,7 +150,7 @@ export default function AttendanceRecord() {
   );
 
   return (
-    <>
+    <div className="p-4">
       <h1>Attendance Record</h1>
       <div class="mb-3">
         <label for="search" class="form-label">
@@ -178,73 +174,43 @@ export default function AttendanceRecord() {
       </div>
       <div className="items">
         <table class="table">
-          <TableHeader
-            data={!dateFilter ? tableHeader : tableHeader1}
-            onSort={handleSort}
-          />
-          {!dateFilter ? (
-            <tbody>
-              {orderedData.map((student, index) => {
-                let driverName = "";
-                drivers.forEach((driver) =>
-                  driver.busNo === student.busNo
-                    ? (driverName = driver.firstname)
-                    : ""
-                );
-                return (
-                  <tr key={student.id}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{student.rollNo}</td>
-                    <td>{student.firstname}</td>
-                    <td>{driverName}</td>
-                    <td>{student.busNo}</td>
-                    <td>
-                      {student.timeOnAndOffBoard
-                        ? student.timeOnAndOffBoard.toDate().toString()
-                        : "none"}
-                    </td>
-                    <td>{student.onAndOffBoard ? "ON Board" : "Off Board"}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          ) : (
-            <tbody>
-              {orderedData.map((student, index) => {
-                console.log("Student : ", student);
-                let driverName = "";
-                drivers.forEach((driver) =>
-                  driver.busNo === student.busNo
-                    ? (driverName = driver.firstname)
-                    : ""
-                );
-                return (
-                  <tr key={student.id}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{student.rollNo}</td>
-                    <td>{student.firstname}</td>
-                    <td>{student?.driverName}</td>
-                    <td>{student.busNo}</td>
-                    <td>
-                      {student.timeAndDate
-                        ? student.timeAndDate.toDate().toString()
-                        : "none"}
-                    </td>
-                    <td>
-                      <td>{student?.openingTime?.onBoard && "on board"}</td>
-                      <td>{student?.openingTime?.offBoard && "off board"}</td>
-                    </td>
-                    <td>
-                      <td>{student?.closingTime?.onBoard && "on board"}</td>
-                      <td>{student?.closingTime?.offBoard && "off board"}</td>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          )}
+          <TableHeader data={tableHeader1} onSort={handleSort} />
+
+          <tbody>
+            {orderedData.map((student, index) => {
+              console.log("Student : ", student);
+              let driverName = "";
+              drivers.forEach((driver) =>
+                driver.busNo === student.busNo
+                  ? (driverName = driver.firstname)
+                  : ""
+              );
+              return (
+                <tr key={student.id}>
+                  <th scope="row">{index + 1}</th>
+                  <td>{student.rollNo}</td>
+                  <td>{student.firstname}</td>
+                  <td>{student?.driverName}</td>
+                  <td>{student.busNo}</td>
+                  <td>
+                    {student.timeAndDate
+                      ? student.timeAndDate.toDate().toString()
+                      : "none"}
+                  </td>
+                  <td>
+                    <td>{student?.openingTime?.onBoard && "on board"}</td>
+                    <td>{student?.openingTime?.offBoard && "off board"}</td>
+                  </td>
+                  <td>
+                    <td>{student?.closingTime?.onBoard && "on board"}</td>
+                    <td>{student?.closingTime?.offBoard && "off board"}</td>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

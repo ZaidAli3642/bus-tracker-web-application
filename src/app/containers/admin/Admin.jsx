@@ -10,6 +10,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -39,9 +40,26 @@ const validationSchema = Yup.object().shape({
 });
 
 const Admin = () => {
+  const [institute, setInstitute] = useState({});
   const navigate = useNavigate();
   const { user } = useAuth();
   const { data, loading, requestPromise } = usePromise();
+
+  const getInstitute = async () => {
+    const instituteCollection = collection(database, "institute");
+    const q = query(
+      instituteCollection,
+      where("institute", "==", user.institute)
+    );
+    const instituteSnapshot = await getDocs(q);
+    const institute = instituteSnapshot.docs.map((institute) => ({
+      id: institute.id,
+      ...institute.data(),
+    }));
+
+    console.log("INstitute : ", institute);
+    setInstitute(institute[0]);
+  };
 
   async function sendPushNotification(expoPushToken, title, body) {
     const message = {
@@ -87,8 +105,9 @@ const Admin = () => {
 
   const sendFeeNotification = async () => {
     const date = new Date().getDate();
-
+    console.log("Data : ", date);
     if (localStorage.getItem("date") == date) return;
+    console.log("Data : ", date);
 
     const studentCollection = collection(database, "students");
     const alertCollection = collection(database, "alert");
@@ -100,6 +119,7 @@ const Admin = () => {
 
     const studentsSnapshot = await getDocs(q);
 
+    console.log("Payment Remaining : ", studentsSnapshot);
     studentsSnapshot.docs.map(async (students) => {
       await addDoc(alertCollection, {
         busNo: students.get("busNo"),
@@ -168,6 +188,7 @@ const Admin = () => {
       getDriverCount(user),
       getBusCount(user)
     );
+    getInstitute();
     sendFeeAlerts();
     sendFeeNotification();
   }, []);
@@ -182,27 +203,36 @@ const Admin = () => {
       </label>
       <div className="admin">
         <Form
-          initialValues={{ openingTime: "", closingTime: "" }}
+          initialValues={{
+            openingTime: institute.openingTime || "",
+            closingTime: institute.closingTime || "",
+          }}
           onSubmit={setOpeningAndClosingTime}
           validationSchema={validationSchema}
         >
           <div className="items-details d-flex justify-content-between align-items-center">
-            <Input
-              label="Opening Time"
-              name="openingTime"
-              placeholder="Enter Opening Time"
-              type="time"
-              inputClasses={"w-75"}
-              classes={"w-75"}
-            />
-            <Input
-              label="Closing Time"
-              name="closingTime"
-              placeholder="Enter Closing Time"
-              type="time"
-              inputClasses={"w-75"}
-              classes={"w-75"}
-            />
+            <div className="w-100">
+              <Input
+                label="Opening Time"
+                name="openingTime"
+                placeholder="Enter Opening Time"
+                type="time"
+                inputClasses={"w-100"}
+                classes={"w-100"}
+              />
+              <span>{institute?.openingTime}</span>
+            </div>
+            <div className="w-100 ms-2">
+              <Input
+                label="Closing Time"
+                name="closingTime"
+                placeholder="Enter Closing Time"
+                type="time"
+                inputClasses={"w-100"}
+                classes={"w-100"}
+              />
+              <span>{institute?.closingTime}</span>
+            </div>
             <SubmitButton title={"Set"} />
           </div>
         </Form>
@@ -213,7 +243,7 @@ const Admin = () => {
             <p>Update Your Information</p>
           </div> */}
           <div className="update update-student ms-0">
-            <p>Studnets</p>
+            <p>Students</p>
             <span>{data && data[0]}</span>
           </div>
           <div className="update update-driver">

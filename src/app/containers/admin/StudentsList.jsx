@@ -157,6 +157,7 @@ const StudentsList = () => {
                       image: student.image,
                       busNo: student.busNo,
                       studentId: student.id,
+                      fatherNID: student.fatherNID,
                     },
                   },
                 })
