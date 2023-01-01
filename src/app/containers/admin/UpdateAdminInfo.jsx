@@ -2,7 +2,7 @@ import { useState } from "react";
 import * as Yup from "yup";
 import { useMatch, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { database, storage } from "../../firebase/firebaseConfig";
+import { auth, database, storage } from "../../firebase/firebaseConfig";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 
@@ -11,6 +11,12 @@ import Form from "../../components/Form";
 import SubmitButton from "../../components/SubmitButton";
 import useAuth from "./../../context/auth/useAuth";
 import SelectImageInput from "./../../components/SelectImageInput";
+import {
+  updatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  EmailAuthCredential,
+} from "firebase/auth";
 
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
@@ -25,6 +31,7 @@ const validationSchema = Yup.object().shape({
     .required()
     .label("Postal Code"),
   contact: Yup.string().required().label("Contact"),
+  password: Yup.string().min(8).max(12).label("Password"),
 });
 
 const UpdateAdminInfo = () => {
@@ -71,6 +78,27 @@ const UpdateAdminInfo = () => {
         image: downloadedUrl,
         imageName: imageName,
       });
+
+      if (values.password) {
+        updatePassword(auth.currentUser, values.password)
+          .then((value) => {
+            console.log("Password : ", value);
+            const credential = EmailAuthProvider.credential(
+              auth.currentUser.email,
+              values.password
+            );
+
+            console.log("Email provided : ", credential);
+            reauthenticateWithCredential(auth.currentUser, credential).then(
+              (res) => {
+                console.log("Response : ", res);
+              }
+            );
+          })
+          .catch((err) => {
+            console.log("ERROR :", err);
+          });
+      }
       toast.success("Data Saved Successfully!");
       setIsProcessing(false);
     } catch (error) {
@@ -106,9 +134,12 @@ const UpdateAdminInfo = () => {
               postalcode: user?.postalcode || "",
               contact: user?.contact || "",
               image: user?.image || null,
+              password: "",
+              email: auth.currentUser.email || "",
             }}
             onSubmit={handleUpdateAdmin}
-            validationSchema={validationSchema}>
+            validationSchema={validationSchema}
+          >
             <h4>Personal Information</h4>
             <div className="line"></div>
 
@@ -132,6 +163,10 @@ const UpdateAdminInfo = () => {
             </div>
             <div className="items-details">
               <Input label="Designation" name="designation" type="text" />
+              <Input label="Password" name="password" type="text" />
+            </div>
+            <div className="items-details">
+              <Input label="Email" name="email" type="text" disabled={true} />
             </div>
             <div className="line"></div>
             <h4>Physical Address</h4>

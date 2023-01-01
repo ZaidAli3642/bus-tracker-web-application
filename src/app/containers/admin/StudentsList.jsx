@@ -124,6 +124,8 @@ const StudentsList = () => {
             <ListItem
               id={student.id}
               to={`/admin/student`}
+              onAndOffBoard={true}
+              onAndOffBoardStatus={student.onAndOffBoard}
               state={{
                 id: student.id,
                 rollNo: student.rollNo,
