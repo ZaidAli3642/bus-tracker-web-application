@@ -55,7 +55,7 @@ p {
 .items {
   max-height: 70vh;
   overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-x: scroll;
   padding: 10px;
   margin-top: 2rem;
   background-color: rgb(244, 246, 248);

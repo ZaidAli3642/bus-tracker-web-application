@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
@@ -269,12 +269,13 @@ const Admin = () => {
           >
             <p>Fee Management</p>
           </div>
-          <div
-            className="update update-bus me-0"
-            onClick={() => navigate("/admin/attendance")}
+          <Link
+            target="_blank"
+            className="update update-bus me-0 text-decoration-none"
+            to={"/admin/attendance"}
           >
             <p>Attendance Record</p>
-          </div>
+          </Link>
         </div>
       </div>
     </>

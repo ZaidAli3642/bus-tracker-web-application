@@ -11,6 +11,7 @@ import Messages from "./Messages";
 import Location from "./Location";
 import EmailVerification from "./EmailVerification";
 import ForgetPassword from "./ForgetPassword";
+import AttendanceRecord from "./AttendanceRecord";
 
 const AdminRoutes = () => {
   const [user, setUser] = useState(null);
@@ -19,7 +20,8 @@ const AdminRoutes = () => {
     <div
       className={
         location.pathname === "/admin/messages" ||
-        location.pathname === "/admin/location"
+        location.pathname === "/admin/location" ||
+        location.pathname === "/admin/attendance"
           ? "container-fluid"
           : "container"
       }
@@ -33,6 +35,7 @@ const AdminRoutes = () => {
           </Route>
           <Route path="/admin/register" element={<Register />} />
           <Route path="/admin/emailVerify" element={<EmailVerification />} />
+          <Route path="/admin/attendance" element={<AttendanceRecord />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin/forget" element={<ForgetPassword />} />
           <Route path="/not-found" element={<NotFound />} />

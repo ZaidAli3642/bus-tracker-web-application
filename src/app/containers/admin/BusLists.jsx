@@ -91,6 +91,7 @@ const BusLists = () => {
                 routes: bus.busRoutes,
                 maintainance: bus.maintainance,
                 seatCapacity: bus.seatCapacity,
+                seatCapacityFilled: bus.seatCapacityFilled,
               }}
               onDelete={() => handleDelete(bus.id)}
               onClick={() =>
@@ -105,6 +106,7 @@ const BusLists = () => {
                     isUpdated: true,
                     isBusAlloted: bus.isBusAlloted,
                     seatCapacity: bus.seatCapacity,
+                    seatCapacityFilled: bus.seatCapacityFilled,
                   },
                 })
               }

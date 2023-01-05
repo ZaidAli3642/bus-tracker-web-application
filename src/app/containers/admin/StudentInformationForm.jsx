@@ -6,6 +6,9 @@ import {
   where,
   query,
   serverTimestamp,
+  doc,
+  getDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { database } from "../../firebase/firebaseConfig";
 import { useLocation, useMatch } from "react-router-dom";
@@ -134,7 +137,14 @@ const StudentInformationForm = () => {
       const filteredBusNo = busNoList.filter(
         (busNo) => busNo.value == values.busNo
       );
-      if (filteredBusNo[0].seatCapacity >= seatCapacity) {
+
+      const busRef = doc(database, "bus", filteredBusNo[0].id);
+      const bus = await getDoc(busRef);
+      const busData = { id: bus.id, ...bus.data() };
+      console.log("Bus Data ", busData);
+
+      console.log("Filtered bus no : ", filteredBusNo, seatCapacity);
+      if (busData?.seatCapacityFilled >= busData.seatCapacity) {
         setIsProcessing(false);
         return toast.error(`Bus No ${values.busNo} seat capacity is full`);
       }
@@ -212,6 +222,10 @@ const StudentInformationForm = () => {
           data.feeSubmittedTime = serverTimestamp();
         if (parentSnapshot.empty) await addData(parentData, "parent");
         result = await addData(data, "students", values.image);
+
+        await updateDoc(busRef, {
+          seatCapacityFilled: busData.seatCapacityFilled + 1,
+        });
       }
 
       console.log("Result : ", result);

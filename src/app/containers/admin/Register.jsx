@@ -14,6 +14,7 @@ import SubmitButton from "./../../components/SubmitButton";
 import Form from "./../../components/Form";
 import useAuth from "./../../context/auth/useAuth";
 import Datalist from "../../components/Datalist";
+import { toast } from "react-toastify";
 
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().max(10).required().label("First Name"),
@@ -102,6 +103,9 @@ const Register = () => {
       setIsLoading(false);
     } catch (error) {
       console.log(error);
+
+      if (error.message.includes("auth/email-already-in-use"))
+        toast.error("Email is already registered");
       setIsLoading(false);
     }
   };

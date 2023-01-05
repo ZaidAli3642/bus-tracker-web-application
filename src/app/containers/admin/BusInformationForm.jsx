@@ -52,6 +52,7 @@ const BusInformationForm = () => {
         isBusAlloted: location?.state?.isBusAlloted ? true : false,
         institute: user.institute,
         seatCapacity: values.seatCapacity,
+        seatCapacit: location?.state?.seatCapacityFilled || 0,
       };
 
       const busRef = collection(database, "bus");

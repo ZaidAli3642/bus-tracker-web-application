@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   collection,
+  doc,
   getDocs,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { database } from "../../firebase/firebaseConfig";
@@ -65,6 +67,25 @@ const StudentsList = () => {
       const parent = parentSnapshot.docs.map((parent) => ({ id: parent.id }));
       deleteDocument("parent", parent[0].id);
     }
+    console.log("Deleting Bus : ", student);
+
+    const busCollection = collection(database, "bus");
+    const q1 = query(
+      busCollection,
+      where("institute", "==", student.institute),
+      where("busNo", "==", student.busNo)
+    );
+
+    const busSnapshot = await getDocs(q1);
+
+    const bus = busSnapshot.docs.map((bus) => ({ id: bus.id, ...bus.data() }));
+
+    console.log("Deleting Bus : ", bus);
+    const busDoc = doc(database, "bus", bus[0].id);
+
+    await updateDoc(busDoc, {
+      seatCapacityFilled: bus[0].seatCapacityFilled - 1,
+    });
   };
 
   useEffect(() => {

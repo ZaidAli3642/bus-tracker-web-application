@@ -40,7 +40,7 @@ const AdminPanel = () => {
             <Route path="/bus/:id" element={<BusDetails />} />
             <Route path="/bus" element={<BusLists />} />
             <Route path="/fee" element={<FeeManagement />} />
-            <Route path="/attendance" element={<AttendanceRecord />} />
+
             <Route path="/pdf" element={<PDFFile />} />
 
             <Route path="/notifications" element={<AdminNotifications />} />

@@ -23,6 +23,7 @@ export default function AttendanceRecord() {
   const [students, setStudents] = useState([]);
   const [filteredStudent, setFilteredStudent] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [searching, setSearching] = useState("default");
   const [dateFilter, setDateFilter] = useState(false);
   const [sortColumn, setSortColumn] = useState({
     path: "rollNo",
@@ -45,9 +46,17 @@ export default function AttendanceRecord() {
     { id: 3, label: "Student name", key: "firstname" },
     { id: 4, label: "Driver Name", key: "driverName" },
     { id: 5, label: "bus No", key: "busNo" },
-    { id: 6, label: "Time", key: "timeOnAndOffBoard" },
-    { id: 7, label: "Opening", key: "openingTime.onBoard" },
-    { id: 7, label: "Closing", key: "closingTime.offBoard" },
+    { id: 6, label: "Date", key: "date" },
+    {
+      id: 7,
+      label: "School Opening(on/off) Board",
+      key: "openingTime.onBoard",
+    },
+    {
+      id: 7,
+      label: "School Opening(on/off) Board",
+      key: "closingTime.offBoard",
+    },
   ];
 
   const handleSort = (path) => {
@@ -78,10 +87,14 @@ export default function AttendanceRecord() {
   const getStudents = async () => {
     try {
       await getAllDrivers();
+
+      const date = new Date().toLocaleDateString("en-GB");
+
       const studentCollection = collection(database, "students");
       const q = query(
         studentCollection,
-        where("institute", "==", user.institute)
+        where("institute", "==", user.institute),
+        where("date", "==", date)
       );
 
       const studentSnapshot = await getDocs(q);
@@ -104,11 +117,15 @@ export default function AttendanceRecord() {
   const searchStudent = (search) => {
     if (search) {
       setFilteredStudent(students);
-      const filtered = filteredStudent.filter(
-        (data) =>
-          data.rollNo.toString().startsWith(search) ||
-          data.firstname.toLowerCase().includes(search.toLowerCase())
-      );
+      const filtered = filteredStudent.filter((data) => {
+        if (searching === "busNo") {
+          return data.busNo === search;
+        } else if (searching === "firstname") {
+          return data.firstname.toLowerCase().includes(search.toLowerCase());
+        }
+
+        return data.rollNo.toString().startsWith(search);
+      });
 
       setFilteredStudent(filtered);
       console.log("Search : ", filteredStudent, search);
@@ -143,7 +160,7 @@ export default function AttendanceRecord() {
 
   useEffect(() => {
     getStudents();
-  }, []);
+  }, [user]);
 
   if (loading) return <Loader />;
 
@@ -154,19 +171,32 @@ export default function AttendanceRecord() {
   );
 
   return (
-    <>
+    <div className="mt-5">
       <h1>Attendance Record</h1>
       <div class="mb-3">
         <label for="search" class="form-label">
           Search Student
         </label>
-        <input
-          type="search"
-          class="form-control"
-          id="search"
-          placeholder="Search Student"
-          onChange={(e) => searchStudent(e.target.value)}
-        />
+        <div style={{ display: "flex" }}>
+          <input
+            type="search"
+            className="form-control w-50"
+            id="search"
+            placeholder="Search Student"
+            onChange={(e) => searchStudent(e.target.value)}
+          />
+          <select
+            className="form-select w-25 ms-3"
+            aria-label="Default select example"
+            onChange={(e) => setSearching(e.target.value)}
+          >
+            <option selected value="regNo">
+              By Reg No
+            </option>
+            <option value="firstname">By Name</option>
+            <option value="busNo">By Bus No</option>
+          </select>
+        </div>
 
         <input
           placeholder="Select Date"
@@ -225,18 +255,16 @@ export default function AttendanceRecord() {
                     <td>{student.firstname}</td>
                     <td>{student?.driverName}</td>
                     <td>{student.busNo}</td>
+                    <td>{student.date || "none"}</td>
                     <td>
-                      {student.timeAndDate
-                        ? student.timeAndDate.toDate().toString()
-                        : "none"}
+                      {`${student?.openingTime?.onBoard || "none"} - ${
+                        student?.openingTime?.offBoard || "none"
+                      }`}
                     </td>
                     <td>
-                      <td>{student?.openingTime?.onBoard && "on board"}</td>
-                      <td>{student?.openingTime?.offBoard && "off board"}</td>
-                    </td>
-                    <td>
-                      <td>{student?.closingTime?.onBoard && "on board"}</td>
-                      <td>{student?.closingTime?.offBoard && "off board"}</td>
+                      {`${student?.closingTime?.onBoard || "none"} - ${
+                        student?.closingTime?.offBoard || "none"
+                      }`}
                     </td>
                   </tr>
                 );
@@ -245,6 +273,6 @@ export default function AttendanceRecord() {
           )}
         </table>
       </div>
-    </>
+    </div>
   );
 }

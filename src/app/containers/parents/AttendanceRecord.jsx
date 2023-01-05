@@ -38,9 +38,17 @@ export default function AttendanceRecord() {
     { id: 3, label: "Student name", key: "firstname" },
     { id: 4, label: "Driver Name", key: "driverName" },
     { id: 5, label: "bus No", key: "busNo" },
-    { id: 6, label: "Time", key: "timeOnAndOffBoard" },
-    { id: 7, label: "Opening", key: "openingTime.onBoard" },
-    { id: 7, label: "Closing", key: "closingTime.offBoard" },
+    { id: 6, label: "Date", key: "date" },
+    {
+      id: 7,
+      label: "School Opening(On/Off) Board",
+      key: "openingTime.onBoard",
+    },
+    {
+      id: 7,
+      label: "School Closing(On/Off) Board",
+      key: "closingTime.offBoard",
+    },
   ];
 
   const handleSort = (path) => {
@@ -192,18 +200,16 @@ export default function AttendanceRecord() {
                   <td>{student.firstname}</td>
                   <td>{student?.driverName}</td>
                   <td>{student.busNo}</td>
+                  <td>{student.date || "none"}</td>
                   <td>
-                    {student.timeAndDate
-                      ? student.timeAndDate.toDate().toString()
-                      : "none"}
+                    {`${student?.openingTime?.onBoard || "none"} - ${
+                      student?.openingTime?.offBoard || "none"
+                    }`}
                   </td>
                   <td>
-                    <td>{student?.openingTime?.onBoard && "on board"}</td>
-                    <td>{student?.openingTime?.offBoard && "off board"}</td>
-                  </td>
-                  <td>
-                    <td>{student?.closingTime?.onBoard && "on board"}</td>
-                    <td>{student?.closingTime?.offBoard && "off board"}</td>
+                    {`${student?.closingTime?.onBoard || "none"} - ${
+                      student?.closingTime?.offBoard || "none"
+                    }`}
                   </td>
                 </tr>
               );

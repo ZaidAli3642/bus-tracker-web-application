@@ -26,6 +26,7 @@ const StudentDetails = () => {
     busNo,
     class: majorOrClass,
     image,
+    fatherNID,
     nationalIdentityNumber,
   } = location.state || {};
 
@@ -34,7 +35,10 @@ const StudentDetails = () => {
     setLoading(true);
     const parentCollection = collection(database, "parent");
 
-    const q = query(parentCollection, where("studentId", "==", rollNo));
+    const q = query(
+      parentCollection,
+      where("nationalIdentityNumber", "==", fatherNID)
+    );
 
     const parentSnapshot = await getDocs(q);
 
