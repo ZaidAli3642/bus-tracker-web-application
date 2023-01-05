@@ -11,6 +11,10 @@ import { useContext } from "react";
 import AuthContext from "../../context/authContext";
 import { toast } from "react-toastify";
 import InputWithMask from "../../components/InputWithMask";
+import { useEffect } from "react";
+import { getInstitutes } from "../../firebase/firebaseCalls/get";
+import Datalist from "../../components/Datalist";
+import Detail from "../../components/Detail";
 
 const validationSchema = Yup.object().shape({
   nationalIdentityNumber: Yup.string()
@@ -23,8 +27,24 @@ const validationSchema = Yup.object().shape({
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const [institutes, setInstitutes] = useState([]);
+  const [selectedInstitute, setSelectedInstitute] = useState("");
   const { parent, setParent } = useContext(AuthContext);
+
   const navigate = useNavigate();
+
+  const getInstitutes = async () => {
+    const instituteCollection = collection(database, "institute");
+
+    const institutesSnapshot = await getDocs(instituteCollection);
+
+    const institutes = institutesSnapshot.docs.map((institutes) => ({
+      id: institutes.get("institute"),
+      value: institutes.get("institute"),
+    }));
+
+    setInstitutes(institutes);
+  };
 
   const login = async (values) => {
     setLoading(true);
@@ -37,10 +57,13 @@ const Login = () => {
       const q1 = query(
         parentCollection,
         where("nationalIdentityNumber", "==", values.nationalIdentityNumber),
-        where("password", "==", values.password)
+        where("password", "==", values.password),
+        where("institute", "==", selectedInstitute)
       );
 
       const parentSnapshot = await getDocs(q1);
+
+      console.log("Selected institute : ", selectedInstitute);
 
       if (parentSnapshot.empty) {
         setLoading(false);
@@ -63,6 +86,10 @@ const Login = () => {
       toast.error("Something went wrong!");
     }
   };
+
+  useEffect(() => {
+    getInstitutes();
+  }, []);
 
   if (parent) return <Navigate to="/" />;
 
@@ -90,6 +117,7 @@ const Login = () => {
                 initialValues={{
                   nationalIdentityNumber: "",
                   password: "",
+                  institute: "",
                 }}
                 validationSchema={validationSchema}
                 onSubmit={login}
@@ -107,6 +135,19 @@ const Login = () => {
                   label="Password"
                   type="password"
                 />
+
+                <Detail label={"Select Institute"} />
+                <select
+                  className="form-select w-100 mt-2"
+                  aria-label="Default select example"
+                  onChange={(e) => setSelectedInstitute(e.target.value)}
+                >
+                  {institutes.map((institute) => (
+                    <option selected value={institute.value}>
+                      {institute.value}
+                    </option>
+                  ))}
+                </select>
 
                 <SubmitButton
                   title="Log in"
