@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { getInstitutes } from "../../firebase/firebaseCalls/get";
 import Datalist from "../../components/Datalist";
 import Detail from "../../components/Detail";
+import moment from "moment/moment";
 
 const validationSchema = Yup.object().shape({
   nationalIdentityNumber: Yup.string()
@@ -34,6 +35,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   const getInstitutes = async () => {
+    const previousDay = moment().subtract(1, "days").format("DD/MM/YYYY");
+
+    console.log("Previous Day : ", previousDay);
     const instituteCollection = collection(database, "institute");
 
     const institutesSnapshot = await getDocs(instituteCollection);
@@ -44,6 +48,7 @@ const Login = () => {
     }));
 
     setInstitutes(institutes);
+    setSelectedInstitute(institutes[institutes.length - 1].value);
   };
 
   const login = async (values) => {
