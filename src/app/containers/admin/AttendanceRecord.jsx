@@ -143,7 +143,7 @@ export default function AttendanceRecord() {
     const q = query(
       attendanceCollection,
       where("institute", "==", user.institute),
-      where("month", "==", month + 1),
+      where("month", "==", String(month + 1)),
       where("year", "==", year)
     );
 
@@ -257,14 +257,18 @@ export default function AttendanceRecord() {
                     <td>{student.busNo}</td>
                     <td>{student.date || "none"}</td>
                     <td>
-                      {`${student?.openingTime?.onBoard || "none"} - ${
-                        student?.openingTime?.offBoard || "none"
-                      }`}
+                      {student?.openingTime?.onBoard.includes("0:00")
+                        ? "A"
+                        : `${student?.openingTime?.onBoard || "none"} - ${
+                            student?.openingTime?.offBoard || "none"
+                          }`}
                     </td>
                     <td>
-                      {`${student?.closingTime?.onBoard || "none"} - ${
-                        student?.closingTime?.offBoard || "none"
-                      }`}
+                      {student?.openingTime?.onBoard.includes("0:00")
+                        ? "A"
+                        : `${student?.closingTime?.onBoard || "none"} - ${
+                            student?.closingTime?.offBoard || "none"
+                          }`}
                     </td>
                   </tr>
                 );
