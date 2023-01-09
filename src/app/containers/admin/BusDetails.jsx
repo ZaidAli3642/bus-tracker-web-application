@@ -50,10 +50,10 @@ const BusDetails = () => {
         <div className="line"></div>
 
         <div className="items-details">
-          <Detail label="Maintainance" detail={maintainance} />
-          <div className="right-item">
-            <Detail label="Seat Capacity" detail={seatCapacity} />
-          </div>
+          {/* <Detail label="Maintainance" detail={maintainance} /> */}
+          <Detail label="Seat Capacity" detail={seatCapacity} />
+          {/* <div className="right-item">
+          </div> */}
         </div>
 
         <button

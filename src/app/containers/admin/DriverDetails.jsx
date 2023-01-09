@@ -109,14 +109,14 @@ const DriverDetails = () => {
             <Detail label="Bus No" detail={busNo} />
           </div>
         </div>
-        <div className="items-details">
+        {/* <div className="items-details">
           <div>
             <Detail label="Duty Start" detail={driverDutyTime} />
           </div>
           <div className="right-item">
             <Detail label="Duty End" detail={driverDutyEnd} />
           </div>
-        </div>
+        </div> */}
 
         <button
           className="btn btn-md btn-primary button"

@@ -43,8 +43,8 @@ const validationSchema = Yup.object().shape({
   image: Yup.string().nullable().required().label("Image"),
   drivingLicense: Yup.string().nullable().required().label("Driving License"),
   medicalReport: Yup.string().nullable().required().label("Medical Report"),
-  driverDutyTime: Yup.string().required().label("Duty Start"),
-  driverDutyEnd: Yup.string().required().label("Duty End"),
+  driverDutyTime: Yup.string().label("Duty Start"),
+  driverDutyEnd: Yup.string().label("Duty End"),
   driverId: Yup.number("Driver Id should be a number")
     .typeError("Driver Id must be a number")
     .required()
@@ -128,9 +128,16 @@ const DriverInformationForm = () => {
         where("busNo", "==", values.busNo),
         where("institute", "==", user.institute)
       );
+      const q1 = query(
+        driverCollection,
+        where("nationalIdentityNumber", "==", values.nationalIdentityNumber),
+        where("busNo", "==", values.busNo),
+        where("institute", "==", user.institute)
+      );
+      const driverDoc1 = await getDocs(q1);
 
       const driverDoc = await getDocs(q);
-      if (!driverDoc.empty) {
+      if (!driverDoc.empty || !driverDoc1.empty) {
         if (!isUpdated) {
           setIsProcessing(false);
           return toast.error(
@@ -335,11 +342,11 @@ const DriverInformationForm = () => {
             <div className="line"></div>
             <div className="items-details">
               <Select options={busNoList} label="Bus No" name="busNo" />
-              <Input type="time" label="Duty Time" name="driverDutyTime" />
+              {/* <Input type="time" label="Duty Time" name="driverDutyTime" /> */}
             </div>
-            <div className="items-details">
+            {/* <div className="items-details">
               <Input type="time" label="Duty End" name="driverDutyEnd" />
-            </div>
+            </div> */}
 
             <SubmitButton title="SAVE DRIVER" isLoading={isProcessing} />
           </Form>

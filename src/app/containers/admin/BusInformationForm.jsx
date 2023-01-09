@@ -30,13 +30,16 @@ const validationSchema = Yup.object().shape({
     .required()
     .label("License No"),
   image: Yup.string().required().nullable().label("License Image"),
-  maintainance: Yup.string().required().label("Maintainance"),
+  maintainance: Yup.string().label("Maintainance"),
   seatCapacity: Yup.number().required().label("Seat Capacity"),
 });
 
 const BusInformationForm = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const location = useLocation();
+  const [inputs, setInputs] = useState(
+    location?.state?.routes || [{ latitude: "", longitude: "" }]
+  );
   const match = useMatch("/admin/bus_update/:id");
   const { user } = useAuth();
 
@@ -80,6 +83,7 @@ const BusInformationForm = () => {
         result = await updateData(data, "bus", values.image, match.params.id);
       } else {
         result = await addData(data, "bus/", values.image);
+        setInputs([{ latitude: "", longitude: "" }]);
       }
 
       if (result === undefined) {
@@ -142,16 +146,16 @@ const BusInformationForm = () => {
             <div className="line"></div>
             <h3>Routes</h3>
             <div className="items-container">
-              <MultipleInputs />
+              <MultipleInputs inputs={inputs} setInputs={setInputs} />
             </div>
             <div className="line"></div>
             <div></div>
             <div className="items-details">
-              <Select
+              {/* <Select
                 options={mantainanceStates}
                 label="Bus Maintainance"
                 name="maintainance"
-              />
+              /> */}
               <Input type="number" label="Seat Capacity" name="seatCapacity" />
             </div>
             <SubmitButton title="SAVE BUS" isLoading={isProcessing} />

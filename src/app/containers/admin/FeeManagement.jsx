@@ -90,6 +90,7 @@ export default function FeeManagement() {
     });
 
     const feeCollection = collection(database, "fee");
+    const alertCollection = collection(database, "alert");
 
     const month = new Date().getMonth();
     const year = new Date().getFullYear();
@@ -105,6 +106,18 @@ export default function FeeManagement() {
       feeMonth: month + 1,
       feeYear: year,
     });
+
+    if (collectFee === "collected") {
+      await addDoc(alertCollection, {
+        busNo: student.busNo,
+        description: "Your child's payment is collected",
+        institute: user.institute,
+        parent: true,
+        title: "Fee Payment Collected",
+        created_at: serverTimestamp(),
+        type: "fee",
+      });
+    }
   };
 
   const searchStudent = (search) => {

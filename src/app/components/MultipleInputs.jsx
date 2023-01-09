@@ -1,18 +1,16 @@
 import { useState } from "react";
 import { useFormikContext } from "formik";
 
-const MultipleInputs = () => {
+const MultipleInputs = ({ inputs, setInputs }) => {
   const { values, setFieldValue } = useFormikContext();
 
-  const [inputs, setInputs] = useState(values["routesList"]);
-
   const handleAddRoutesInput = () => {
-    const list = [...inputs, { latitude: "", longitude: "" }];
+    const list = [...values["routesList"], { latitude: "", longitude: "" }];
     setInputs(list);
   };
 
   const handleRemoveRoutesInput = (index) => {
-    const list = [...inputs];
+    const list = [...values["routesList"]];
     list.splice(index, 1);
     values["routesList"].splice(index, 1);
     setInputs(list);
@@ -24,6 +22,7 @@ const MultipleInputs = () => {
     list[index][name] = value;
     setFieldValue("routesList", list);
   };
+  console.log("Inputs : ", inputs);
 
   return (
     <>
