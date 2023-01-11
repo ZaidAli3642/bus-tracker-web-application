@@ -4,8 +4,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 const BusDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { id, busNo, licenseNo, image, routes, maintainance, seatCapacity } =
-    location.state;
+  const {
+    id,
+    busNo,
+    licenseNo,
+    image,
+    routes,
+    maintainance,
+    seatCapacity,
+    seatCapacityFilled,
+  } = location.state;
 
   return (
     <>
@@ -52,6 +60,12 @@ const BusDetails = () => {
         <div className="items-details">
           {/* <Detail label="Maintainance" detail={maintainance} /> */}
           <Detail label="Seat Capacity" detail={seatCapacity} />
+          <div className="right-item">
+            <Detail
+              label="Seat Remaining"
+              detail={seatCapacity - seatCapacityFilled}
+            />
+          </div>
           {/* <div className="right-item">
           </div> */}
         </div>

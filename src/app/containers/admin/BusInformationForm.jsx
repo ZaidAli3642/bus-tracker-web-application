@@ -43,6 +43,8 @@ const BusInformationForm = () => {
   const match = useMatch("/admin/bus_update/:id");
   const { user } = useAuth();
 
+  console.log("Location : ", location);
+
   const handleAddBusInformation = async (values, { resetForm }) => {
     setIsProcessing(true);
     try {
@@ -55,7 +57,7 @@ const BusInformationForm = () => {
         isBusAlloted: location?.state?.isBusAlloted ? true : false,
         institute: user.institute,
         seatCapacity: values.seatCapacity,
-        seatCapacit: location?.state?.seatCapacityFilled || 0,
+        seatCapacityFilled: location?.state?.seatCapacityFilled || 0,
       };
 
       const busRef = collection(database, "bus");
